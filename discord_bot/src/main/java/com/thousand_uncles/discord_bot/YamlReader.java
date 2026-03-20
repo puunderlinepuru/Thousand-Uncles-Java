@@ -1,0 +1,49 @@
+package com.thousand_uncles.discord_bot;
+
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.util.HashMap;
+import java.util.Map;
+
+public class YamlReader {
+    static File file;
+
+    YamlReader(String fileName) {
+        try {
+            file = new File(YamlReader.class.getClassLoader().getResource(fileName).toURI());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public Map<String, Object> yamlRead() {
+        Yaml yaml = new Yaml();
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream( file );
+           return yaml.load(fileInputStream);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void yamlWrite(HashMap<String, Object> data) {
+        DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        Yaml yaml = new Yaml(options);
+
+        try{
+            FileWriter writer = new FileWriter( file );
+            yaml.dump(data, writer);
+            writer.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+}
