@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgres-db
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  discord_bot:
+    build:
+      context: ./discord_bot
+    container_name: discord_bot
+    env_file:
+      - token.env
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+#      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+#      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+    depends_on:
+      - postgres
+#    ports:
+#      - "8080:8080"
+    networks:
+      - app-network
+#    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

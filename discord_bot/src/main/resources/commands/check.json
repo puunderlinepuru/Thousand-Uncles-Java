@@ -1,0 +1,12 @@
+{
+  "name": "check",
+  "description": "Checks a map",
+  "options": [
+    {
+      "name": "map",
+      "description": "map to check",
+      "type": 3,
+      "required": true
+    }
+  ]
+}
