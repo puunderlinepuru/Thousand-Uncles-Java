@@ -3,6 +3,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 /.idea/
+/tokens
+/src/main/resources/GoogleAPI_Desktop_secret.json
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

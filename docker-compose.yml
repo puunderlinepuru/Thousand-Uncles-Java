@@ -31,6 +31,14 @@ services:
       - app-network
 #    restart: unless-stopped
 
+  google_api_handler:
+    build:
+      context: ./google_api_handler
+    container_name: google_api_handler
+    depends_on:
+      - postgres
+#    restart: unless-stopped
+
 volumes:
   postgres_data:
 
