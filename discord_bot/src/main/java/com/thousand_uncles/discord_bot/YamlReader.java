@@ -15,11 +15,11 @@ public class YamlReader {
     static File file;
     String fileName;
 
-    YamlReader(String fileName) {
+    public YamlReader(String fileName) {
         try {
 //            this.fileName = fileName;
 //            file = new File(fileName);
-            file = new File("discord_bot/target/classes/" + fileName);
+            file = new File( fileName );
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -38,7 +38,7 @@ public class YamlReader {
         }
     }
 
-    public static void yamlWrite(HashMap<String, Object> data) {
+    public void yamlWrite(HashMap<String, Object> data) {
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Yaml yaml = new Yaml(options);

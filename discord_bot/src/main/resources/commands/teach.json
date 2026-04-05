@@ -1,0 +1,12 @@
+{
+  "name": "teach",
+  "description": "Teaches rock any phrase. literally any. don't put weird things though, I will remove them :p",
+  "options": [
+    {
+      "name": "phrase",
+      "description": "What are we learning?",
+      "type": 3,
+      "required": true
+    }
+  ]
+}
