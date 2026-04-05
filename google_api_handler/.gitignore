@@ -3,8 +3,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 /.idea/
-/tokens
 /src/main/resources/GoogleAPI_Desktop_secret.json
+resources/records.json
+/tokens
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
@@ -39,4 +40,3 @@ build/
 
 ### Mac OS ###
 .DS_Store
-/.idea/

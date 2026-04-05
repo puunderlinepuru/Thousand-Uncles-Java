@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 /src/main/resources/config.yml
 /src/main/resources/GoogleAPI_Desktop_secret.json
+resources/records.json
 tokens/
 
 ### STS ###

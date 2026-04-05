@@ -1,7 +1,5 @@
 package com.thousand_uncles;
 
-import com.fasterxml.jackson.core.exc.StreamWriteException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -23,7 +21,6 @@ import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.util.*;
 
@@ -74,14 +71,13 @@ public class GoogleAPI_Handler {
 
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        final String testSpreadsheetID = "1a09PuBN2hnJ58c8km_la3e0_sUAjQ8HatalX7fdMl50";
+//        final String testSpreadsheetID = "1a09PuBN2hnJ58c8km_la3e0_sUAjQ8HatalX7fdMl50";
 
 //        https://docs.google.com/spreadsheets/d/1cxxyzz0SDWCj8wI6QwN66SOtbpedrf2DWXrH6io2ZNk/edit?gid=0#gid=0
-//        final String uncletopiaSpreadsheetID = "1cxxyzz0SDWCj8wI6QwN66SOtbpedrf2DWXrH6io2ZNk"; // Actual
+        final String uncletopiaSpreadsheetID = "1cxxyzz0SDWCj8wI6QwN66SOtbpedrf2DWXrH6io2ZNk"; // Actual
 
 //        https://docs.google.com/spreadsheets/d/11IRxK5JLbdaUgrMtSZrFQl_EjvdoKTuq4xWV_qPau7s
-        final String uncletopiaSpreadsheetID = "11IRxK5JLbdaUgrMtSZrFQl_EjvdoKTuq4xWV_qPau7s"; // Backup copy from Nov 17
-        final String range = "Sheet1!A1";
+//        final String uncletopiaSpreadsheetID = "11IRxK5JLbdaUgrMtSZrFQl_EjvdoKTuq4xWV_qPau7s"; // Backup copy from Nov 17
 
         List<List<Object>> valuesToPost = new ArrayList<>();
         String[] inletValues = {"Another update"};
@@ -157,23 +153,28 @@ class Update_Task extends TimerTask {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode jsonNode = objectMapper.createObjectNode();
 
-
-
-//        Map name
-        String tempData = values.get(0).get(0).toString();
-
         for (int i = 0; i < values.size(); i++) {
-            if (values.get(i).toArray().length > 3) {
-                ObjectNode mapNode = objectMapper.createObjectNode();
-                mapNode.put("curr", (String) values.get(i).get(1));
-                mapNode.put("prev", (String) values.get(i).get(2));
-                mapNode.put("pic", (String) values.get(i).get(3));
-                jsonNode.set((String) values.get(i).get(0), mapNode);
-            }
-            System.out.println(values.get(i));
-            if (values.get(i).toArray().length < 4 && !gamemodes.contains(values.get(i).get(0))) {
+            ObjectNode mapNode = objectMapper.createObjectNode();
+            if (values.get(i).toArray().length < 4 && !gamemodes.contains(values.get(i).get(0).toString())) {
                 System.out.println("error in element " + values.get(i) + " at " + i);
             }
+            if (values.get(i).toArray().length >= 4) {
+                mapNode.put("curr_time", (String) values.get(i).get(1));
+                mapNode.put("prev_time", (String) values.get(i).get(2));
+                mapNode.put("image_proof1_link", (String) values.get(i).get(3));
+
+            }
+            if (values.get(i).toArray().length >= 6) {
+                mapNode.put("image_proof2_link", (String) values.get(i).get(4));
+                mapNode.put("image_proof3_link", (String) values.get(i).get(5));
+            }
+            if (values.get(i).toArray().length == 7) {
+                System.out.println(values.get(i));
+                mapNode.put("video_proof_link", (String) values.get(i).get(6));
+            }
+            jsonNode.set((String) values.get(i).get(0), mapNode);
+//            System.out.println(values.get(i));
+
         }
 
         System.out.println(values.size());
@@ -181,7 +182,8 @@ class Update_Task extends TimerTask {
         try {
             objectMapper
                     .writerWithDefaultPrettyPrinter()
-                    .writeValue(new File(this.getClass().getResource("/records.json").getPath()), jsonNode);
+                    .writeValue(new File("resources/records.json"), jsonNode);
+            System.out.println("Records JSON updated");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
