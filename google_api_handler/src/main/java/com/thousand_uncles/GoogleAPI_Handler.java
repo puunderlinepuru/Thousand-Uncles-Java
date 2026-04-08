@@ -1,6 +1,5 @@
 package com.thousand_uncles;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.api.client.auth.oauth2.Credential;
@@ -182,7 +181,7 @@ class Update_Task extends TimerTask {
         try {
             objectMapper
                     .writerWithDefaultPrettyPrinter()
-                    .writeValue(new File("resources/records.json"), jsonNode);
+                    .writeValue(new File("shared/records.json"), jsonNode);
             System.out.println("Records JSON updated");
         } catch (IOException e) {
             throw new RuntimeException(e);

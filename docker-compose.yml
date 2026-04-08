@@ -18,7 +18,8 @@ services:
       context: ./discord_bot
     container_name: discord_bot
     volumes:
-      - ./shared_resources_space:/resources
+      - ./shared_resources_space:/shared/:ro
+      - ./discord_bot/resources:/resources
     env_file:
       - token.env
 #    environment:
@@ -31,17 +32,17 @@ services:
 #      - "8080:8080"
     networks:
       - app-network
-#    restart: unless-stopped
+    restart: unless-stopped
 
   google_api_handler:
     build:
       context: ./google_api_handler
     container_name: google_api_handler
     volumes:
-      - ./shared_resources_space:/resources/
+      - ./shared_resources_space:/shared/
     depends_on:
       - postgres
-#    restart: unless-stopped
+    restart: unless-stopped
 
 volumes:
   postgres_data:

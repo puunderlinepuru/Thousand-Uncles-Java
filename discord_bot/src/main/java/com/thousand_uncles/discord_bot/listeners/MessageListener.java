@@ -1,26 +1,28 @@
 package com.thousand_uncles.discord_bot.listeners;
 
+import com.thousand_uncles.discord_bot.YamlReader;
 import com.thousand_uncles.discord_bot.fun_stuff.*;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.event.domain.message.MessageEvent;
 import discord4j.core.object.entity.Message;
-import discord4j.core.object.entity.channel.Channel;
-import discord4j.core.object.entity.channel.MessageChannel;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.Dictionary;
+import java.util.Map;
 
 
 @Component
 public class MessageListener {
+    private String MEME_CHANNEL_ID;
 
     GatewayDiscordClient client;
 
     public MessageListener(GatewayDiscordClient client) {
-
+//        TODO make separate Config class to use config variables from
+        YamlReader configReader = new YamlReader("resources/config.yml");
+        Map config = configReader.yamlRead();
+        MEME_CHANNEL_ID = (String) config.get("meme_channel_id");
         this.client = client;
 
         client.on(MessageCreateEvent.class, this::onMessage).subscribe();
@@ -28,6 +30,10 @@ public class MessageListener {
 
     public Mono<Void> onMessage(MessageCreateEvent event) {
         final Message message = event.getMessage();
+//        Allowed Channel Check
+        if (!message.getChannelId().equals(Snowflake.of(MEME_CHANNEL_ID))) {return Mono.empty();}
+
+//        Bot Check
         if (message.getAuthor().map(user -> !user.isBot()).orElse(false)) {
             System.out.println("mentions: \n" +message.getUserMentionIds().contains(client.getSelfId()));
             if (!message.getUserMentionIds().contains(client.getSelfId())) {return Mono.empty();}
@@ -46,11 +52,6 @@ public class MessageListener {
             return message.getChannel()
                     .flatMap(channel -> channel.createMessage(response))
                     .then();
-
-
-            /*return message.getChannel()
-                    .flatMap(channel -> channel.createMessage("You said: " + message.getContent()))
-                    .then();*/
         }
         return Mono.empty();
     }

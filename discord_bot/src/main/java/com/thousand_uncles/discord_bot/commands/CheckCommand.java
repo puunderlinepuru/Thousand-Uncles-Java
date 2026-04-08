@@ -25,7 +25,7 @@ public class CheckCommand implements SlashCommand {
     public Mono<Void> handle(ChatInputInteractionEvent event){
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(new File("resources/records.json"));
+            JsonNode jsonNode = objectMapper.readTree(new File("shared/records.json"));
 
             String map = event.getOption("map")
                     .flatMap(ApplicationCommandInteractionOption::getValue)
