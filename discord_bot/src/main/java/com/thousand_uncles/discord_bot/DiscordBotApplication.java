@@ -1,19 +1,14 @@
 package com.thousand_uncles.discord_bot;
 
 import discord4j.common.util.Snowflake;
-import discord4j.core.DiscordClient;
+import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
-import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.TextChannel;
-import discord4j.core.object.presence.ClientActivity;
-import discord4j.core.object.presence.ClientPresence;
 import discord4j.rest.RestClient;
-import jakarta.annotation.PostConstruct;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
-import reactor.core.publisher.Mono;
 import reactor.util.Logger;
 import reactor.util.Loggers;
 
@@ -41,37 +36,33 @@ public class DiscordBotApplication {
         System.out.println("Set up.");
 	}
 
-    @PostConstruct
-    public void discordClient() {
+    @Bean
+    public GatewayDiscordClient gatewayDiscordClient() {
+        System.out.println("got to gatewaydiscordClient");
+        System.out.println("token: " + token);
+
+        GatewayDiscordClient client = DiscordClientBuilder.create(token).build()
+                .gateway()
+                .login()
+                .block();
 
         if (READY_MESSAGE.isEmpty()){
-            DiscordClient.create(token)
-                    .gateway()
-                    .setInitialPresence(s -> ClientPresence.online(
-                            ClientActivity.playing("with a new feature").withState("and an extra state")))
-                    .withGateway(client -> client.on(ReadyEvent.class)
-                            .doOnNext(ready -> log.info("Logged in as {}", ready.getSelf().getUsername()))
-                            .then())
-                    .block();
+            assert client != null;
+            client.on(ReadyEvent.class)
+                    .doOnNext(ready -> log.info("Logged in as {}", ready.getSelf().getUsername()))
+                    .then();
         } else {
-            DiscordClient.create(token)
-                    .gateway()
-                    .setInitialPresence(s -> ClientPresence.online(
-                            ClientActivity.playing("with a new feature").withState("and an extra state")))
-                    .withGateway(gw -> {
-                        Mono<Message> sendMessage = gw.on(ReadyEvent.class)
-                                .flatMap(e -> e.getClient().getGuildById(Snowflake.of(SERVER_ID)))
-                                .next()
-                                .flatMap(e -> e.getChannelById(Snowflake.of(MEME_CHANNEL_ID)))
-                                .ofType(TextChannel.class)
-                                .flatMap(channel -> channel.createMessage(READY_MESSAGE));
-                        return sendMessage
-                                .then();
-                    })
+            assert client != null;
+            client.on(ReadyEvent.class)
+                    .flatMap(e -> e.getClient().getGuildById(Snowflake.of(SERVER_ID)))
+                    .next()
+                    .flatMap(e -> e.getChannelById(Snowflake.of(MEME_CHANNEL_ID)))
+                    .ofType(TextChannel.class)
+                    .flatMap(channel -> channel.createMessage(READY_MESSAGE))
+                    .then()
                     .block();
         }
-
-
+        return client;
     }
 
     @Bean

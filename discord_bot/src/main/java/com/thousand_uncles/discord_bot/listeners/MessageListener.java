@@ -22,11 +22,14 @@ public class MessageListener {
 
     public MessageListener(GatewayDiscordClient client) {
 
+        this.client = client;
+
         client.on(MessageCreateEvent.class, this::onMessage).subscribe();
     }
 
     public Mono<Void> onMessage(MessageCreateEvent event) {
         final Message message = event.getMessage();
+        System.out.println("[ MESSAGE ]");
 //        Allowed Channel Check
         if (!message.getChannelId().equals(Snowflake.of(MEME_CHANNEL_ID))) {return Mono.empty();}
 
