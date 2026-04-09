@@ -14,16 +14,13 @@ import java.util.Map;
 
 @Component
 public class MessageListener {
-    private String MEME_CHANNEL_ID;
+    static YamlReader configReader = new YamlReader("resources/config.yml");
+    static Map config = configReader.yamlRead();
+    private static final String MEME_CHANNEL_ID = (String) config.get("meme_channel_id");
 
     GatewayDiscordClient client;
 
     public MessageListener(GatewayDiscordClient client) {
-//        TODO make separate Config class to use config variables from
-        YamlReader configReader = new YamlReader("resources/config.yml");
-        Map config = configReader.yamlRead();
-        MEME_CHANNEL_ID = (String) config.get("meme_channel_id");
-        this.client = client;
 
         client.on(MessageCreateEvent.class, this::onMessage).subscribe();
     }
