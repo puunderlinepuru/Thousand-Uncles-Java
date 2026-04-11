@@ -1,4 +1,9 @@
 # Rock - discord bot for records keeping
+
+#### (README Language/ Язык README)
+[![English](https://img.shields.io/badge/Language-English-blue)](README.md)
+[![Русский](https://img.shields.io/badge/Language-Русский-green)](README.ru-RU.md)
+
 ![rock](./rock.jpg)
 # What is he?
 Originally started as a simple "read JSON" bot but has been growing into so much more
