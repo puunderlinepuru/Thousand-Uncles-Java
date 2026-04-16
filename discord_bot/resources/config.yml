@@ -1,12 +1,23 @@
 # ROLLING
-meme_channel_id: "1491854639232974968"
 server_id: "1306287199259463710"
+meme_channel_id: "1491854639232974968"
+currently_gaming_channel_id: "1390704864648106074"
 role_on_join_id: "1306288862737469490"
 
 # TESTING
 #server_id: "1326570611975258227"
 #meme_channel_id: "1436478432618877141"
+#currently_gaming_channel_id: "1494327564250910832"
 #role_on_join_id: "1436112043710091344"
 
 # UNIVERSAL
-ready_message: "https://tenor.com/view/cat-chat-cat-fall-hello-chat-cat-gif-24961178"
+ready_message: ""
+users_to_timeout:
+  #  Hunger
+  - "229734102071246850"
+  #
+  #  Deaf
+  - "479964109413023746"
+  #
+  #    Soup
+  - "636567679335137290"

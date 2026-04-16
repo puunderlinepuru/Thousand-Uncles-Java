@@ -5,6 +5,8 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.object.entity.channel.TextChannel;
+import discord4j.gateway.intent.Intent;
+import discord4j.gateway.intent.IntentSet;
 import discord4j.rest.RestClient;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -43,6 +45,13 @@ public class DiscordBotApplication {
 
         GatewayDiscordClient client = DiscordClientBuilder.create(token).build()
                 .gateway()
+                .setEnabledIntents(IntentSet.of(
+                        Intent.GUILDS,
+                        Intent.GUILD_MEMBERS,
+                        Intent.GUILD_MESSAGES,
+                        Intent.MESSAGE_CONTENT,
+                        Intent.GUILD_MESSAGE_REACTIONS
+                ))
                 .login()
                 .block();
 

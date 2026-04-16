@@ -12,6 +12,7 @@ Originally started as a simple "read JSON" bot but has been growing into so much
 ## Prerequisites
  - Installed Docker with Docker Compose plugin
  - Registered Discord application
+ - Java 21
 
 ## Guide
 *I hope I remember the commands right*
@@ -19,6 +20,9 @@ Originally started as a simple "read JSON" bot but has been growing into so much
 (Some features are hardcoded so can set up incorrectly 
 (like hardcoded meme-channel_id which I should change in the future 
 but for now the bot will ignore your messages and only respond to commands))
+
+### Cloning
+
 1) Clone and move into this GitHub Repository:
 
 `git clone https://github.com/puunderlinepuru/Thousand-Uncles-Java.git && cd "Thousand-Uncles-Java"`
@@ -27,11 +31,25 @@ but for now the bot will ignore your messages and only respond to commands))
 
 `echo "ENV=*Your bot token*" > token.env`
 
-3) Build Docker containers
+### Setting Google API
+
+3) Launch Google API to get OAuth link
+
+`java -jar ./google_api_handler/target/google_api_handler-0.0.1-SNAPSHOT.jar`
+
+^ This will output a link for Google authentication
+
+4) Authorize in Google via link
+
+After this it should generate google_api_handler/token folder
+
+### Building and launching containers
+
+5) Build Docker containers
 
 `docker compose build`
 
-4) Run the containers
+6) Run the containers
 
 `docker compose up`
 
