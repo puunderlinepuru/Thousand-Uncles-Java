@@ -51,17 +51,15 @@ public class MessageListener {
 
         if (
                 message.getChannelId().equals(Snowflake.of(CURRENTLY_GAMING_CHANNEL_ID))
-                || !message.getUserMentions().isEmpty()
+                && !message.getUserMentions().isEmpty()
         ) {
-            System.out.println("[ MESSAGE ] at meme-channel");
+            System.out.println("[ MESSAGE ] at currently-gaming-channel");
             for (String badUserID : USERS_TO_TIMEOUT) {
                 if (message.getUserMentionIds().contains(Snowflake.of(badUserID))) {
                     Guild guild = message.getGuild().block();
 
                     assert guild != null;
                     Member badMember = guild.getMemberById(Snowflake.of(badUserID)).block();
-
-                    badMember.ban();
 
                     assert badMember != null;
                     timeoutMember(badMember, Duration.ofSeconds(10));
