@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 @Component
+@SuppressWarnings("unused")
 public class TeachCommand implements SlashCommand{
     @Override
     public String getName() {
@@ -22,18 +23,18 @@ public class TeachCommand implements SlashCommand{
         YamlReader yamlReader = new YamlReader("resources/dictionary.yml");
         String phrase = event.getOption("phrase")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
-                .map(ApplicationCommandInteractionOptionValue::asString)
-                .get();
+                .map(ApplicationCommandInteractionOptionValue::asString).flatMap(String::describeConstable).orElseThrow();
 
 
-        Map<String, Object> dictionary = yamlReader.yamlRead();
-        ArrayList words = (ArrayList) dictionary.get("words");
+        Map<String, ArrayList<String>> dictionary = yamlReader.yamlDictionaryRead();
+        ArrayList <String> words = dictionary.get("words");
+        int wordCount = words.size();
         words.add(phrase);
         dictionary.put("words", words);
 
-        yamlReader.yamlWrite(dictionary);
+        yamlReader.yamlDictionaryWrite(dictionary);
         return event.reply()
                 .withEphemeral(false)
-                .withContent("Added  \"" + phrase + "\" to dictionary");
+                .withContent("Added  \"" + phrase + "\" to dictionary. Total: " + wordCount);
     }
 }
