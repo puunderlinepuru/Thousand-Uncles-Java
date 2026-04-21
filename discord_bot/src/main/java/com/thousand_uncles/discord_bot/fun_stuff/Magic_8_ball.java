@@ -1,7 +1,8 @@
 package com.thousand_uncles.discord_bot.fun_stuff;
 
+import com.thousand_uncles.discord_bot.GlobalThings;
+
 import java.util.List;
-import java.util.Random;
 
 public class Magic_8_ball {
     static List<String> magic8Ball = List.of(
@@ -18,8 +19,7 @@ public class Magic_8_ball {
     static int magic8BallSize = 21;
 
     public static String getAnswers() {
-        Random rand = new Random();
-        int n = rand.nextInt(magic8BallSize);
-        return (String) magic8Ball.get(n);
+        int n = GlobalThings.rand.nextInt(magic8BallSize);
+        return magic8Ball.get(n);
     }
 }
