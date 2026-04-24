@@ -1,13 +1,14 @@
-package com.thousand_uncles.website;
+package com.thousand_uncles.dashboard;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WebsiteApplication {
+public class DashboardApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WebsiteApplication.class, args);
+		SpringApplication.run(DashboardApplication.class, args);
 	}
+
 
 }

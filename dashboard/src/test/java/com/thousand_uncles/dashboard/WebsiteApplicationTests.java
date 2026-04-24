@@ -1,10 +1,10 @@
-package com.thousand_uncles.website;
+package com.thousand_uncles.dashboard;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class WebsiteApplicationTests {
+class DashboardApplicationTests {
 
 	@Test
 	void contextLoads() {
