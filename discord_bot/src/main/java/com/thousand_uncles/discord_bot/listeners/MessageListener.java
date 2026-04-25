@@ -21,6 +21,7 @@ import java.util.Map;
 
 
 @Component
+@SuppressWarnings("unused")
 public class MessageListener {
     static YamlReader configReader = new YamlReader("resources/config.yml");
     static Map config = configReader.yamlRead();
@@ -59,33 +60,46 @@ public class MessageListener {
                 && !message.getType().equals(Message.Type.REPLY)
         ) {
             System.out.println("[ MESSAGE ] at currently-gaming-channel");
-            for (String badUserID : USERS_TO_TIMEOUT) {
-                if (message.getUserMentionIds().contains(Snowflake.of(badUserID))) {
-                    int chanceToGetBeaned = GlobalThings.rand.nextInt(10);
-                    System.out.println("chanceToGetBeaned rolled: " + chanceToGetBeaned);
-                    if (chanceToGetBeaned == 1){
-                        Member author = message.getAuthor().get().asMember(Snowflake.of(SERVER_ID)).block();
-                        assert author != null;
-                        timeoutMember(author, Duration.ofSeconds(30));
-                        String messageContent = "Backfire AHAHAHAHAHAHAHHA, Timed " + author.getDisplayName() + " out :3";
-                        return message.getChannel()
-                                .flatMap(channel -> channel.createMessage(messageContent))
-                                .then();
-                    }
 
-                    Guild guild = message.getGuild().block();
+//            Structure @rock ... mute @person ...
+            if (
+                    message.getUserMentionIds().contains(client.getSelfId()) &&
+                            message.getUserMentionIds().size() > 1 &&
+                            message.getContent().contains("mute <@")
+            ) {
 
-                    assert guild != null;
-                    Member badMember = guild.getMemberById(Snowflake.of(badUserID)).block();
+                String messageContent = message.getContent();
+
+
+                int indexOfMute = messageContent.indexOf(" mute <@");
+                int identifierEndIndex = messageContent.indexOf(">", indexOfMute + 7);
+                if (identifierEndIndex == -1) {
+                    return Mono.empty();
+                }
+
+                String badMemberID = messageContent.substring(indexOfMute+8, identifierEndIndex);
+
+                Guild guild = message.getGuild().block();
+
+                assert guild != null;
+                try {
+                    Member badMember = guild.getMemberById(Snowflake.of(badMemberID)).block();
 
                     assert badMember != null;
                     timeoutMember(badMember, Duration.ofSeconds(30));
 
-                    String messageContent = "timed out " + badMember.getDisplayName() + " :3";
+                    String responseContent = "timed out " + badMember.getDisplayName() + " :3";
                     return message.getChannel()
-                            .flatMap(channel -> channel.createMessage(messageContent))
+                            .flatMap(channel -> channel.createMessage(responseContent))
                             .then();
+                } catch (Exception e) {
+                    System.out.println("[ ERROR ]" + e.getMessage());
+
+                    return Mono.empty();
                 }
+
+
+
             }
         }
 
