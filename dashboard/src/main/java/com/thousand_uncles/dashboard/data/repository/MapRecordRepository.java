@@ -1,6 +1,6 @@
-package com.thousand_uncles.dashboard.repository;
+package com.thousand_uncles.dashboard.data.repository;
 
-import com.thousand_uncles.dashboard.entity.MapRecord;
+import com.thousand_uncles.dashboard.data.models.MapRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

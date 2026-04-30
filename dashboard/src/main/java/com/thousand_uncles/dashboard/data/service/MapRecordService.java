@@ -1,7 +1,7 @@
-package com.thousand_uncles.dashboard.service;
+package com.thousand_uncles.dashboard.data.service;
 
-import com.thousand_uncles.dashboard.entity.MapRecord;
-import com.thousand_uncles.dashboard.repository.MapRecordRepository;
+import com.thousand_uncles.dashboard.data.models.MapRecord;
+import com.thousand_uncles.dashboard.data.repository.MapRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

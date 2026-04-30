@@ -1,7 +1,7 @@
-package com.thousand_uncles.dashboard.controller;
+package com.thousand_uncles.dashboard.web.controllers.api;
 
-import com.thousand_uncles.dashboard.entity.MapRecord;
-import com.thousand_uncles.dashboard.service.MapRecordService;
+import com.thousand_uncles.dashboard.data.models.MapRecord;
+import com.thousand_uncles.dashboard.data.service.MapRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

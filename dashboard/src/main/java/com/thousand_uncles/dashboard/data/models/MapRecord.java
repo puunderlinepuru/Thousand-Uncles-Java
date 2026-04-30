@@ -1,4 +1,4 @@
-package com.thousand_uncles.dashboard.entity;
+package com.thousand_uncles.dashboard.data.models;
 
 import jakarta.persistence.*;
 
