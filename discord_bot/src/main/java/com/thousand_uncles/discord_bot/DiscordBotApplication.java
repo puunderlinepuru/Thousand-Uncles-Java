@@ -1,5 +1,6 @@
 package com.thousand_uncles.discord_bot;
 
+import com.thousand_uncles.discord_bot.bot.YamlReader;
 import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
@@ -32,7 +33,7 @@ public class DiscordBotApplication {
 	public static void main(String[] args) {
 
         System.out.println("Setting up..");
-		new SpringApplicationBuilder(DiscordBotApplication.class)
+        new SpringApplicationBuilder(DiscordBotApplication.class)
 				.build()
 				.run(args);
         System.out.println("Set up.");

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class MapRecordUtil {
 
     @Autowired
-    private MapRecordService service; // ✅ Spring injects this
+    private MapRecordService service;
 
     public void doSomething() {
         var records = service.getAllRecords();
