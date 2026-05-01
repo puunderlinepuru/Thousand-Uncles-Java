@@ -11,14 +11,8 @@ public class MapRecordUtil {
     private MapRecordService service; // ✅ Spring injects this
 
     public void doSomething() {
-        // ✅ Service is properly injected
         var records = service.getAllRecords();
+//        var newRecord = service.addRecord("pl_goldrush");
         System.out.println("Total records: " + records.size());
-    }
-
-    public void processRecord(String name) {
-        // ✅ Service is properly injected
-        var record = service.getRecordByName(name);
-        // Process record...
     }
 }

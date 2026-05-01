@@ -16,11 +16,11 @@ public class MapRecordService {
     @SuppressWarnings("unused")
     private MapRecordRepository repository;
 
-//    // Add new record
-//    public MapRecord addRecord(String mapName) {
-//        MapRecord record = new MapRecord(mapName);
-//        return repository.save(record);
-//    }
+    // Add new record
+    public MapRecord addRecord(String mapName) {
+        MapRecord record = new MapRecord(mapName);
+        return repository.save(record);
+    }
 
     // Read record by name
     public MapRecord getRecordByName(String mapName) {

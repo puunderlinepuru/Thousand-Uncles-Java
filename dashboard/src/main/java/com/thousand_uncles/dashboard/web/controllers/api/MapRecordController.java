@@ -16,12 +16,12 @@ public class MapRecordController {
     @Autowired
     private MapRecordService service;
 
-//    // Add new record
-//    @PostMapping
-//    public ResponseEntity<MapRecord> addRecord(@RequestBody MapRecord record) {
-//        MapRecord saved = service.addRecord(record.getMapName());
-//        return ResponseEntity.ok(saved);
-//    }
+    // Add new record
+    @PostMapping
+    public ResponseEntity<MapRecord> addRecord(@RequestBody MapRecord record) {
+        MapRecord saved = service.addRecord(record.getMapName());
+        return ResponseEntity.ok(saved);
+    }
 
     // Get record by name
     @GetMapping("/{name}")
