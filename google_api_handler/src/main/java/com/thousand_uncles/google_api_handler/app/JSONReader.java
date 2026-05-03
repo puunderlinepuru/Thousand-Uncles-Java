@@ -6,50 +6,37 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 public class JSONReader {
-    private static final Set<String> gamemodes = Set.of("capture point", "territory control", "capture the flag", "koth", "payload");
+    static final Set<String> gamemodes = Set.of("capture point", "territory control", "capture the flag", "koth", "payload");
 
-    public static void main(String[] args) {
-        readRecordsJSON("records.json");
-    }
+//    public static void main(String[] args) {
+//        readRecordsJSON("records.json");
+//    }
 
-    public static JsonNode readRecordsJSON(String fileName) {
-        try {
+    public static JsonNode readRecordsJSON (String fileName) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(new File("shared/" + fileName));
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(new File("shared/" + fileName));
-            System.out.println("JsonNode: " + jsonNode);
-            System.out.println("item at 0: " + jsonNode.get(0));
-            System.out.println("3: " + jsonNode.get("cp_altitude"));
-            System.out.println("size: " + jsonNode.size());
-
-            for (Object map : jsonNode) {
-                if (map instanceof ObjectNode){
-                    System.out.println("test: " + ((ObjectNode) map).get("curr_time"));
-                    System.out.println(((ObjectNode) map).);
-                }
-                System.out.println("loop test: " + map.getClass());
-//                System.out.println(map);
-            }
-            return jsonNode;
-
-        } catch (Exception e) {
-            System.out.println("[ERROR]" + e);
+        for (Iterator<String> it = jsonNode.fieldNames(); it.hasNext(); ) {
+            String field = it.next();
+//            System.out.println("field: " + field);
+//            System.out.println("data: " + jsonNode.get(field));
         }
-        return null;
+        return jsonNode;
     }
 
-    public static void writeRecordsJSON(String fileName, List<List<Object>> records) {
+    public static void writeRecordsJSON(String fileName, List<List<String>> records) {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode jsonNode = objectMapper.createObjectNode();
 
 
         for (int i = 0; i < records.size(); i++) {
             ObjectNode mapNode = objectMapper.createObjectNode();
-            if (records.get(i).toArray().length < 4 && !gamemodes.contains(records.get(i).get(0).toString())) {
+            if (records.get(i).toArray().length < 4 && !gamemodes.contains(records.get(i).get(0))) {
                 System.out.println("error in element " + records.get(i) + " at " + i);
             }
             if (records.get(i).toArray().length >= 4) {
@@ -83,24 +70,65 @@ public class JSONReader {
         }
     }
 
-    public static JsonNode beatenRecords(JsonNode oldNode, ObjectNode newNode) {
+    public static JsonNode beatenRecords(JsonNode oldRecordsNode, List<List<String>> newRecordsTable) {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode beatenRecords = objectMapper.createObjectNode();
 
-        if (oldNode.size() < newNode.size()) {
-//            New maps?
-            for (Object map : newNode) {
-                if (map instanceof ObjectNode){
-                    System.out.println("test: " + ((ObjectNode) map).get("curr_time"));
-                    System.out.println(((ObjectNode) map).asText());
+        for (List<String> newMapRecord : newRecordsTable) {
+            String mapName = (String) newMapRecord.getFirst();
+            System.out.println("map: " + mapName);
+
+            System.out.println("getting time for " + mapName);
+            String[] timeStringParts;
+            int minutes;
+            int seconds;
+
+            int oldTime;
+            try {
+                timeStringParts = oldRecordsNode.get(mapName).get("curr_time").asText().split(":");
+                minutes = Integer.parseInt(timeStringParts[0]);
+                seconds = Integer.parseInt(timeStringParts[1]);
+                oldTime = seconds + minutes*60;
+
+                int newTime;
+                timeStringParts = newMapRecord.get(1).split(":");
+                minutes = Integer.parseInt(timeStringParts[0]);
+                seconds = Integer.parseInt(timeStringParts[1]);
+                newTime = seconds + minutes*60;
+
+                System.out.println(oldTime + " <-> " + newTime);
+
+                if (oldTime > newTime) {
+                    System.out.println("[ UPGRADE ]" + mapName + " has better time");
+                    beatenRecords.set(mapName, formatNode(newMapRecord));
                 }
-                System.out.println("loop test: " + map.getClass());
-//                System.out.println(map);
+            } catch (NullPointerException nullPointerException) {
+                System.out.println("[ NEW MAP ]" + mapName);
+                beatenRecords.set(mapName, formatNode(newMapRecord));
             }
+
+        }
+        return beatenRecords;
+    }
+
+    private static ObjectNode formatNode(List<String> mapRecord){
+        ObjectNode mapNode = new ObjectMapper().createObjectNode();
+        if (mapRecord.toArray().length >= 4) {
+            mapNode.put("curr_time", mapRecord.get(1));
+            mapNode.put("prev_time", mapRecord.get(2));
+            mapNode.put("image_proof1_link", mapRecord.get(3));
+
+        }
+        if (mapRecord.toArray().length >= 6) {
+            mapNode.put("image_proof2_link", mapRecord.get(4));
+            mapNode.put("image_proof3_link", mapRecord.get(5));
+        }
+        if (mapRecord.toArray().length == 7) {
+            System.out.println(mapRecord);
+            mapNode.put("video_proof_link", mapRecord.get(6));
         }
 
-
-        return null;
+        return mapNode;
     }
 
 }

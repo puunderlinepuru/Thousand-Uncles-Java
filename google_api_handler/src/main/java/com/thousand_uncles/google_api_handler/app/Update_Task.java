@@ -1,18 +1,12 @@
 package com.thousand_uncles.google_api_handler.app;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.api.client.googleapis.json.GoogleJsonError;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import java.util.TimerTask;
+import java.util.*;
 
 class Update_Task extends TimerTask {
     UpdateValuesResponse result;
@@ -29,14 +23,22 @@ class Update_Task extends TimerTask {
         this.service = service;
     }
     public void run() {
-        List<List<Object>> values;
-
 //        Any%
-        values = readSheets("Any%", "A2", "G53");
-//        load old json
-//        compare new to old
+        List<List<String>> newRecordsValues = cleanSheetData(readSheets("Any%", "A2", "G53"));
+
+        try{
+            JsonNode oldRecords = JSONReader.readRecordsJSON("records.json");
+            JsonNode beatenRecords = JSONReader.beatenRecords(oldRecords, newRecordsValues);
+            if (!beatenRecords.isEmpty()) {
+                JSONReader.writeRecordsJSON("records.json", newRecordsValues);
+            }
 //        write or not write
 //        updateSheets();
+        } catch (IOException e) {
+            JSONReader.writeRecordsJSON("records.json", newRecordsValues);
+        }
+
+
     }
 
     protected List<List<Object>> readSheets(String sheet, String topLeft, String bottomRight) {
@@ -60,6 +62,33 @@ class Update_Task extends TimerTask {
             }
         }
     }
+
+    protected List<List<String>> cleanSheetData(List<List<Object>> unprocessedSheetData){
+        String mapName;
+        List<Object> dirtyMapData;
+        List<String> cleanMapData;
+        List<List<String>> cleanRecords = new ArrayList<>();
+
+        for (int i = 0; i < unprocessedSheetData.size(); i++) {
+            dirtyMapData = unprocessedSheetData.get(i);
+            mapName = (String) dirtyMapData.getFirst();
+            cleanMapData = new ArrayList<>();
+
+            System.out.println("analyzing " + mapName);
+
+//            Make fields Strings
+            cleanMapData = dirtyMapData.stream().map(Object::toString).toList();
+
+            if (cleanMapData.size() < 4 || cleanMapData.size() > 7) {
+                System.out.println("[ ERROR ] element " + mapName + " at " + i + " has weird size");
+                continue;
+            }
+            cleanRecords.add(cleanMapData);
+        }
+
+        return cleanRecords;
+    }
+
 
     /*protected void updateSheets() {
         try {
