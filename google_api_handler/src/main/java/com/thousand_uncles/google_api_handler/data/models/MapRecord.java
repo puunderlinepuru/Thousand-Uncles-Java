@@ -10,7 +10,10 @@ public class MapRecord {
     private Integer id;
 
     @Column(name = "map_name")
-    private String mapName;
+    private String map_name;
+
+    @Column(name = "curr_wr_seconds")
+    private int curr_wr_seconds;
 
     // Constructors
     @SuppressWarnings("unused")
@@ -18,10 +21,12 @@ public class MapRecord {
 
     @SuppressWarnings("unused")
     public MapRecord(String mapName) {
-        this.mapName = mapName;
+        this.map_name = mapName;
     }
 
     // Getters and Setters
+
+//    ID
     @SuppressWarnings("unused")
     public Integer getId() {
         return id;
@@ -32,21 +37,34 @@ public class MapRecord {
         this.id = id;
     }
 
+//    map_name
     @SuppressWarnings("unused")
-    public String getMapName() {
-        return mapName;
+    public String getMap_name() {
+        return map_name;
     }
 
     @SuppressWarnings("unused")
-    public void setMapName(String mapName) {
-        this.mapName = mapName;
+    public void setMap_name(String map_name) {
+        this.map_name = map_name;
     }
+
+//    curr_wr_seconds
+    @SuppressWarnings("unused")
+    public int getCurr_wr_seconds(){
+        return curr_wr_seconds;
+    }
+
+    @SuppressWarnings("unused")
+    public void setCurr_wr_seconds(int curr_wr_seconds){
+        this.curr_wr_seconds = curr_wr_seconds;
+    }
+
 
     @Override
     public String toString() {
         return "MapRecord{" +
                 "id=" + id +
-                ", mapName='" + mapName + '\'' +
+                ", map_name='" + map_name + '\'' +
                 '}';
     }
 }

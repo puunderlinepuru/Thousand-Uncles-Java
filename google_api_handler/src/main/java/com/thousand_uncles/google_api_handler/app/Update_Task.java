@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.thousand_uncles.google_api_handler.data.models.MapRecord;
+import com.thousand_uncles.google_api_handler.data.service.MapRecordService;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.util.*;
@@ -15,16 +18,25 @@ class Update_Task extends TimerTask {
     String spreadsheetId;
     List<List<Object>> valuesToPost;
 
-    Update_Task(String spreadSheetId, UpdateValuesResponse result, String valueInputOption, List<List<Object>> valuesToPost, Sheets service){
+
+    ApplicationContext applicationContext;
+
+    Update_Task(String spreadSheetId, UpdateValuesResponse result, String valueInputOption, List<List<Object>> valuesToPost, Sheets service, ApplicationContext applicationContext){
         this.spreadsheetId = spreadSheetId;
         this.result = result;
         this.valueInputOption = valueInputOption;
         this.valuesToPost = valuesToPost;
         this.service = service;
+        this.applicationContext = applicationContext;
     }
+
     public void run() {
 //        Any%
         List<List<String>> newRecordsValues = cleanSheetData(readSheets("Any%", "A2", "G53"));
+
+        MapRecordService mapRecordService = applicationContext.getBean(MapRecordService.class);
+        List<MapRecord> databaseRecords = mapRecordService.getAllRecords();
+        System.out.println(databaseRecords);
 
         try{
             JsonNode oldRecords = JSONReader.readRecordsJSON("records.json");

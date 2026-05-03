@@ -6,26 +6,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 public class JSONReader {
     static final Set<String> gamemodes = Set.of("capture point", "territory control", "capture the flag", "koth", "payload");
 
-//    public static void main(String[] args) {
-//        readRecordsJSON("records.json");
-//    }
-
     public static JsonNode readRecordsJSON (String fileName) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(new File("shared/" + fileName));
-
-        for (Iterator<String> it = jsonNode.fieldNames(); it.hasNext(); ) {
-            String field = it.next();
-//            System.out.println("field: " + field);
-//            System.out.println("data: " + jsonNode.get(field));
-        }
         return jsonNode;
     }
 

@@ -12,8 +12,10 @@ public class MapRecordUtil {
 
     public void doSomething() {
         var records = service.getAllRecords();
-//        var newRecord = service.addRecord("pl_goldrush");
         System.out.println("Total records: " + records.size());
+
+        var updated = service.updateWR("pl_upward", 50);
+        System.out.println("updated: " + updated);
     }
 
     public String getMapData(String mapName){

@@ -1,7 +1,5 @@
 package com.thousand_uncles.google_api_handler.app;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -15,6 +13,8 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -23,6 +23,9 @@ import java.util.*;
 
 @Component
 public class GoogleAPI_Handler {
+
+    @Autowired
+    ApplicationContext applicationContext;
 
     private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
@@ -35,10 +38,6 @@ public class GoogleAPI_Handler {
     private static final List<String> SCOPES =
             Collections.singletonList(SheetsScopes.SPREADSHEETS);
     private static final String CREDENTIALS_FILE_PATH = "/GoogleAPI_Desktop_secret.json";
-
-    GoogleAPI_Handler() throws GeneralSecurityException, IOException {
-        startTasks();
-    }
 
     /**
      * Creates an authorized Credential object.
@@ -67,7 +66,7 @@ public class GoogleAPI_Handler {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public static void startTasks() throws IOException, GeneralSecurityException {
+    public void startTasks() throws IOException, GeneralSecurityException {
 
 //        Show_Directories_And_Files.printFiles();
 
@@ -94,7 +93,7 @@ public class GoogleAPI_Handler {
         String valueInputOption = "RAW";
 
         Timer timer = new Timer();
-        TimerTask timerTask = new Update_Task(uncletopiaSpreadsheetID, result, valueInputOption, valuesToPost, service);
+        TimerTask timerTask = new Update_Task(uncletopiaSpreadsheetID, result, valueInputOption, valuesToPost, service, applicationContext);
         timer.schedule(timerTask, 200, 1800000);
     }
 }

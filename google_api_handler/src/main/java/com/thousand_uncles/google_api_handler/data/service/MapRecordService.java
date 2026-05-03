@@ -24,7 +24,7 @@ public class MapRecordService {
 
     // Read record by name
     public MapRecord getRecordByName(String mapName) {
-        return repository.findByMapName(mapName);
+        return repository.findByMap_name(mapName);
     }
 
     // Read all records
@@ -33,19 +33,25 @@ public class MapRecordService {
     }
 
     // Update record by name
-    public boolean updateRecord(String oldName, String newName) {
-        int updated = repository.updateMapName(oldName, newName);
+    public boolean updateMapName(String oldName, String newName) {
+        int updated = repository.updateMap_name(oldName, newName);
         return updated > 0;
     }
 
     // Delete record by name
     public boolean deleteRecord(String mapName) {
-        int deleted = repository.deleteByMapName(mapName);
+        int deleted = repository.deleteByMap_name(mapName);
         return deleted > 0;
+    }
+
+//    Modify existing WR
+    public boolean updateWR(String mapName, int newWR){
+        int updated = repository.updateCurr_wr_seconds(mapName, newWR);
+        return updated > 0;
     }
 
     // Search records by partial name
     public List<MapRecord> searchRecords(String partialName) {
-        return repository.findByMapNameContaining(partialName);
+        return repository.findByMap_nameContaining(partialName);
     }
 }
