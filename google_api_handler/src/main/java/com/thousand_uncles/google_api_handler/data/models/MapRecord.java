@@ -13,15 +13,16 @@ public class MapRecord {
     private String map_name;
 
     @Column(name = "curr_wr_seconds")
-    private int curr_wr_seconds;
+    private short curr_wr_seconds;
 
     // Constructors
     @SuppressWarnings("unused")
     public MapRecord() {}
 
     @SuppressWarnings("unused")
-    public MapRecord(String mapName) {
-        this.map_name = mapName;
+    public MapRecord(String map_name, short curr_wr_seconds) {
+        this.map_name = map_name;
+        this.curr_wr_seconds = curr_wr_seconds;
     }
 
     // Getters and Setters
@@ -55,7 +56,7 @@ public class MapRecord {
     }
 
     @SuppressWarnings("unused")
-    public void setCurr_wr_seconds(int curr_wr_seconds){
+    public void setCurr_wr_seconds(short curr_wr_seconds){
         this.curr_wr_seconds = curr_wr_seconds;
     }
 

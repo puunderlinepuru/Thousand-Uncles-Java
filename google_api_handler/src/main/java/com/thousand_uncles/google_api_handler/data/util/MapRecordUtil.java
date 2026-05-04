@@ -14,8 +14,8 @@ public class MapRecordUtil {
         var records = service.getAllRecords();
         System.out.println("Total records: " + records.size());
 
-        var updated = service.updateWR("pl_upward", 50);
-        System.out.println("updated: " + updated);
+//        var updated = service.updateWR("pl_upward", 50);
+//        System.out.println("updated: " + updated);
     }
 
     public String getMapData(String mapName){

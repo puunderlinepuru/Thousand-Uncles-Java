@@ -17,8 +17,8 @@ public class MapRecordService {
     private MapRecordRepository repository;
 
     // Add new record
-    public MapRecord addRecord(String mapName) {
-        MapRecord record = new MapRecord(mapName);
+    public MapRecord addRecord(String map_name, short curr_wr_seconds) {
+        MapRecord record = new MapRecord(map_name, curr_wr_seconds);
         return repository.save(record);
     }
 

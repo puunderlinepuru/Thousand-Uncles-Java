@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 import java.io.IOException;
 import java.util.*;
 
-class Update_Task extends TimerTask {
+class UpdateTask extends TimerTask {
     UpdateValuesResponse result;
     String valueInputOption;
     Sheets service;
@@ -21,7 +21,7 @@ class Update_Task extends TimerTask {
 
     ApplicationContext applicationContext;
 
-    Update_Task(String spreadSheetId, UpdateValuesResponse result, String valueInputOption, List<List<Object>> valuesToPost, Sheets service, ApplicationContext applicationContext){
+    UpdateTask(String spreadSheetId, UpdateValuesResponse result, String valueInputOption, List<List<Object>> valuesToPost, Sheets service, ApplicationContext applicationContext){
         this.spreadsheetId = spreadSheetId;
         this.result = result;
         this.valueInputOption = valueInputOption;
@@ -35,19 +35,63 @@ class Update_Task extends TimerTask {
         List<List<String>> newRecordsValues = cleanSheetData(readSheets("Any%", "A2", "G53"));
 
         MapRecordService mapRecordService = applicationContext.getBean(MapRecordService.class);
-        List<MapRecord> databaseRecords = mapRecordService.getAllRecords();
-        System.out.println(databaseRecords);
+//        List<MapRecord> databaseRecords = mapRecordService.getAllRecords();
+//        System.out.println(databaseRecords);
+
+        for (int i = 0; i < newRecordsValues.size(); i++) {
+
+//            Name
+            String mapName = newRecordsValues.get(i).get(0);
+
+            int spreadsheetRecordTimeInSeconds;
+            String[] timeStringParts = newRecordsValues.get(i).get(1).split(":");
+            int minutes = Integer.parseInt(timeStringParts[0]);
+            int seconds = Integer.parseInt(timeStringParts[1]);
+            spreadsheetRecordTimeInSeconds = seconds + minutes*60;
+
+//            Database record object
+            MapRecord databaseMapRecord= mapRecordService.getRecordByName(mapName);
+            System.out.println(" got from database: " + databaseMapRecord);
+
+            if (databaseMapRecord == null) {
+                System.out.println("[ DATABASE MESSAGE ] record doesn't exits, adding map " + mapName + " with data " + (short) spreadsheetRecordTimeInSeconds);
+                mapRecordService.addRecord(mapName, (short) spreadsheetRecordTimeInSeconds);
+                continue;
+            }
+
+            int databaseRecordTimeInSeconds;
+            try{
+                databaseRecordTimeInSeconds = databaseMapRecord.getCurr_wr_seconds();
+            } catch (Exception e) {
+                System.out.println("[ DATABASE MESSAGE ] value is null, adding map " + mapName + " with data " + (short) spreadsheetRecordTimeInSeconds);
+                mapRecordService.addRecord(mapName, (short) spreadsheetRecordTimeInSeconds);
+                continue;
+            }
+
+
+            if (spreadsheetRecordTimeInSeconds > databaseRecordTimeInSeconds){
+                boolean updated = mapRecordService.updateWR(mapName, spreadsheetRecordTimeInSeconds);
+                System.out.println("[ RECORD BEATEN ] for map " + mapName + ": " + databaseRecordTimeInSeconds + " -> " + spreadsheetRecordTimeInSeconds);
+                if (!updated){
+                    System.out.println("[ ERROR ] Error updating map record in database");
+                }
+            }
+        }
+
+//        if (newRecordsValues.size() < databaseRecords.size()){
+//            System.out.println("[ DATABASE MESSAGE ] More records in DB than were loaded from spreadsheet, I suggest you check that");
+//        }
 
         try{
-            JsonNode oldRecords = JSONReader.readRecordsJSON("records.json");
-            JsonNode beatenRecords = JSONReader.beatenRecords(oldRecords, newRecordsValues);
+            JsonNode oldRecords = JSONHandler.readRecordsJSON("records.json");
+            JsonNode beatenRecords = JSONHandler.beatenRecords(oldRecords, newRecordsValues);
             if (!beatenRecords.isEmpty()) {
-                JSONReader.writeRecordsJSON("records.json", newRecordsValues);
+                JSONHandler.writeRecordsJSON("records.json", newRecordsValues);
             }
 //        write or not write
 //        updateSheets();
         } catch (IOException e) {
-            JSONReader.writeRecordsJSON("records.json", newRecordsValues);
+            JSONHandler.writeRecordsJSON("records.json", newRecordsValues);
         }
 
 

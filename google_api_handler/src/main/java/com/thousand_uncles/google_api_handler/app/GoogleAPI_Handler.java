@@ -93,7 +93,7 @@ public class GoogleAPI_Handler {
         String valueInputOption = "RAW";
 
         Timer timer = new Timer();
-        TimerTask timerTask = new Update_Task(uncletopiaSpreadsheetID, result, valueInputOption, valuesToPost, service, applicationContext);
+        TimerTask timerTask = new UpdateTask(uncletopiaSpreadsheetID, result, valueInputOption, valuesToPost, service, applicationContext);
         timer.schedule(timerTask, 200, 1800000);
     }
 }

@@ -29,4 +29,8 @@ public interface MapRecordRepository extends JpaRepository<MapRecord, Integer> {
     @Modifying
     @Query("UPDATE MapRecord m SET m.curr_wr_seconds = :newTime WHERE m.map_name = :name")
     int updateCurr_wr_seconds(@Param("name") String name, @Param("newTime") int newTime);
+
+//    @Modifying
+//    @Query("")
+//    int add
 }

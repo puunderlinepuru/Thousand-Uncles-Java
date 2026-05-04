@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public class JSONReader {
+public class JSONHandler {
     static final Set<String> gamemodes = Set.of("capture point", "territory control", "capture the flag", "koth", "payload");
 
     public static JsonNode readRecordsJSON (String fileName) throws IOException {
@@ -21,34 +21,9 @@ public class JSONReader {
     public static void writeRecordsJSON(String fileName, List<List<String>> records) {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode jsonNode = objectMapper.createObjectNode();
-
-
         for (int i = 0; i < records.size(); i++) {
-            ObjectNode mapNode = objectMapper.createObjectNode();
-            if (records.get(i).toArray().length < 4 && !gamemodes.contains(records.get(i).get(0))) {
-                System.out.println("error in element " + records.get(i) + " at " + i);
-            }
-            if (records.get(i).toArray().length >= 4) {
-                mapNode.put("curr_time", (String) records.get(i).get(1));
-                mapNode.put("prev_time", (String) records.get(i).get(2));
-                mapNode.put("image_proof1_link", (String) records.get(i).get(3));
-
-            }
-            if (records.get(i).toArray().length >= 6) {
-                mapNode.put("image_proof2_link", (String) records.get(i).get(4));
-                mapNode.put("image_proof3_link", (String) records.get(i).get(5));
-            }
-            if (records.get(i).toArray().length == 7) {
-                System.out.println(records.get(i));
-                mapNode.put("video_proof_link", (String) records.get(i).get(6));
-            }
-            jsonNode.set((String) records.get(i).get(0), mapNode);
-//            System.out.println(values.get(i));
-
+            jsonNode.set((String) records.get(i).get(0), formatNode(records.get(i)));
         }
-
-        System.out.println(records.size());
-
         try {
             objectMapper
                     .writerWithDefaultPrettyPrinter()
@@ -95,7 +70,6 @@ public class JSONReader {
                 System.out.println("[ NEW MAP ]" + mapName);
                 beatenRecords.set(mapName, formatNode(newMapRecord));
             }
-
         }
         return beatenRecords;
     }
