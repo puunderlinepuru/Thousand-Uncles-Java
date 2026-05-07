@@ -27,8 +27,28 @@ public interface MapRecordRepository extends JpaRepository<MapRecord, Integer> {
     int deleteByMap_name(@Param("name") String name);
 
     @Modifying
-    @Query("UPDATE MapRecord m SET m.curr_wr_seconds = :newTime WHERE m.map_name = :name")
-    int updateCurr_wr_seconds(@Param("name") String name, @Param("newTime") int newTime);
+    @Query("UPDATE MapRecord m SET " +
+            "m.prev_wr_seconds = m.curr_wr_seconds, " +
+            "m.curr_wr_seconds = :newTime, " +
+            "m.proof_img_1_link = :stage1_proof, " +
+            "m.proof_img_2_link = :stage2_proof, " +
+            "m.proof_img_3_link = :stage3_proof, " +
+            "m.proof_vid_link = :proof_vid, " +
+            "m.stage_1_time_seconds = :stage1_time, " +
+            "m.stage_2_time_seconds = :stage2_time, " +
+            "m.stage_3_time_seconds = :stage3_time " +
+            "WHERE m.map_name = :name")
+    int updateRecord(
+            @Param("name")          String name,
+            @Param("newTime")       Short newTime,
+            @Param("stage1_proof")  String stage_1_proof,
+            @Param("stage2_proof")  String stage_2_proof,
+            @Param("stage3_proof")  String stage_3_proof,
+            @Param("proof_vid")     String proof_vid,
+            @Param("stage1_time")  Short stage_1_time,
+            @Param("stage2_time")  Short stage_2_time,
+            @Param("stage3_time")  Short stage_3_time
+    );
 
 //    @Modifying
 //    @Query("")

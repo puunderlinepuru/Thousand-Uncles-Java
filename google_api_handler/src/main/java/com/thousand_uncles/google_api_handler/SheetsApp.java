@@ -1,6 +1,7 @@
 package com.thousand_uncles.google_api_handler;
 
 import com.thousand_uncles.google_api_handler.app.GoogleAPI_Handler;
+import org.postgresql.util.PSQLException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -11,17 +12,25 @@ import java.security.GeneralSecurityException;
 @SpringBootApplication
 public class SheetsApp {
     public static void main(String[] args) {
-        ApplicationContext applicationContext = SpringApplication.run(SheetsApp.class, args);
-
-        GoogleAPI_Handler googleAPIHandler = applicationContext.getBean(GoogleAPI_Handler.class);
-
-//        MapRecordUtil util = applicationContext.getBean(MapRecordUtil.class);
-//        util.doSomething();
         try {
-            googleAPIHandler.startTasks();
-        } catch (GeneralSecurityException | IOException e) {
+            ApplicationContext applicationContext = SpringApplication.run(SheetsApp.class, args);
+            GoogleAPI_Handler googleAPIHandler = applicationContext.getBean(GoogleAPI_Handler.class);
+            //        MapRecordUtil util = applicationContext.getBean(MapRecordUtil.class);
+            //        util.doSomething();
+            try {
+                googleAPIHandler.startTasks();
+            } catch (GeneralSecurityException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (Exception e) {
+            System.out.println("blep");
             throw new RuntimeException(e);
         }
+
+
+
+
+
     }
 
     /*@Bean

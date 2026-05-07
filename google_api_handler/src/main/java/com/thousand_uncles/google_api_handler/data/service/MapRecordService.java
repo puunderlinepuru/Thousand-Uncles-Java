@@ -17,8 +17,31 @@ public class MapRecordService {
     private MapRecordRepository repository;
 
     // Add new record
-    public MapRecord addRecord(String map_name, short curr_wr_seconds) {
-        MapRecord record = new MapRecord(map_name, curr_wr_seconds);
+    public MapRecord addRecord(
+            String map_name,
+            Short curr_wr_seconds,
+            Short prev_wr_seconds,
+            String proof_pic_1_link,
+            String proof_pic_2_link,
+            String proof_pic_3_link,
+            String proof_vid_link,
+            Short stage_time_1,
+            Short stage_time_2,
+            Short stage_time_3
+    ) {
+        MapRecord record = new MapRecord(
+                map_name,
+                curr_wr_seconds,
+                prev_wr_seconds,
+                proof_pic_1_link,
+                proof_pic_2_link,
+                proof_pic_3_link,
+                proof_vid_link,
+                stage_time_1,
+                stage_time_2,
+                stage_time_3
+        );
+
         return repository.save(record);
     }
 
@@ -45,8 +68,28 @@ public class MapRecordService {
     }
 
 //    Modify existing WR
-    public boolean updateWR(String mapName, int newWR){
-        int updated = repository.updateCurr_wr_seconds(mapName, newWR);
+    public boolean updateWR(
+            String map_name,
+            Short curr_wr_seconds,
+            String proof_pic_1_link,
+            String proof_pic_2_link,
+            String proof_pic_3_link,
+            String proof_vid_link,
+            Short stage_time_1,
+            Short stage_time_2,
+            Short stage_time_3
+    ){
+        int updated = repository.updateRecord(
+                map_name,
+                curr_wr_seconds,
+                proof_pic_1_link,
+                proof_pic_2_link,
+                proof_pic_3_link,
+                proof_vid_link,
+                stage_time_1,
+                stage_time_2,
+                stage_time_3
+        );
         return updated > 0;
     }
 
