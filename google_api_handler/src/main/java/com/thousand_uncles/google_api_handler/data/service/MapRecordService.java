@@ -12,11 +12,12 @@ import java.util.List;
 @Transactional
 public class MapRecordService {
 
-    @Autowired
     @SuppressWarnings("unused")
+    @Autowired
     private MapRecordRepository repository;
 
     // Add new record
+    @SuppressWarnings("unused")
     public MapRecord addRecord(
             String map_name,
             Short curr_wr_seconds,
@@ -46,28 +47,33 @@ public class MapRecordService {
     }
 
     // Read record by name
+    @SuppressWarnings("unused")
     public MapRecord getRecordByName(String mapName) {
         return repository.findByMap_name(mapName);
     }
 
     // Read all records
+    @SuppressWarnings("unused")
     public List<MapRecord> getAllRecords() {
         return repository.findAll();
     }
 
     // Update record by name
+    @SuppressWarnings("unused")
     public boolean updateMapName(String oldName, String newName) {
         int updated = repository.updateMap_name(oldName, newName);
         return updated > 0;
     }
 
     // Delete record by name
+    @SuppressWarnings("unused")
     public boolean deleteRecord(String mapName) {
         int deleted = repository.deleteByMap_name(mapName);
         return deleted > 0;
     }
 
 //    Modify existing WR
+    @SuppressWarnings("unused")
     public boolean updateWR(
             String map_name,
             Short curr_wr_seconds,
@@ -94,6 +100,7 @@ public class MapRecordService {
     }
 
     // Search records by partial name
+    @SuppressWarnings("unused")
     public List<MapRecord> searchRecords(String partialName) {
         return repository.findByMap_nameContaining(partialName);
     }

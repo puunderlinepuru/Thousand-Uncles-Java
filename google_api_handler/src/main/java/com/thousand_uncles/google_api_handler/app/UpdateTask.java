@@ -37,10 +37,13 @@ class UpdateTask extends TimerTask {
         List<List<String>> newRecordsValues = cleanSheetData(readSheets("Any%", "A3", "G59"));
 
         MapRecordService mapRecordService = applicationContext.getBean(MapRecordService.class);
-//        List<MapRecord> databaseRecords = mapRecordService.getAllRecords();
-//        System.out.println(databaseRecords);
 
         for (int i = 0; i < newRecordsValues.size(); i++) {
+
+            if (newRecordsValues.get(i).size() < 4) {
+                System.out.println("[ SPREADSHEET WARNING ] Length requirement not met. Something's missing");
+                continue;
+            }
 
 //            Name
             String map_name = newRecordsValues.get(i).get(0);
@@ -63,13 +66,18 @@ class UpdateTask extends TimerTask {
                 System.out.println("[ SPREADSHEET ERROR ] issue with previous WR for map " + map_name);
             }
 
-            String proof_pic_1_link = null;
+            String proof_pic_1_link;
             String proof_pic_2_link = null;
             String proof_pic_3_link = null;
             String proof_vid_link = null;
             Short stage_time_1 = null;
             Short stage_time_2 = null;
             Short stage_time_3 = null;
+
+            if (newRecordsValues.get(i).get(3).isEmpty()){
+                System.out.println("[ SPREADSHEET ERROR ] Proof image field is empty for map " + map_name + ", skipping");
+                continue;
+            }
 
             if (newRecordsValues.get(i).get(3).charAt(0) != 'h')
             {
@@ -103,7 +111,7 @@ class UpdateTask extends TimerTask {
 
             if (databaseMapRecord == null) {
                 System.out.println("[ DATABASE MESSAGE ] record doesn't exits, adding map " + map_name + " with data " + spreadsheetRecordTimeInSeconds);
-                mapRecordService.addRecord(
+                MapRecord savedMap = mapRecordService.addRecord(
                         map_name,
                         spreadsheetRecordTimeInSeconds,
                         spreadsheetPrevRecordTimeInSeconds,
@@ -115,6 +123,7 @@ class UpdateTask extends TimerTask {
                         stage_time_2,
                         stage_time_3
                 );
+                System.out.println("    Saved map " + savedMap.getMap_name());
                 continue;
             }
 
@@ -158,10 +167,6 @@ class UpdateTask extends TimerTask {
                 System.out.println("[ ERROR ] Error updating map record in database");
             }
         }
-
-//        if (newRecordsValues.size() < databaseRecords.size()){
-//            System.out.println("[ DATABASE MESSAGE ] More records in DB than were loaded from spreadsheet, I suggest you check that");
-//        }
 
         try{
             JsonNode oldRecords = JSONHandler.readRecordsJSON("records.json");
@@ -210,10 +215,7 @@ class UpdateTask extends TimerTask {
             dirtyMapData = unprocessedSheetData.get(i);
             System.out.println("    got data: " + dirtyMapData);
             mapName = (String) dirtyMapData.getFirst();
-            cleanMapData = new ArrayList<>();
-
             System.out.println("analyzing " + mapName);
-
 
 //            Make fields Strings
             cleanMapData = dirtyMapData.stream().map(Object::toString).toList();

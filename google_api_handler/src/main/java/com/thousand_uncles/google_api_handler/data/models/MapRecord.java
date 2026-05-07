@@ -18,25 +18,25 @@ public class MapRecord {
     @Column(name = "prev_wr_seconds", nullable = false, precision = 5)
     private Short prev_wr_seconds;
 
-    @Column(name = "proof_img_1_link", nullable = false, length = 255)
+    @Column(name = "proof_img_1_link", nullable = false)
     private String proof_img_1_link;
 
-    @Column(name = "proof_img_2_link", nullable = true, length = 255)
+    @Column(name = "proof_img_2_link")
     private String proof_img_2_link;
 
-    @Column(name = "proof_img_3_link", nullable = true, length = 255)
+    @Column(name = "proof_img_3_link")
     private String proof_img_3_link;
 
-    @Column(name = "proof_vid_link", nullable = true, length = 255)
+    @Column(name = "proof_vid_link")
     private String proof_vid_link;
 
-    @Column(name = "stage_1_time_seconds", nullable = true, precision = 5)
+    @Column(name = "stage_1_time_seconds", precision = 5)
     private Short stage_1_time_seconds;
 
-    @Column(name = "stage_2_time_seconds", nullable = true, precision = 5)
+    @Column(name = "stage_2_time_seconds", precision = 5)
     private Short stage_2_time_seconds;
 
-    @Column(name = "stage_3_time_seconds", nullable = true, precision = 5)
+    @Column(name = "stage_3_time_seconds", precision = 5)
     private Short stage_3_time_seconds;
 
     // Constructors
