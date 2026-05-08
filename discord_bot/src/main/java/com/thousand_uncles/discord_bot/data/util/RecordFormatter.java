@@ -11,7 +11,8 @@ public class RecordFormatter {
         return timeShort;
     }
 
-    public static String NumberToString (short timeNumber) {
+    @SuppressWarnings("unused")
+    public static String NumberToString (Short timeNumber) {
         String timeString;
         int minutes = timeNumber / 60;
         int seconds = timeNumber % 60;

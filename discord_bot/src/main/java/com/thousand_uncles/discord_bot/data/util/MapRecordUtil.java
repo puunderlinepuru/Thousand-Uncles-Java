@@ -4,6 +4,7 @@ import com.thousand_uncles.discord_bot.data.service.MapRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@SuppressWarnings("unused")
 @Component
 public class MapRecordUtil {
 
@@ -12,7 +13,6 @@ public class MapRecordUtil {
 
     public void doSomething() {
         var records = service.getAllRecords();
-//        var newRecord = service.addRecord("pl_goldrush");
         System.out.println("Total records: " + records.size());
     }
 
