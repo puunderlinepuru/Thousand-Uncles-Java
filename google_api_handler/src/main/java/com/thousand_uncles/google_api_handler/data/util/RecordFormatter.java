@@ -1,4 +1,4 @@
-package com.thousand_uncles.google_api_handler.app.Utility;
+package com.thousand_uncles.google_api_handler.data.util;
 
 public class RecordFormatter {
     public static Short StringToNumber (String timeString){

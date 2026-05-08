@@ -5,7 +5,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.thousand_uncles.google_api_handler.app.Utility.JSONHandler;
-import com.thousand_uncles.google_api_handler.app.Utility.RecordFormatter;
+import com.thousand_uncles.google_api_handler.data.util.RecordFormatter;
 import com.thousand_uncles.google_api_handler.data.models.MapRecord;
 import com.thousand_uncles.google_api_handler.data.service.MapRecordService;
 import org.springframework.context.ApplicationContext;
