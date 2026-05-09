@@ -14,7 +14,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import reactor.util.Logger;
 import reactor.util.Loggers;
-
 import java.util.Map;
 
 @SpringBootApplication
@@ -39,6 +38,7 @@ public class DiscordBotApplication {
         System.out.println("Set up.");
 	}
 
+    @SuppressWarnings("unused")
     @Bean
     public GatewayDiscordClient gatewayDiscordClient() {
         System.out.println("got to gatewaydiscordClient");
@@ -75,6 +75,7 @@ public class DiscordBotApplication {
         return client;
     }
 
+    @SuppressWarnings("unused")
     @Bean
     public RestClient discordRestClient(GatewayDiscordClient client) {
         return client.getRestClient();
