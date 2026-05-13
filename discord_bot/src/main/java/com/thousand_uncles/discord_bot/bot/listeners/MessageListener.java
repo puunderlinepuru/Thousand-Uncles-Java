@@ -3,9 +3,11 @@ package com.thousand_uncles.discord_bot.bot.listeners;
 import com.thousand_uncles.discord_bot.bot.YamlReader;
 import com.thousand_uncles.discord_bot.bot.fun_stuff.Magic_8_ball;
 import com.thousand_uncles.discord_bot.bot.fun_stuff.RandomDictionary;
+import com.thousand_uncles.discord_bot.bot.fun_stuff.RandomNumberInRange;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.emoji.Emoji;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
@@ -18,6 +20,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Component
@@ -103,25 +107,40 @@ public class MessageListener {
             }
         }
 
+//        Downvote
+        if (message.getAuthor().get().getId().equals(Snowflake.of("229734102071246850"))){
+            message.addReaction(Emoji.of(Long.parseLong("1393275379623399465"),"thumbsdown", false)).block();
+            System.out.println("matched");
+        }
+
 //        Bot Check
         if ( message.getChannelId().equals(Snowflake.of(MEME_CHANNEL_ID)) ) {
             System.out.println("[ MESSAGE ] at meme-channel");
             System.out.println("mentions: \n" +message.getUserMentionIds().contains(client.getSelfId()));
             if (!message.getUserMentionIds().contains(client.getSelfId())) {return Mono.empty();}
             String response;
-            if (message.getContent().contains("?")
-                    || message.getContent().contains("is it")
-                    || message.getContent().contains("is this")
-                    || message.getContent().contains("is that"))
+            String messageContent = message.getContent();
+
+            Pattern rangePattern = Pattern.compile("number between\\s+(\\d+)\\s+and\\s+(\\d+)");
+            Matcher rangeMatcher = rangePattern.matcher(messageContent);
+
+            if (messageContent.contains("?"))
             {
                 response = Magic_8_ball.getAnswers();
-            }
-
-            else {
+            } else if (rangeMatcher.find()) {
+                int min = Integer.parseInt(rangeMatcher.group(1));
+                int max = Integer.parseInt(rangeMatcher.group(2));
+                if (min >= max) {
+                    response = "Invalid range";
+                } else {
+                    response = String.valueOf(RandomNumberInRange.getNumber(min, max));
+                }
+            } else {
                 response = RandomDictionary.getWisdom();
             }
+            String finalResponse = response;
             return message.getChannel()
-                    .flatMap(channel -> channel.createMessage(response))
+                    .flatMap(channel -> channel.createMessage(finalResponse))
                     .then();
         }
         return Mono.empty();
