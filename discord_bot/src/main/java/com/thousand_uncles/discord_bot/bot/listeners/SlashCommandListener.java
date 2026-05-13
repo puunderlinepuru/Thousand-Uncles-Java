@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collection;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Component
 public class SlashCommandListener {
 
@@ -17,7 +18,6 @@ public class SlashCommandListener {
 
     public SlashCommandListener(List<SlashCommand> slashCommands, GatewayDiscordClient client) {
         commands = slashCommands;
-
         client.on(ChatInputInteractionEvent.class, this::handle).subscribe();
     }
 
