@@ -20,7 +20,6 @@ class UpdateTask extends TimerTask {
     String spreadsheetId;
     List<List<Object>> valuesToPost;
 
-
     ApplicationContext applicationContext;
 
     UpdateTask(String spreadSheetId, UpdateValuesResponse result, String valueInputOption, List<List<Object>> valuesToPost, Sheets service, ApplicationContext applicationContext){

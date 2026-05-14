@@ -15,10 +15,18 @@ public class BotResponseFormatter {
             response += "Proof picture 1: " + requestedMap.getProof_img_1_link() + "\n";
             response += "Proof picture 2: " + requestedMap.getProof_img_2_link() + "\n";
             response += "Proof picture 3: " + requestedMap.getProof_img_3_link() + "\n";
+
+            try {
+                response += "Stage 1 time: " + RecordFormatter.NumberToString(requestedMap.getStage_1_time_seconds()) + "\n";
+                response += "Stage 2 time: " + RecordFormatter.NumberToString(requestedMap.getStage_2_time_seconds()) + "\n";
+                response += "Stage 3 time: " + RecordFormatter.NumberToString(requestedMap.getStage_3_time_seconds()) + "\n";
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 
         if (requestedMap.getProof_vid_link() != null) {
-            response+= "Video picture: " + requestedMap.getProof_vid_link();
+            response+= "Video: " + requestedMap.getProof_vid_link();
         }
 
         return response;

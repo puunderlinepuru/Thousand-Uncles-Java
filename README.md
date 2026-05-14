@@ -15,45 +15,10 @@ Originally started as a simple "read JSON" bot but has been growing into so much
  - Java 21
 
 ## Guide
-*I hope I remember the commands right*
 
-(Some features are hardcoded so can set up incorrectly 
-(like hardcoded meme-channel_id which I should change in the future 
-but for now the bot will ignore your messages and only respond to commands))
+*Work In Progress*
 
-### Cloning
-
-1) Clone and move into this GitHub Repository:
-
-`git clone https://github.com/puunderlinepuru/Thousand-Uncles-Java.git && cd "Thousand-Uncles-Java"`
-
-2) Create environment file `token.env` with your discord bot token
-
-`echo "ENV=*Your bot token*" > token.env`
-
-### Setting Google API
-
-3) Launch Google API to get OAuth link
-
-`java -jar ./google_api_handler/target/google_api_handler-0.0.1-SNAPSHOT.jar`
-
-^ This will output a link for Google authentication
-
-4) Authorize in Google via link
-
-After this it should generate google_api_handler/token folder
-
-### Building and launching containers
-
-5) Build Docker containers
-
-`docker compose build`
-
-6) Run the containers
-
-`docker compose up`
-
-That's it, your bot should now be up
+Things change rapidly, ill update README at some point
 
 # Structure
 
@@ -68,18 +33,13 @@ The bot itself. Does bot things
   - Adds a phrase to Dictionary at`/discord_bot/resources/dictionary.yml`
 ### Other features
 - upon being @'d in dedicated **meme channel** pulls a random phrase out of the ^Dictionary
-  - if the message with @ contains one of the following:
-    - "?"
-    - "is it"
-    - "is this"
-  
-  returns random Magic 8-Ball answer
+  - if the message with @ contains "?" returns random Magic 8-Ball answer
 
 ## google_api_handler
-Updates `/shared_resources_space/records.yml` with data from **Google Sheets** once every hour
+Updates `/shared_resources_space/records.yml` and PSQL Database with data from **Google Sheets** once every hour
 
 ## website
 Placeholder - there will be website to monitor and edit things
 
 ## PostgreSQL
-Should have records saved but is currently also a placeholder
+Primary source for records data

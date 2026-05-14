@@ -16,7 +16,11 @@ public class RecordFormatter {
         String timeString;
         int minutes = timeNumber / 60;
         int seconds = timeNumber % 60;
-        timeString = minutes + ":" + seconds;
+        if (seconds < 10){
+            timeString = minutes + ":0" + seconds;
+        } else {
+            timeString = minutes + ":" + seconds;
+        }
         return timeString;
     }
 }

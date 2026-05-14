@@ -9,14 +9,16 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
+@SuppressWarnings("unused")
 @Component
 public class JoinListener {
     static YamlReader configReader = new YamlReader("resources/config.yml");
-    static Map config = configReader.yamlRead();
+    static Map<String, Object> config = configReader.yamlRead();
     private static final String ROLE_ON_JOIN_ID = (String) config.get("role_on_join_id");
 
     GatewayDiscordClient client;
 
+    @SuppressWarnings("unused")
     public JoinListener(GatewayDiscordClient client) {
 
         client.on(MemberJoinEvent.class, this::onJoin).subscribe();
@@ -25,7 +27,7 @@ public class JoinListener {
     public Mono<Void> onJoin(MemberJoinEvent event) {
 
         System.out.println("Somebody joined! Assigning a role..");
-        event.getMember().addRole(Snowflake.of(ROLE_ON_JOIN_ID));
+        event.getMember().addRole(Snowflake.of(ROLE_ON_JOIN_ID)).block();
         return Mono.empty();
     }
 }

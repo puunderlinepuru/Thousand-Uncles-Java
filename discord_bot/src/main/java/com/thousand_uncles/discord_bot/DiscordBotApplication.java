@@ -22,7 +22,7 @@ public class DiscordBotApplication {
     private static final String token = System.getProperty("BOT_TOKEN");
 
     static YamlReader configReader = new YamlReader("resources/config.yml");
-    static Map config = configReader.yamlRead();
+    static Map<String, Object> config = configReader.yamlRead();
     private static final String SERVER_ID = (String) config.get("server_id");
     private static final String MEME_CHANNEL_ID = (String) config.get("meme_channel_id");
     private static final String READY_MESSAGE = (String) config.get("ready_message");
@@ -56,13 +56,12 @@ public class DiscordBotApplication {
                 .login()
                 .block();
 
+        assert client != null;
         if (READY_MESSAGE.isEmpty()){
-            assert client != null;
             client.on(ReadyEvent.class)
                     .doOnNext(ready -> log.info("Logged in as {}", ready.getSelf().getUsername()))
                     .then();
         } else {
-            assert client != null;
             client.on(ReadyEvent.class)
                     .flatMap(e -> e.getClient().getGuildById(Snowflake.of(SERVER_ID)))
                     .next()

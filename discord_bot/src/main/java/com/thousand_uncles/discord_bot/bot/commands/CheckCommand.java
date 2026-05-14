@@ -75,7 +75,7 @@ public class CheckCommand implements SlashCommand {
 
             InteractionApplicationCommandCallbackReplyMono sendMessage = event
                     .reply()
-                    .withContent("a")
+                    .withContent("Found candidates for " + map + ":")
                     .withEphemeral(true)
                     .withComponents(ActionRow.of(
                                     SelectMenu.of("mySelectMenu1", foundMapOptions)
