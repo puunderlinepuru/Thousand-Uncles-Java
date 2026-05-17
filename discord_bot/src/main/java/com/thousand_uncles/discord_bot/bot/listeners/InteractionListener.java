@@ -1,7 +1,7 @@
 package com.thousand_uncles.discord_bot.bot.listeners;
 
-import com.thousand_uncles.discord_bot.bot.YamlReader;
 import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
+import com.thousand_uncles.discord_bot.bot.util.Config;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordService;
 import discord4j.common.util.Snowflake;
@@ -18,29 +18,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
 import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings("unused")
 @Component
 public class InteractionListener {
-    static YamlReader configReader = new YamlReader("resources/config.yml");
-    static Map<String, Object> config = configReader.yamlRead();
-    static String REGION_ROLE_MESSAGE_ID = (String) config.get("region_role_message_id");
-    static String SERVER_ID = (String) config.get("server_id");
-    static String NA_ROLE_ID = (String) config.get("na_role_id");
-    static String EU_ROLE_ID = (String) config.get("eu_role_id");
-    static String AU_ROLE_ID = (String) config.get("au_role_id");
-    static String ASIA_ROLE_ID = (String) config.get("asia_role_id");
 
     @Autowired
     ApplicationContext applicationContext;
 
     GatewayDiscordClient client;
 
-    public InteractionListener(GatewayDiscordClient client) {
+    String REGION_ROLE_MESSAGE_ID;
+    String SERVER_ID;
+    String NA_ROLE_ID;
+    String EU_ROLE_ID;
+    String AU_ROLE_ID;
+    String ASIA_ROLE_ID;
+
+    public InteractionListener(GatewayDiscordClient client, Config config) {
         this.client = client;
+        System.out.println("InteractionListener initialized");
+        REGION_ROLE_MESSAGE_ID = config.getRegion_role_message_id();
+        SERVER_ID = config.getServer_id();
+        NA_ROLE_ID = config.getNa_role_id();
+        EU_ROLE_ID = config.getEu_role_id();
+        AU_ROLE_ID = config.getAu_role_id();
+        ASIA_ROLE_ID = config.getAsia_role_id();
 
         client.on(ButtonInteractionEvent.class, this::onButton).subscribe();
 
@@ -129,6 +133,9 @@ public class InteractionListener {
         for (Reaction reaction : message.getReactions()) {
             if (reaction.getCount() >= 5) {
                 System.out.println("funny");
+//                Laugh
+//                message.addReaction(Emoji.of(Long.valueOf("1312119388576419901"), "name", false));
+                message.addReaction(reaction.getEmoji());
             }
         }
 

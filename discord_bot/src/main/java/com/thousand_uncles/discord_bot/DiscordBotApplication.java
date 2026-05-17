@@ -1,32 +1,22 @@
 package com.thousand_uncles.discord_bot;
 
-import com.thousand_uncles.discord_bot.bot.YamlReader;
-import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
-import discord4j.core.object.entity.channel.TextChannel;
 import discord4j.gateway.intent.Intent;
 import discord4j.gateway.intent.IntentSet;
 import discord4j.rest.RestClient;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import reactor.util.Logger;
 import reactor.util.Loggers;
-import java.util.Map;
 
 @SpringBootApplication
 public class DiscordBotApplication {
 
     private static final String token = System.getProperty("BOT_TOKEN");
-
-    static YamlReader configReader = new YamlReader("resources/config.yml");
-    static Map<String, Object> config = configReader.yamlRead();
-    private static final String SERVER_ID = (String) config.get("server_id");
-    private static final String MEME_CHANNEL_ID = (String) config.get("meme_channel_id");
-    private static final String READY_MESSAGE = (String) config.get("ready_message");
-
     private static final Logger log = Loggers.getLogger(DiscordBotApplication.class);
 
 	public static void main(String[] args) {
@@ -36,6 +26,7 @@ public class DiscordBotApplication {
 				.build()
 				.run(args);
         System.out.println("Set up.");
+
 	}
 
     @SuppressWarnings("unused")
@@ -44,7 +35,7 @@ public class DiscordBotApplication {
         System.out.println("got to gatewaydiscordClient");
         System.out.println("token: " + token);
 
-        GatewayDiscordClient client = DiscordClientBuilder.create(token).build()
+         GatewayDiscordClient client = DiscordClientBuilder.create(token).build()
                 .gateway()
                 .setEnabledIntents(IntentSet.of(
                         Intent.GUILDS,
@@ -57,20 +48,10 @@ public class DiscordBotApplication {
                 .block();
 
         assert client != null;
-        if (READY_MESSAGE.isEmpty()){
-            client.on(ReadyEvent.class)
-                    .doOnNext(ready -> log.info("Logged in as {}", ready.getSelf().getUsername()))
-                    .then();
-        } else {
-            client.on(ReadyEvent.class)
-                    .flatMap(e -> e.getClient().getGuildById(Snowflake.of(SERVER_ID)))
-                    .next()
-                    .flatMap(e -> e.getChannelById(Snowflake.of(MEME_CHANNEL_ID)))
-                    .ofType(TextChannel.class)
-                    .flatMap(channel -> channel.createMessage(READY_MESSAGE))
-                    .then()
-                    .block();
-        }
+        client.on(ReadyEvent.class)
+                .doOnNext(ready -> log.info("Logged in as {}", ready.getSelf().getUsername()))
+                .then();
+
         return client;
     }
 

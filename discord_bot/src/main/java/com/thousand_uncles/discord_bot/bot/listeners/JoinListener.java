@@ -1,25 +1,22 @@
 package com.thousand_uncles.discord_bot.bot.listeners;
 
-import com.thousand_uncles.discord_bot.bot.YamlReader;
+import com.thousand_uncles.discord_bot.bot.util.Config;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.guild.MemberJoinEvent;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
-
 @SuppressWarnings("unused")
 @Component
 public class JoinListener {
-    static YamlReader configReader = new YamlReader("resources/config.yml");
-    static Map<String, Object> config = configReader.yamlRead();
-    private static final String ROLE_ON_JOIN_ID = (String) config.get("role_on_join_id");
+    private final String ROLE_ON_JOIN_ID;
 
     GatewayDiscordClient client;
 
     @SuppressWarnings("unused")
-    public JoinListener(GatewayDiscordClient client) {
+    public JoinListener(GatewayDiscordClient client, Config config) {
+        ROLE_ON_JOIN_ID = config.getRole_on_join_id();
 
         client.on(MemberJoinEvent.class, this::onJoin).subscribe();
     }
