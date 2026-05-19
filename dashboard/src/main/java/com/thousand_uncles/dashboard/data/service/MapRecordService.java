@@ -3,6 +3,8 @@ package com.thousand_uncles.dashboard.data.service;
 import com.thousand_uncles.dashboard.data.models.MapRecord;
 import com.thousand_uncles.dashboard.data.repository.MapRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +14,16 @@ import java.util.List;
 @Transactional
 public class MapRecordService {
 
-    @Autowired
+    @Autowired(required = false)
     @SuppressWarnings("unused")
     private MapRecordRepository repository;
+
+    @Value("${app.data}")
+    private static String thing;
+
+    protected MapRecordService(){
+        System.out.println(thing);
+    }
 
     // Add new record
     public MapRecord addRecord(String mapName) {
