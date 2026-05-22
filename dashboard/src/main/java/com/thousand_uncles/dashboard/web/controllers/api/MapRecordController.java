@@ -19,7 +19,7 @@ public class MapRecordController {
     // Add new record
     @PostMapping
     public ResponseEntity<MapRecord> addRecord(@RequestBody MapRecord record) {
-        MapRecord saved = service.addRecord(record.getMapName());
+        MapRecord saved = service.addRecord(record.getId(), record.getMapName());
         return ResponseEntity.ok(saved);
     }
 

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro-Futuristic Monitoring</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SYSTEM MONITOR</h1>
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-indicator"></div>
+                    <span>SERVER STATUS: ONLINE</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-indicator"></div>
+                    <span>NETWORK: STABLE</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-indicator offline"></div>
+                    <span>BACKUP: OFFLINE</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <div class="panel">
+                <h2 class="panel-title">SYSTEM RESOURCES</h2>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-label">CPU USAGE</div>
+                        <div class="metric-value">42%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">MEMORY</div>
+                        <div class="metric-value">68%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">DISK</div>
+                        <div class="metric-value">34%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">TEMP</div>
+                        <div class="metric-value">42°C</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <svg class="chart-line" viewBox="0 0 100 100">
+                        <path d="M0,80 Q20,60 40,70 T80,30 T100,40" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2 class="panel-title">NETWORK TRAFFIC</h2>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-label">UPLOAD</div>
+                        <div class="metric-value">2.4 MB/s</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">DOWNLOAD</div>
+                        <div class="metric-value">15.7 MB/s</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">PACKETS</div>
+                        <div class="metric-value">1.2K/s</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">LATENCY</div>
+                        <div class="metric-value">42ms</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <svg class="chart-line" viewBox="0 0 100 100">
+                        <path d="M0,60 Q20,50 40,60 T80,40 T100,50" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2 class="panel-title">APPLICATIONS</h2>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-label">ACTIVE</div>
+                        <div class="metric-value">12</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">FAILED</div>
+                        <div class="metric-value">0</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">RESTARTS</div>
+                        <div class="metric-value">3</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">UPTIME</div>
+                        <div class="metric-value">12d 4h</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <svg class="chart-line" viewBox="0 0 100 100">
+                        <path d="M0,70 Q20,60 40,70 T80,50 T100,60" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>RETRO-FUTURISTIC MONITORING SYSTEM • LAST UPDATE: 2023-07-15 14:30:45</p>
+        </div>
+    </div>
+</body>
+</html>

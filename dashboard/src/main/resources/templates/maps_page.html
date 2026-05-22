@@ -1,4 +1,6 @@
-<div th:switch="${maps}">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:switch="${maps}" xmlns:th="http://www.w3.org/1999/xhtml">
     <h2 th:case="null">No users yet!</h2>
     <div th:case="*">
         <h2>Users</h2>
@@ -13,9 +15,9 @@
             </thead>
             <tbody>
             <tr th:each="map : ${maps}">
-                <td th:text="${map.mapname}"></td>
-                <td><a th:href="@{/edit/{id}(id=${map.id})}">Edit</a></td>
-                <td><a th:href="@{/delete/{id}(id=${map.id})}">Delete</a></td>
+                <td th:text="${map.getMapName}"></td>
+                <td><a th:href="@{/edit/{id}(id=${map.getId})}">Edit</a></td>
+                <td><a th:href="@{/delete/{id}(id=${map.getId})}">Delete</a></td>
             </tr>
             </tbody>
         </table>

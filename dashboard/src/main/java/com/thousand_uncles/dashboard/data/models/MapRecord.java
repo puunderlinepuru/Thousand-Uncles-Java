@@ -17,7 +17,8 @@ public class MapRecord {
     public MapRecord() {}
 
     @SuppressWarnings("unused")
-    public MapRecord(String mapName) {
+    public MapRecord(Integer id, String mapName) {
+        this.id = id;
         this.mapName = mapName;
     }
 

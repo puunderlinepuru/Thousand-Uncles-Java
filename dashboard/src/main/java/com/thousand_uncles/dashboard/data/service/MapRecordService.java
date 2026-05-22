@@ -4,7 +4,6 @@ import com.thousand_uncles.dashboard.data.models.MapRecord;
 import com.thousand_uncles.dashboard.data.repository.MapRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +25,8 @@ public class MapRecordService {
     }
 
     // Add new record
-    public MapRecord addRecord(String mapName) {
-        MapRecord record = new MapRecord(mapName);
+    public MapRecord addRecord(Integer id, String mapName) {
+        MapRecord record = new MapRecord(id, mapName);
         return repository.save(record);
     }
 

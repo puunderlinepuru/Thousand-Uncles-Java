@@ -8,11 +8,6 @@ import java.util.List;
 @Service
 public class FallbackMapRecordService {
 
-    // Add new record
-    public MapRecord addRecord(String mapName) {
-        MapRecord record = new MapRecord(mapName);
-        return null;
-    }
 
     // Read record by name
     public MapRecord getRecordByName(String mapName) {

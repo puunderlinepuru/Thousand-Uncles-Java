@@ -1,23 +1,38 @@
 package com.thousand_uncles.dashboard.web.controllers.web;
 
-import com.thousand_uncles.dashboard.data.service.MapRecordService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.thousand_uncles.dashboard.data.models.MapRecord;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/")
-@SuppressWarnings("unused")
+import java.util.ArrayList;
+
+@Controller
 public class DashboardController {
 
-    @Autowired
-    private MapRecordService mapRecordService;
+    private ArrayList<MapRecord> mapRecordArrayList = new ArrayList<>();
+
+    public DashboardController(){
+        mapRecordArrayList.add(new MapRecord(1, "a"));
+        mapRecordArrayList.add(new MapRecord(2, "b"));
+        mapRecordArrayList.add(new MapRecord(3, "c"));
+    }
+
+    @GetMapping("/hello")
+    public String hello(Model model) {
+        model.addAttribute("message", "Hello World from Thymeleaf!");
+        return "hello";
+    }
 
     @GetMapping("/maps")
-    public String showUserList(Model model) {
-        model.addAttribute("maps", mapRecordService.getAllRecords());
+    public String maps(Model model) {
+        model.addAttribute("maps", mapRecordArrayList);
         return "maps_page";
     }
+
+    @GetMapping("/hud")
+    public String hud(Model model) {
+        return "hud";
+    }
 }
+

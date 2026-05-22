@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World</title>
+    <link th:href="styles.css" rel="stylesheet" >
+</head>
+<body>
+    <h1 th:text="${message}">Default Message</h1>
+    <p>Thymeleaf is working!</p>
+
+    <label for="name">Name (4 to 8 characters):</label>
+
+    <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            minlength="4"
+            maxlength="8"
+            size="10" />
+</body>
+</html>

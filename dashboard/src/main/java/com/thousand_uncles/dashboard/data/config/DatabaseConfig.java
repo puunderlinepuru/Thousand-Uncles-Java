@@ -17,12 +17,6 @@ public class DatabaseConfig {
     public MapRecordService mapRecordService(FallbackMapRecordService fallbackService) {
         return new MapRecordService() {
             // Add new record
-            @Override
-            public MapRecord addRecord(String mapName) {
-                MapRecord record = new MapRecord(mapName);
-                System.out.println("Using fallback");
-                return fallbackService.addRecord(mapName);
-            }
 
             // Read record by name
             @Override
@@ -36,13 +30,6 @@ public class DatabaseConfig {
             public List<MapRecord> getAllRecords() {
                 System.out.println("Using fallback");
                 return fallbackService.getAllRecords();
-            }
-
-            // Update record by name
-            @Override
-            public boolean updateRecord(String oldName, String newName) {
-                System.out.println("Using fallback");
-                return fallbackService.updateRecord(oldName, newName);
             }
 
             // Delete record by name
