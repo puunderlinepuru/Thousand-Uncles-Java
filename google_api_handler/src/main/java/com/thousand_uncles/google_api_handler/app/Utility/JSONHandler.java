@@ -5,31 +5,39 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Set;
 
 public class JSONHandler {
-    static final Set<String> gamemodes = Set.of("capture point", "territory control", "capture the flag", "koth", "payload");
+//    static final Set<String> gamemodes = Set.of("capture point", "territory control", "capture the flag", "koth", "payload");
 
     public static JsonNode readRecordsJSON (String fileName) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(new File("shared/" + fileName));
-        return jsonNode;
+        return objectMapper.readTree(new File("shared/" + fileName));
     }
 
     public static void writeRecordsJSON(String fileName, List<List<String>> records) {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode jsonNode = objectMapper.createObjectNode();
-        for (int i = 0; i < records.size(); i++) {
-            jsonNode.set((String) records.get(i).get(0), formatNode(records.get(i)));
+        for (List<String> record : records) {
+            jsonNode.set(record.getFirst(), formatNode(record));
         }
         try {
+            Path path = Paths.get("shared");
+            Files.createDirectories(path);
             objectMapper
                     .writerWithDefaultPrettyPrinter()
                     .writeValue(new File("shared/" + fileName), jsonNode);
             System.out.println("Records JSON updated");
-        } catch (IOException e) {
+        } catch (FileNotFoundException notFoundException){
+            System.out.println("No records.json file. \nCreating...");
+
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -39,7 +47,7 @@ public class JSONHandler {
         ObjectNode beatenRecords = objectMapper.createObjectNode();
 
         for (List<String> newMapRecord : newRecordsTable) {
-            String mapName = (String) newMapRecord.getFirst();
+            String mapName = newMapRecord.getFirst();
             System.out.println("map: " + mapName);
 
             System.out.println("getting time for " + mapName);
