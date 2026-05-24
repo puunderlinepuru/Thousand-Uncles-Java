@@ -77,12 +77,9 @@ public class GoogleAPI_Handler {
 //        https://docs.google.com/spreadsheets/d/1cxxyzz0SDWCj8wI6QwN66SOtbpedrf2DWXrH6io2ZNk/edit?gid=0#gid=0
         final String uncletopiaSpreadsheetID = "1cxxyzz0SDWCj8wI6QwN66SOtbpedrf2DWXrH6io2ZNk"; // Actual
 
-//        https://docs.google.com/spreadsheets/d/11IRxK5JLbdaUgrMtSZrFQl_EjvdoKTuq4xWV_qPau7s
-//        final String uncletopiaSpreadsheetID = "11IRxK5JLbdaUgrMtSZrFQl_EjvdoKTuq4xWV_qPau7s"; // Backup copy from Nov 17
-
-        List<List<Object>> valuesToPost = new ArrayList<>();
+        List<List<Object>> valuesToUpdateOnSpreadsheet = new ArrayList<>();
         String[] inletValues = {"Another update"};
-        valuesToPost.add(List.of(inletValues));
+        valuesToUpdateOnSpreadsheet.add(List.of(inletValues));
 
         Sheets service =
                 new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
@@ -92,8 +89,15 @@ public class GoogleAPI_Handler {
         UpdateValuesResponse result = null;
         String valueInputOption = "RAW";
 
+        System.out.println("[ STATUS UPDATE ] Initializing Google API Connection..");
+        System.out.println("[ INFO ] \n SpreadsheetID: " + uncletopiaSpreadsheetID + "\n" +
+                "Tried updating values on spreadsheets to: " + valuesToUpdateOnSpreadsheet + "\n" +
+                "Got response requesting update: " + result + "\n" +
+                "InputOption used for updates: " + valueInputOption + "\n");
+
+        System.out.println("[ STATUS UPDATE ] Starting Update Task..");
         Timer timer = new Timer();
-        TimerTask timerTask = new UpdateTask(uncletopiaSpreadsheetID, result, valueInputOption, valuesToPost, service, applicationContext);
+        TimerTask timerTask = new UpdateTask(uncletopiaSpreadsheetID, valueInputOption, service, applicationContext);
         timer.schedule(timerTask, 200, 1800000);
     }
 }

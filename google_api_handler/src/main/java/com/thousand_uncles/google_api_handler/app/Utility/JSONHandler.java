@@ -48,9 +48,6 @@ public class JSONHandler {
 
         for (List<String> newMapRecord : newRecordsTable) {
             String mapName = newMapRecord.getFirst();
-            System.out.println("map: " + mapName);
-
-            System.out.println("getting time for " + mapName);
             String[] timeStringParts;
             int minutes;
             int seconds;
@@ -68,15 +65,15 @@ public class JSONHandler {
                 seconds = Integer.parseInt(timeStringParts[1]);
                 newTime = seconds + minutes*60;
 
-                System.out.println(oldTime + " <-> " + newTime);
-
                 if (oldTime > newTime) {
-                    System.out.println("[ UPGRADE ]" + mapName + " has better time");
+                    System.out.println("[ JSON UPGRADE ]" + mapName + " has better time");
                     beatenRecords.set(mapName, formatNode(newMapRecord));
                 }
             } catch (NullPointerException nullPointerException) {
-                System.out.println("[ NEW MAP ]" + mapName);
+                System.out.println("[ JSON NEW MAP ]" + mapName);
                 beatenRecords.set(mapName, formatNode(newMapRecord));
+            } catch (Exception e) {
+                System.out.println("[ JSON RECORD ERROR ] Error for map " + mapName + ". Skipping.. \n" + e);
             }
         }
         return beatenRecords;
@@ -95,7 +92,6 @@ public class JSONHandler {
             mapNode.put("image_proof3_link", mapRecord.get(5));
         }
         if (mapRecord.toArray().length == 7) {
-            System.out.println(mapRecord);
             mapNode.put("video_proof_link", mapRecord.get(6));
         }
 
