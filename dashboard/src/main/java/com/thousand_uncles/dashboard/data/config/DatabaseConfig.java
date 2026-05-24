@@ -5,15 +5,16 @@ import com.thousand_uncles.dashboard.data.service.FallbackMapRecordService;
 import com.thousand_uncles.dashboard.data.service.MapRecordService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-
+import org.springframework.context.annotation.Profile;
 import java.util.List;
 
 @Configuration
+@SuppressWarnings("unused")
 public class DatabaseConfig {
 
     @Bean
-    @Primary
+    @SuppressWarnings("unused")
+    @Profile("dev")
     public MapRecordService mapRecordService(FallbackMapRecordService fallbackService) {
         return new MapRecordService() {
             // Add new record
@@ -48,3 +49,4 @@ public class DatabaseConfig {
         };
     }
 }
+
