@@ -1,25 +1,14 @@
 package com.thousand_uncles.discord_bot.data.service;
 
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
-import com.thousand_uncles.discord_bot.data.repository.MapRecordRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional
-@Profile("prod")
-public class MapRecordService {
-
-    @SuppressWarnings("unused")
-    @Autowired(required = false)
-    private MapRecordRepository repository;
-
-    // Add new record
-    @SuppressWarnings("unused")
+@Profile("dev")
+public class FallbackMapRecordService {
     public MapRecord addRecord(
             String map_name,
             Short curr_wr_seconds,
@@ -45,36 +34,36 @@ public class MapRecordService {
                 stage_time_3
         );
 
-        return repository.save(record);
+        return null;
     }
 
     // Read record by name
     @SuppressWarnings("unused")
     public MapRecord getRecordByName(String mapName) {
-        return repository.findByMap_name(mapName);
+        return null;
     }
 
     // Read all records
     @SuppressWarnings("unused")
     public List<MapRecord> getAllRecords() {
-        return repository.findAll();
+        return null;
     }
 
     // Update record by name
     @SuppressWarnings("unused")
     public boolean updateMapName(String oldName, String newName) {
-        int updated = repository.updateMap_name(oldName, newName);
-        return updated > 0;
+//        int updated = repository.updateMap_name(oldName, newName);
+        return false;
     }
 
     // Delete record by name
     @SuppressWarnings("unused")
     public boolean deleteRecord(String mapName) {
-        int deleted = repository.deleteByMap_name(mapName);
-        return deleted > 0;
+//        int deleted = repository.deleteByMap_name(mapName);
+        return false;
     }
 
-//    Modify existing WR
+    //    Modify existing WR
     @SuppressWarnings("unused")
     public boolean updateWR(
             String map_name,
@@ -87,7 +76,7 @@ public class MapRecordService {
             Short stage_time_2,
             Short stage_time_3
     ){
-        int updated = repository.updateRecord(
+        /*int updated = repository.updateRecord(
                 map_name,
                 curr_wr_seconds,
                 proof_pic_1_link,
@@ -97,13 +86,13 @@ public class MapRecordService {
                 stage_time_1,
                 stage_time_2,
                 stage_time_3
-        );
-        return updated > 0;
+        );*/
+        return false;
     }
 
     // Search records by partial name
     @SuppressWarnings("unused")
     public List<MapRecord> searchRecords(String partialName) {
-        return repository.findByMap_nameContaining(partialName);
+        return null;
     }
 }

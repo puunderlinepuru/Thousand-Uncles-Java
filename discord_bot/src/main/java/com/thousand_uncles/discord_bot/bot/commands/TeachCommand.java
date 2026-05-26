@@ -20,19 +20,18 @@ public class TeachCommand implements SlashCommand{
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
-        YamlReader yamlReader = new YamlReader("resources/dictionary.yml");
         String phrase = event.getOption("phrase")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString).flatMap(String::describeConstable).orElseThrow();
 
 
-        Map<String, ArrayList<String>> dictionary = yamlReader.yamlDictionaryRead();
+        Map<String, ArrayList<String>> dictionary = YamlReader.yamlDictionaryRead("resources/dictionary.yml");
         ArrayList <String> words = dictionary.get("words");
         int wordCount = words.size();
         words.add(phrase);
         dictionary.put("words", words);
 
-        yamlReader.yamlDictionaryWrite(dictionary);
+        YamlReader.yamlDictionaryWrite("resources/dictionary.yml", dictionary);
         return event.reply()
                 .withEphemeral(false)
                 .withContent("Added  \"" + phrase + "\" to dictionary. Total: " + wordCount);

@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-@ConfigurationProperties(prefix = "things")
+@ConfigurationProperties(prefix = "app")
 public class Config {
 
     Config(){
-        System.out.println("Config initialized");
+
     }
 
     private String server_id;
@@ -26,6 +26,8 @@ public class Config {
 
     private String ready_message;
     private List<String> users_to_timeout;
+
+    private final Available_Categories available_categories = new Available_Categories();
 
     public String getServer_id() {
         return server_id;
@@ -102,5 +104,29 @@ public class Config {
     }
     public void setUsers_to_timeout(List<String> users_to_timeout) {
         this.users_to_timeout = users_to_timeout;
+    }
+
+    public static class Available_Categories{
+
+        private List<String> check;
+        private List<String> update;
+
+        public List<String> getCheck() {
+            return check;
+        }
+        public void setCheck(List<String> check) {
+            this.check = check;
+        }
+
+        public List<String> getUpdate() {
+            return update;
+        }
+        public void setUpdate(List<String> update) {
+            this.update = update;
+        }
+    }
+
+    public Available_Categories getAvailable_categories() {
+        return available_categories;
     }
 }

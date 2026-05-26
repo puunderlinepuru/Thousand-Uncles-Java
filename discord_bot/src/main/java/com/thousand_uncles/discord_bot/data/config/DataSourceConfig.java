@@ -1,4 +1,4 @@
-package com.thousand_uncles.dashboard.data.config;
+package com.thousand_uncles.discord_bot.data.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;

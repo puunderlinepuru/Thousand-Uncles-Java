@@ -1,7 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.listeners;
 
-import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
-import com.thousand_uncles.discord_bot.bot.util.Config;
+import com.thousand_uncles.discord_bot.bot.util.*;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordService;
 import discord4j.common.util.Snowflake;
@@ -61,6 +60,7 @@ public class InteractionListener {
 
         return Mono.empty();
     }
+
     public Mono<Void> onButton (ButtonInteractionEvent event){
         System.out.println("button");
 
@@ -114,15 +114,26 @@ public class InteractionListener {
 
     public Mono<Void> onSelectMenu (SelectMenuInteractionEvent event){
         System.out.println("select menu");
-        System.out.println(event.getValues().getFirst());
+        String selectedOption = event.getValues().getFirst();
+        String customID = event.getCustomId();
 
+        if (customID.startsWith("check") || customID.startsWith("update")){
+            String[] parts = customID.split("-");
+            String command = parts[0];
+            String mapName = parts[1];
+            int mapID = GlobalThings.getMapIDS().indexOf(mapName);
+
+            AppNotifications.DISCORD_INTERACTION_INFO(" looking for " + selectedOption + "% category for " + mapName);
+        }
+
+//        Looking for map time
         MapRecordService mapRecordService = applicationContext.getBean(MapRecordService.class);
         MapRecord gotMap = mapRecordService.getRecordByName(event.getValues().getFirst());
         System.out.println("found map " + gotMap.getMap_name());
 
         assert event.getMessage().isPresent();
         System.out.println(event.getMessage().get().getChannel().block());
-        event.edit().withContent(BotResponseFormatter.getResponse(gotMap)).withComponents().block();
+        event.edit().withContent(BotResponseFormatter.mapRecordToMessageContent(gotMap)).withComponents().block();
 
         return Mono.empty();
     }
@@ -135,7 +146,7 @@ public class InteractionListener {
                 System.out.println("funny");
 //                Laugh
 //                message.addReaction(Emoji.of(Long.valueOf("1312119388576419901"), "name", false));
-                message.addReaction(reaction.getEmoji());
+                message.addReaction(reaction.getEmoji()).block();
             }
         }
 

@@ -12,17 +12,9 @@ import java.util.Map;
 public class YamlReader {
     static File file;
 
-    public YamlReader(String fileName) {
-        try {
-            file = new File( fileName );
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     @SuppressWarnings("unused")
-    public Map<String, Object> yamlRead() {
+    public static Map<String, Object> yamlRead(String fileName) {
+        file = new File( fileName );
         Yaml yaml = new Yaml();
 
         try {
@@ -34,7 +26,8 @@ public class YamlReader {
     }
 
     @SuppressWarnings("unused")
-    public void yamlWrite(Map<String, Object> data) {
+    public static void yamlWrite(String fileName, Map<String, Object> data) {
+        file = new File( fileName );
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Yaml yaml = new Yaml(options);
@@ -48,7 +41,8 @@ public class YamlReader {
         }
     }
 
-    public Map<String, ArrayList<String>> yamlDictionaryRead() {
+    public static Map<String, ArrayList<String>> yamlDictionaryRead(String fileName) {
+        file = new File( fileName );
         Yaml yaml = new Yaml();
         try {
             FileInputStream fileInputStream = new FileInputStream( file );
@@ -58,7 +52,8 @@ public class YamlReader {
         }
     }
 
-    public void yamlDictionaryWrite(Map<String, ArrayList<String>> dictionary) {
+    public static void yamlDictionaryWrite(String fileName, Map<String, ArrayList<String>> dictionary) {
+        file = new File( fileName );
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Yaml yaml = new Yaml(options);

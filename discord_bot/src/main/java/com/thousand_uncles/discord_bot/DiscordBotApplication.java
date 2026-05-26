@@ -8,14 +8,14 @@ import discord4j.gateway.intent.IntentSet;
 import discord4j.rest.RestClient;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import reactor.util.Logger;
 import reactor.util.Loggers;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class DiscordBotApplication {
-
     private static final String token = System.getProperty("BOT_TOKEN");
     private static final Logger log = Loggers.getLogger(DiscordBotApplication.class);
 

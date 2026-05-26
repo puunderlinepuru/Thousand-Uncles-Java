@@ -5,7 +5,7 @@ import com.thousand_uncles.discord_bot.data.util.RecordFormatter;
 
 public class BotResponseFormatter {
 
-    public static String getResponse(MapRecord requestedMap) {
+    public static String mapRecordToMessageContent(MapRecord requestedMap) {
         String response = "";
         response += "Current WR: " + RecordFormatter.NumberToString(requestedMap.getCurr_wr_seconds()) + "\n";
         response += "Previous WR: " + RecordFormatter.NumberToString(requestedMap.getPrev_wr_seconds()) + "\n";

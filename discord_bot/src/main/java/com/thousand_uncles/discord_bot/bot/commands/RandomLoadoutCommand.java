@@ -1,6 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
-import com.thousand_uncles.discord_bot.bot.GlobalThings;
+import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;

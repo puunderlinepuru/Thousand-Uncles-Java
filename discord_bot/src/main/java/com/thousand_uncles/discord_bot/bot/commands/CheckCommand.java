@@ -1,6 +1,7 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
 import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
+import com.thousand_uncles.discord_bot.bot.util.Config;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordService;
 import discord4j.core.GatewayDiscordClient;
@@ -30,17 +31,18 @@ public class CheckCommand implements SlashCommand {
     @Autowired
     private GatewayDiscordClient client;
 
+    @Autowired
+    private Config config;
+
 
     @Override
     public String getName() {
         return "check";
     }
 
-
-//    TODO use subcommand groups for map types and subcommands for maps
-//    TODO find ANY info on how to do subcommands in Discord4J
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event){
+
 
 
         try {
@@ -50,7 +52,7 @@ public class CheckCommand implements SlashCommand {
 //            JsonNode jsonNode = objectMapper.readTree(new File("shared/records.json"));
 
             @SuppressWarnings("")
-            String map = event.getOption("map")
+            String partialMapName = event.getOption("map")
                     .flatMap(ApplicationCommandInteractionOption::getValue)
                     .map(ApplicationCommandInteractionOptionValue::asString)
                     .orElse(null);
@@ -58,46 +60,70 @@ public class CheckCommand implements SlashCommand {
 //            JsonNode mapNode = jsonNode.get(map);
 
 
-            List<MapRecord> searchedMaps = mapRecordService.searchRecords(map);
-            assert searchedMaps != null : "[ DATABASE ERROR ] Failed to fetch map";
+            List<MapRecord> searchedMaps = mapRecordService.searchRecords(partialMapName);
+            if (searchedMaps == null){
+                return mapNotFound(event);
+            }
 
             SelectMenu foundMapsMenu;
             List<SelectMenu.Option> foundMapOptions = new java.util.ArrayList<>(List.of());
             if (searchedMaps.size() == 1){
-                return event.reply()
-                        .withEphemeral(true)
-                        .withContent(BotResponseFormatter.getResponse(searchedMaps.getFirst()));
+                return singleMapFoundResponse(event, searchedMaps.getFirst(), "Any%");
             }
 
             for (int i = 0; i < searchedMaps.size(); i++) {
                 foundMapOptions.add(i, SelectMenu.Option.of(searchedMaps.get(i).getMap_name(),searchedMaps.get(i).getMap_name()));
             }
 
-            InteractionApplicationCommandCallbackReplyMono sendMessage = event
-                    .reply()
-                    .withContent("Found candidates for " + map + ":")
-                    .withEphemeral(true)
-                    .withComponents(ActionRow.of(
-                                    SelectMenu.of("mySelectMenu1", foundMapOptions)
-                                            .withMaxValues(1)));
-
-            return sendMessage
-                    .flatMapMany(selectMenuMessageId ->
-                            client.on(SelectMenuInteractionEvent.class, interactionEvent ->
-                                    Mono.justOrEmpty(interactionEvent.getInteraction().getMessage())
-                                            .map(Message::getId)
-                                            .filter(selectMenuMessageId::equals)
-                                            .then(interactionEvent.reply(interactionEvent.getValues().toString()))
-                            )
-                    )
-                    .then();
+            return multipleMapsFoundResponse(event, partialMapName, foundMapOptions);
 
 
         } catch (Exception e) {
             System.out.println("[ ERROR ] " + e);
-            return event.reply()
-                    .withEphemeral(true)
-                    .withContent("Beep Boop.. There was an error loading the map, sorry :c");
+            return mapNotFound(event);
         }
+    }
+
+    private Mono<Void> multipleMapsFoundResponse(ChatInputInteractionEvent event, String partialMapName, List<SelectMenu.Option> foundMapOptions){
+        InteractionApplicationCommandCallbackReplyMono sendMessage = event
+                .reply()
+                .withContent("Found candidates for " + partialMapName + ":")
+                .withEphemeral(true)
+                .withComponents(ActionRow.of(
+                        SelectMenu.of("foundMapSelectMenu", foundMapOptions)
+                                .withMaxValues(1)));
+
+        return sendMessage
+                .flatMapMany(selectMenuMessageId ->
+                        client.on(SelectMenuInteractionEvent.class, interactionEvent ->
+                                Mono.justOrEmpty(interactionEvent.getInteraction().getMessage())
+                                        .map(Message::getId)
+                                        .filter(selectMenuMessageId::equals)
+                                        .then(interactionEvent.reply(interactionEvent.getValues().toString()))
+                        )
+                )
+                .then();
+    }
+
+    private Mono<Void> singleMapFoundResponse(ChatInputInteractionEvent event, MapRecord foundMap, String recordCategory){
+        List<String> availableToCheckCategories = config.getAvailable_categories().getCheck();
+        List<SelectMenu.Option> availableCategoriesOptions = new java.util.ArrayList<>(List.of());
+        for (int i = 0; i < availableToCheckCategories.size(); i++) {
+            availableCategoriesOptions.add(i, SelectMenu.Option.of(availableToCheckCategories.get(i), availableToCheckCategories.get(i)));
+        }
+        return event.reply()
+                .withEphemeral(true)
+                .withContent("Record for " + foundMap + " - " + recordCategory + ":\n" +
+                        BotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
+                        "Other categories:")
+                .withComponents(ActionRow.of(
+                        SelectMenu.of("check-" + foundMap.getMap_name(), availableCategoriesOptions)
+                                .withMaxValues(1)));
+    }
+
+    private Mono<Void> mapNotFound(ChatInputInteractionEvent event){
+        return event.reply()
+                .withEphemeral(true)
+                .withContent("Beep Boop.. There was an error loading the map, sorry :c");
     }
 }

@@ -1,6 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.fun_stuff;
 
-import com.thousand_uncles.discord_bot.bot.GlobalThings;
+import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 
 public class RandomNumberInRange {
     public static Integer getNumber(int firstNumber, int secondNumber){
