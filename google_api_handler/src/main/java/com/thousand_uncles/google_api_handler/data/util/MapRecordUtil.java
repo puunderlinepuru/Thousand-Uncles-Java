@@ -10,14 +10,4 @@ public class MapRecordUtil {
 
     @Autowired
     private MapRecordService service;
-
-    public void doSomething() {
-        var records = service.getAllRecords();
-        System.out.println("Total records: " + records.size());
-    }
-
-    public String getMapData(String mapName){
-        var record = service.getRecordByName(mapName);
-        return "Database found record: " + record.toString();
-    }
 }
