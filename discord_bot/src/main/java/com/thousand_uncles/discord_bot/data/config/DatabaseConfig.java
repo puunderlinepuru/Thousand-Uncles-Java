@@ -20,28 +20,26 @@ public class DatabaseConfig {
             // Add new record
 
             // Read record by name
-            @Override
+            /*@Override
             public MapRecord getRecordByName(String mapName) {
                 System.out.println("Using fallback");
                 return fallbackService.getRecordByName(mapName);
-            }
+            }*/
 
             // Read all records
-            @Override
+            /*@Override
             public List<MapRecord> getAllRecords() {
                 System.out.println("Using fallback");
                 return fallbackService.getAllRecords();
-            }
+            }*/
 
             // Delete record by name
-            @Override
             public boolean deleteRecord(String mapName) {
                 System.out.println("Using fallback");
                 return fallbackService.deleteRecord(mapName);
             }
 
             // Search records by partial name
-            @Override
             public List<MapRecord> searchRecords(String partialName) {
                 System.out.println("Using fallback");
                 return fallbackService.searchRecords(partialName);

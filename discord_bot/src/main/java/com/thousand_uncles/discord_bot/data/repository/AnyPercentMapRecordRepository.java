@@ -1,5 +1,6 @@
 package com.thousand_uncles.discord_bot.data.repository;
 
+import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,24 +11,24 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MapRecordRepository extends JpaRepository<MapRecord, Integer> {
+public interface AnyPercentMapRecordRepository extends JpaRepository<AnyPercentMapRecord, Integer> {
 
-    @Query("SELECT m FROM MapRecord m WHERE m.map_name = :name")
+    @Query("SELECT m FROM AnyPercentMapRecord m WHERE m.map_name = :name")
     MapRecord findByMap_name(@Param("name") String name);
 
-    @Query("SELECT m FROM MapRecord m WHERE LOWER(m.map_name) LIKE LOWER(CONCAT('%', :name, '%'))")
+    @Query("SELECT m FROM AnyPercentMapRecord m WHERE LOWER(m.map_name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<MapRecord> findByMap_nameContaining(@Param("name") String name);
 
     @Modifying
-    @Query("UPDATE MapRecord m SET m.map_name = :newName WHERE m.map_name = :oldName")
+    @Query("UPDATE AnyPercentMapRecord m SET m.map_name = :newName WHERE m.map_name = :oldName")
     int updateMap_name(@Param("oldName") String oldName, @Param("newName") String newName);
 
     @Modifying
-    @Query("DELETE FROM MapRecord m WHERE m.map_name = :name")
+    @Query("DELETE FROM AnyPercentMapRecord m WHERE m.map_name = :name")
     int deleteByMap_name(@Param("name") String name);
 
     @Modifying
-    @Query("UPDATE MapRecord m SET " +
+    @Query("UPDATE AnyPercentMapRecord m SET " +
             "m.prev_wr_seconds = m.curr_wr_seconds, " +
             "m.curr_wr_seconds = :newTime, " +
             "m.proof_img_1_link = :stage1_proof, " +

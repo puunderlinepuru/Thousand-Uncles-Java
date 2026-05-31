@@ -1,12 +1,18 @@
 package com.thousand_uncles.discord_bot.data.models;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "any_percent")
-public class MapRecord {
+@MappedSuperclass
+public abstract class MapRecord {
+
+//    @Version
+//    private Long version;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Integer id;
 
     @Column(name = "map_name")
@@ -21,52 +27,33 @@ public class MapRecord {
     @Column(name = "proof_img_1_link", nullable = false)
     private String proof_img_1_link;
 
+    @Nullable
     @Column(name = "proof_img_2_link")
     private String proof_img_2_link;
 
+    @Nullable
     @Column(name = "proof_img_3_link")
     private String proof_img_3_link;
 
+    @Nullable
     @Column(name = "proof_vid_link")
     private String proof_vid_link;
 
+    @Nullable
     @Column(name = "stage_1_time_seconds", precision = 5)
     private Short stage_1_time_seconds;
 
+    @Nullable
     @Column(name = "stage_2_time_seconds", precision = 5)
     private Short stage_2_time_seconds;
 
+    @Nullable
     @Column(name = "stage_3_time_seconds", precision = 5)
     private Short stage_3_time_seconds;
 
     // Constructors
     @SuppressWarnings("unused")
     public MapRecord() {}
-
-    public MapRecord(
-            String map_name,
-            Short curr_wr_seconds,
-            Short prev_wr_seconds,
-            String proof_pic_1,
-            String proof_pic_2,
-            String proof_pic_3,
-            String proof_vid_link,
-            Short stage_time_1,
-            Short stage_time_2,
-            Short stage_time_3
-
-    ) {
-        this.map_name = map_name;
-        this.curr_wr_seconds = curr_wr_seconds;
-        this.prev_wr_seconds = prev_wr_seconds;
-        this.proof_img_1_link = proof_pic_1;
-        this.proof_img_2_link = proof_pic_2;
-        this.proof_img_3_link = proof_pic_3;
-        this.proof_vid_link = proof_vid_link;
-        this.stage_1_time_seconds = stage_time_1;
-        this.stage_2_time_seconds = stage_time_2;
-        this.stage_3_time_seconds = stage_time_3;
-    }
 
     // Getters and Setters
 
@@ -110,7 +97,7 @@ public class MapRecord {
     }
 
     @SuppressWarnings("unused")
-    public void setPrev_wr_seconds_wr_seconds(short prev_wr_seconds){
+    public void setPrev_wr_seconds(short prev_wr_seconds){
         this.prev_wr_seconds = prev_wr_seconds;
     }
 
@@ -127,6 +114,7 @@ public class MapRecord {
 
 //    proof_img_2_link
     @SuppressWarnings("unused")
+    @Nullable
     public String getProof_img_2_link(){
         return proof_img_2_link;
     }
@@ -138,6 +126,7 @@ public class MapRecord {
 
 //    proof_img_3_link
     @SuppressWarnings("unused")
+    @Nullable
     public String getProof_img_3_link(){
         return proof_img_3_link;
     }
@@ -149,6 +138,7 @@ public class MapRecord {
 
 //    proof_vid_link
     @SuppressWarnings("unused")
+    @Nullable
     public String getProof_vid_link(){
         return proof_vid_link;
     }
@@ -160,7 +150,8 @@ public class MapRecord {
 
 //    stage_1_time_seconds
     @SuppressWarnings("unused")
-    public short getStage_1_time_seconds(){
+    @Nullable
+    public Short getStage_1_time_seconds(){
         return stage_1_time_seconds;
     }
 
@@ -171,7 +162,8 @@ public class MapRecord {
 
 //    stage_2_time_seconds
     @SuppressWarnings("unused")
-    public short getStage_2_time_seconds(){
+    @Nullable
+    public Short getStage_2_time_seconds(){
         return stage_2_time_seconds;
     }
 
@@ -182,7 +174,8 @@ public class MapRecord {
 
 //    stage_3_time_seconds
     @SuppressWarnings("unused")
-    public short getStage_3_time_seconds(){
+    @Nullable
+    public Short getStage_3_time_seconds(){
         return stage_3_time_seconds;
     }
 
