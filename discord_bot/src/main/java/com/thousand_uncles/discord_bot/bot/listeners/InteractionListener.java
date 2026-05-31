@@ -9,6 +9,8 @@ import discord4j.core.event.domain.Event;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.event.domain.message.ReactionAddEvent;
+import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.Role;
@@ -25,6 +27,9 @@ public class InteractionListener {
 
     @Autowired
     ApplicationContext applicationContext;
+
+    @Autowired
+    Config config;
 
     GatewayDiscordClient client;
 
@@ -113,6 +118,8 @@ public class InteractionListener {
     }
 
     public Mono<Void> onSelectMenu (SelectMenuInteractionEvent event){
+        MapRecordService mapRecordService = applicationContext.getBean(MapRecordService.class);
+
         System.out.println("select menu");
         String selectedOption = event.getValues().getFirst();
         String customID = event.getCustomId();
@@ -124,11 +131,19 @@ public class InteractionListener {
             int mapID = GlobalThings.getMapIDS().indexOf(mapName);
 
             AppNotifications.DISCORD_INTERACTION_INFO(" looking for " + selectedOption + "% category for " + mapName);
+
+
+            MapRecord gotMap;
+            try{
+                gotMap = mapRecordService.getRecord(mapID, selectedOption);
+            } catch (Exception e) {
+                return mapNotFoundResponse(event);
+            }
+            return foundMapResponse(event, gotMap, selectedOption);
         }
 
 //        Looking for map time
-        MapRecordService mapRecordService = applicationContext.getBean(MapRecordService.class);
-        MapRecord gotMap = mapRecordService.getRecordByName(event.getValues().getFirst());
+        MapRecord gotMap = mapRecordService.getRecord(GlobalThings.getMapIDS().indexOf(selectedOption), customID);
         System.out.println("found map " + gotMap.getMap_name());
 
         assert event.getMessage().isPresent();
@@ -151,6 +166,29 @@ public class InteractionListener {
         }
 
         return  Mono.empty();
+    }
+
+    private Mono<Void> foundMapResponse(SelectMenuInteractionEvent event, MapRecord foundMap, String recordCategory){
+        AppNotifications.DISCORD_INTERACTION_INFO("Found Map");
+        List<String> availableToCheckCategories = config.getAvailable_categories().getCheck();
+        List<SelectMenu.Option> availableCategoriesOptions = new java.util.ArrayList<>(List.of());
+        for (int i = 0; i < availableToCheckCategories.size(); i++) {
+            availableCategoriesOptions.add(i, SelectMenu.Option.of(availableToCheckCategories.get(i), availableToCheckCategories.get(i)));
+        }
+        return event.edit()
+                .withEphemeral(true)
+                .withContent("Record for " + foundMap.getMap_name() + " - " + recordCategory + ":\n" +
+                        BotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
+                        "Other categories:")
+                .withComponents(ActionRow.of(
+                        SelectMenu.of("check-" + foundMap.getMap_name(), availableCategoriesOptions)
+                                .withMaxValues(1)));
+    }
+
+    private Mono<Void> mapNotFoundResponse(SelectMenuInteractionEvent event){
+        return event.reply()
+                .withEphemeral(true)
+                .withContent("Beep Boop.. This record doesn't exist, try again :p");
     }
 
 }

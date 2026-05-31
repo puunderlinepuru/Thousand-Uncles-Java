@@ -1,12 +1,15 @@
 package com.thousand_uncles.google_api_handler.data.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "any_percent")
-public class MapRecord {
+@MappedSuperclass
+public abstract class MapRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Integer id;
 
     @Column(name = "map_name")
@@ -43,34 +46,9 @@ public class MapRecord {
     @SuppressWarnings("unused")
     public MapRecord() {}
 
-    public MapRecord(
-            String map_name,
-            Short curr_wr_seconds,
-            Short prev_wr_seconds,
-            String proof_pic_1,
-            String proof_pic_2,
-            String proof_pic_3,
-            String proof_vid_link,
-            Short stage_time_1,
-            Short stage_time_2,
-            Short stage_time_3
-
-    ) {
-        this.map_name = map_name;
-        this.curr_wr_seconds = curr_wr_seconds;
-        this.prev_wr_seconds = prev_wr_seconds;
-        this.proof_img_1_link = proof_pic_1;
-        this.proof_img_2_link = proof_pic_2;
-        this.proof_img_3_link = proof_pic_3;
-        this.proof_vid_link = proof_vid_link;
-        this.stage_1_time_seconds = stage_time_1;
-        this.stage_2_time_seconds = stage_time_2;
-        this.stage_3_time_seconds = stage_time_3;
-    }
-
     // Getters and Setters
 
-//    ID
+    //    ID
     @SuppressWarnings("unused")
     public Integer getId() {
         return id;
@@ -81,7 +59,7 @@ public class MapRecord {
         this.id = id;
     }
 
-//    map_name
+    //    map_name
     @SuppressWarnings("unused")
     public String getMap_name() {
         return map_name;
@@ -92,7 +70,7 @@ public class MapRecord {
         this.map_name = map_name;
     }
 
-//    curr_wr_seconds
+    //    curr_wr_seconds
     @SuppressWarnings("unused")
     public short getCurr_wr_seconds(){
         return curr_wr_seconds;
@@ -103,7 +81,7 @@ public class MapRecord {
         this.curr_wr_seconds = curr_wr_seconds;
     }
 
-//    prev_wr_seconds
+    //    prev_wr_seconds
     @SuppressWarnings("unused")
     public short getPrev_wr_seconds(){
         return prev_wr_seconds;
@@ -114,7 +92,7 @@ public class MapRecord {
         this.prev_wr_seconds = prev_wr_seconds;
     }
 
-//    proof_img_1_link
+    //    proof_img_1_link
     @SuppressWarnings("unused")
     public String getProof_img_1_link(){
         return proof_img_1_link;
@@ -125,7 +103,7 @@ public class MapRecord {
         this.proof_img_1_link = proof_img_1_link;
     }
 
-//    proof_img_2_link
+    //    proof_img_2_link
     @SuppressWarnings("unused")
     public String getProof_img_2_link(){
         return proof_img_2_link;
@@ -136,7 +114,7 @@ public class MapRecord {
         this.proof_img_2_link = proof_img_2_link;
     }
 
-//    proof_img_3_link
+    //    proof_img_3_link
     @SuppressWarnings("unused")
     public String getProof_img_3_link(){
         return proof_img_3_link;
@@ -147,7 +125,7 @@ public class MapRecord {
         this.proof_img_3_link = proof_img_3_link;
     }
 
-//    proof_vid_link
+    //    proof_vid_link
     @SuppressWarnings("unused")
     public String getProof_vid_link(){
         return proof_vid_link;
@@ -158,7 +136,7 @@ public class MapRecord {
         this.proof_vid_link = proof_vid_link;
     }
 
-//    stage_1_time_seconds
+    //    stage_1_time_seconds
     @SuppressWarnings("unused")
     public short getStage_1_time_seconds(){
         return stage_1_time_seconds;
@@ -169,7 +147,7 @@ public class MapRecord {
         this.stage_1_time_seconds = stage_1_time_seconds;
     }
 
-//    stage_2_time_seconds
+    //    stage_2_time_seconds
     @SuppressWarnings("unused")
     public short getStage_2_time_seconds(){
         return stage_2_time_seconds;
@@ -180,7 +158,7 @@ public class MapRecord {
         this.stage_2_time_seconds = stage_2_time_seconds;
     }
 
-//    stage_3_time_seconds
+    //    stage_3_time_seconds
     @SuppressWarnings("unused")
     public short getStage_3_time_seconds(){
         return stage_3_time_seconds;

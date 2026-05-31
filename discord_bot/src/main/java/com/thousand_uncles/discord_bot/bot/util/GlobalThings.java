@@ -13,5 +13,7 @@ public class GlobalThings {
 
     public static List<String> getMapIDS() {return mapIDS;}
 
+    public static Integer getMapID(String mapName) {return mapIDS.indexOf(mapName);}
+
     public static Random getRand() {return rand;}
 }

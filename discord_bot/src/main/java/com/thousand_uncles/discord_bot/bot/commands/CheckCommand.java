@@ -1,5 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
+import com.thousand_uncles.discord_bot.bot.util.AppNotifications;
 import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
 import com.thousand_uncles.discord_bot.bot.util.Config;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
@@ -42,9 +43,6 @@ public class CheckCommand implements SlashCommand {
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event){
-
-
-
         try {
             MapRecordService mapRecordService = applicationContext.getBean(MapRecordService.class);
 
@@ -57,25 +55,34 @@ public class CheckCommand implements SlashCommand {
                     .map(ApplicationCommandInteractionOptionValue::asString)
                     .orElse(null);
 
+            System.out.println("gotName: " + partialMapName);
+
+            String category = event.getOption("category")
+                    .flatMap(ApplicationCommandInteractionOption::getValue)
+                    .map(ApplicationCommandInteractionOptionValue::asString)
+                    .orElse("any");
+
 //            JsonNode mapNode = jsonNode.get(map);
 
 
-            List<MapRecord> searchedMaps = mapRecordService.searchRecords(partialMapName);
-            if (searchedMaps == null){
+            List<MapRecord> searchedMaps = mapRecordService.searchRecords(partialMapName, category);
+            System.out.println("found maps: " + searchedMaps);
+            if (searchedMaps.isEmpty()){
+                System.out.println(" no maps found");
                 return mapNotFound(event);
             }
 
             SelectMenu foundMapsMenu;
             List<SelectMenu.Option> foundMapOptions = new java.util.ArrayList<>(List.of());
             if (searchedMaps.size() == 1){
-                return singleMapFoundResponse(event, searchedMaps.getFirst(), "Any%");
+                return singleMapFoundResponse(event, searchedMaps.getFirst(), category);
             }
 
             for (int i = 0; i < searchedMaps.size(); i++) {
                 foundMapOptions.add(i, SelectMenu.Option.of(searchedMaps.get(i).getMap_name(),searchedMaps.get(i).getMap_name()));
             }
 
-            return multipleMapsFoundResponse(event, partialMapName, foundMapOptions);
+            return multipleMapsFoundResponse(event, partialMapName, category, foundMapOptions);
 
 
         } catch (Exception e) {
@@ -84,10 +91,10 @@ public class CheckCommand implements SlashCommand {
         }
     }
 
-    private Mono<Void> multipleMapsFoundResponse(ChatInputInteractionEvent event, String partialMapName, List<SelectMenu.Option> foundMapOptions){
+    private Mono<Void> multipleMapsFoundResponse(ChatInputInteractionEvent event, String partialMapName, String category, List<SelectMenu.Option> foundMapOptions){
         InteractionApplicationCommandCallbackReplyMono sendMessage = event
                 .reply()
-                .withContent("Found candidates for " + partialMapName + ":")
+                .withContent("Found candidates for " + partialMapName + " - " + category + "%:")
                 .withEphemeral(true)
                 .withComponents(ActionRow.of(
                         SelectMenu.of("foundMapSelectMenu", foundMapOptions)
@@ -105,7 +112,8 @@ public class CheckCommand implements SlashCommand {
                 .then();
     }
 
-    private Mono<Void> singleMapFoundResponse(ChatInputInteractionEvent event, MapRecord foundMap, String recordCategory){
+    private Mono<Void> singleMapFoundResponse(ChatInputInteractionEvent event, MapRecord foundMap, String category){
+        AppNotifications.DISCORD_INTERACTION_INFO("Single Map Found Response Case");
         List<String> availableToCheckCategories = config.getAvailable_categories().getCheck();
         List<SelectMenu.Option> availableCategoriesOptions = new java.util.ArrayList<>(List.of());
         for (int i = 0; i < availableToCheckCategories.size(); i++) {
@@ -113,7 +121,7 @@ public class CheckCommand implements SlashCommand {
         }
         return event.reply()
                 .withEphemeral(true)
-                .withContent("Record for " + foundMap + " - " + recordCategory + ":\n" +
+                .withContent("Record for " + foundMap.getMap_name() + " - " + "%" + ":\n" +
                         BotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
                         "Other categories:")
                 .withComponents(ActionRow.of(

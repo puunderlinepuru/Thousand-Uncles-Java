@@ -21,7 +21,7 @@ public class BotResponseFormatter {
                 response += "Stage 2 time: " + RecordFormatter.NumberToString(requestedMap.getStage_2_time_seconds()) + "\n";
                 response += "Stage 3 time: " + RecordFormatter.NumberToString(requestedMap.getStage_3_time_seconds()) + "\n";
             } catch (Exception e) {
-                throw new RuntimeException(e);
+
             }
         }
 
