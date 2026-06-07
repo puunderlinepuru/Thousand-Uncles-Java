@@ -1,7 +1,9 @@
 package com.thousand_uncles.discord_bot.data.models;
 
 import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
 
 @MappedSuperclass
