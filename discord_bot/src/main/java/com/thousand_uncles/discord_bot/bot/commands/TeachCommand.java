@@ -1,6 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
-import com.thousand_uncles.discord_bot.bot.YamlReader;
+import com.thousand_uncles.discord_bot.bot.util.YamlReader;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;

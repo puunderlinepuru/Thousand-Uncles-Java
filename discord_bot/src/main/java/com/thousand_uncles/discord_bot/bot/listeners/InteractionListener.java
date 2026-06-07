@@ -2,7 +2,7 @@ package com.thousand_uncles.discord_bot.bot.listeners;
 
 import com.thousand_uncles.discord_bot.bot.util.*;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
-import com.thousand_uncles.discord_bot.data.service.MapRecordService;
+import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.Event;
@@ -118,7 +118,7 @@ public class InteractionListener {
     }
 
     public Mono<Void> onSelectMenu (SelectMenuInteractionEvent event){
-        MapRecordService mapRecordService = applicationContext.getBean(MapRecordService.class);
+        MapRecordServiceProd mapRecordServiceProd = applicationContext.getBean(MapRecordServiceProd.class);
 
         System.out.println("select menu");
         String selectedOption = event.getValues().getFirst();
@@ -135,7 +135,7 @@ public class InteractionListener {
 
             MapRecord gotMap;
             try{
-                gotMap = mapRecordService.getRecord(mapID, selectedOption);
+                gotMap = mapRecordServiceProd.getRecord(mapID, selectedOption);
             } catch (Exception e) {
                 return mapNotFoundResponse(event);
             }
@@ -143,7 +143,7 @@ public class InteractionListener {
         }
 
 //        Looking for map time
-        MapRecord gotMap = mapRecordService.getRecord(GlobalThings.getMapIDS().indexOf(selectedOption), customID);
+        MapRecord gotMap = mapRecordServiceProd.getRecord(GlobalThings.getMapIDS().indexOf(selectedOption), customID);
         System.out.println("found map " + gotMap.getMap_name());
 
         assert event.getMessage().isPresent();

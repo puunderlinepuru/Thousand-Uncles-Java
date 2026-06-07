@@ -4,7 +4,7 @@ import com.thousand_uncles.discord_bot.bot.util.AppNotifications;
 import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
 import com.thousand_uncles.discord_bot.bot.util.Config;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
-import com.thousand_uncles.discord_bot.data.service.MapRecordService;
+import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
@@ -30,11 +30,13 @@ public class CheckCommand implements SlashCommand {
     private ApplicationContext applicationContext;
 
     @Autowired
+    MapRecordServiceProd mapRecordServiceProd;
+
+    @Autowired
     private GatewayDiscordClient client;
 
     @Autowired
     private Config config;
-
 
     @Override
     public String getName() {
@@ -44,7 +46,7 @@ public class CheckCommand implements SlashCommand {
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event){
         try {
-            MapRecordService mapRecordService = applicationContext.getBean(MapRecordService.class);
+            MapRecordServiceProd mapRecordServiceProd = applicationContext.getBean(MapRecordServiceProd.class);
 
 //            ObjectMapper objectMapper = new ObjectMapper();
 //            JsonNode jsonNode = objectMapper.readTree(new File("shared/records.json"));
@@ -65,7 +67,7 @@ public class CheckCommand implements SlashCommand {
 //            JsonNode mapNode = jsonNode.get(map);
 
 
-            List<MapRecord> searchedMaps = mapRecordService.searchRecords(partialMapName, category);
+            List<MapRecord> searchedMaps = mapRecordServiceProd.searchRecords(partialMapName, category);
             System.out.println("found maps: " + searchedMaps);
             if (searchedMaps.isEmpty()){
                 System.out.println(" no maps found");

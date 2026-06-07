@@ -1,4 +1,4 @@
-package com.thousand_uncles.discord_bot.data.util;
+package com.thousand_uncles.data.util;
 
 public class RecordFormatter {
     @SuppressWarnings("unused")

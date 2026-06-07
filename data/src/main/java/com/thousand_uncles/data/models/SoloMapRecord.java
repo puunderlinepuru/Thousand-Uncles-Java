@@ -1,4 +1,4 @@
-package com.thousand_uncles.discord_bot.data.models;
+package com.thousand_uncles.data.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

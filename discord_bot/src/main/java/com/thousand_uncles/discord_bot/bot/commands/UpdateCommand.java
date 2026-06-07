@@ -2,14 +2,15 @@ package com.thousand_uncles.discord_bot.bot.commands;
 
 import com.thousand_uncles.discord_bot.bot.util.Config;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
-import com.thousand_uncles.discord_bot.data.models.MapRecord;
-import com.thousand_uncles.discord_bot.data.models.SoloMapRecord;
-import com.thousand_uncles.discord_bot.data.service.MapRecordService;
-import com.thousand_uncles.discord_bot.data.util.RecordFormatter;
+import com.thousand_uncles.data.models.MapRecord;
+import com.thousand_uncles.data.models.SoloMapRecord;
+import com.thousand_uncles.data.service.MapRecordServiceProd;
+import com.thousand_uncles.data.util.RecordFormatter;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -20,8 +21,9 @@ public class UpdateCommand implements SlashCommand{
     @Autowired
     Config config;
 
+    @SuppressWarnings("unused")
     @Autowired
-    MapRecordService mapRecordService;
+    ApplicationContext applicationContext;
 
     @Override
     public String getName() {
@@ -30,6 +32,8 @@ public class UpdateCommand implements SlashCommand{
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event){
+        MapRecordServiceProd mapRecordServiceProd = applicationContext.getBean(MapRecordServiceProd.class);
+
         String category = event.getOption("category")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
@@ -65,7 +69,7 @@ public class UpdateCommand implements SlashCommand{
 
         System.out.println("hello");
 
-        int mapTime = 0, stage_1_time = 0, stage_2_time = 0, stage_3_time = 0;
+        int mapTime, stage_1_time = 0, stage_2_time = 0, stage_3_time = 0;
 
 //        check category for valid
         if (!config.getAvailable_categories().getUpdate().contains(category)){
@@ -84,6 +88,7 @@ public class UpdateCommand implements SlashCommand{
 
 //        convert time
         try{
+            assert timeOption != null;
             mapTime = RecordFormatter.StringToNumber(timeOption);
         } catch (Exception e) {
             return event.reply()
@@ -93,7 +98,7 @@ public class UpdateCommand implements SlashCommand{
 
         MapRecord existingRecord;
         try{
-            existingRecord = mapRecordService.getRecord(mapID, category);
+            existingRecord = mapRecordServiceProd.getRecord(mapID, category);
         } catch (Exception e) {
             existingRecord = null;
         }
@@ -138,6 +143,7 @@ public class UpdateCommand implements SlashCommand{
 
         MapRecord newRecord;
 
+        assert category != null;
         if (category.equals("solo")){
             newRecord = new SoloMapRecord();
         } else {
@@ -163,7 +169,7 @@ public class UpdateCommand implements SlashCommand{
             newRecord.setStage_3_time_seconds((short) stage_3_time);
         }
 
-        mapRecordService.addRecord(newRecord);
+        mapRecordServiceProd.addRecord(newRecord);
 
         return event.reply()
                 .withEphemeral(false)

@@ -1,7 +1,7 @@
 package com.thousand_uncles.discord_bot.bot.fun_stuff;
 
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
-import com.thousand_uncles.discord_bot.bot.YamlReader;
+import com.thousand_uncles.discord_bot.bot.util.YamlReader;
 
 import java.util.List;
 
