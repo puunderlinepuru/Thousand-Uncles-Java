@@ -51,7 +51,34 @@ public interface AnyPercentMapRecordRepository extends JpaRepository<AnyPercentM
             @Param("stage3_time")  Short stage_3_time
     );
 
-//    @Modifying
-//    @Query("")
-//    int add
+    @Modifying
+    @Query(value = "INSERT INTO any_percent (id, map_name, curr_wr_seconds, prev_wr_seconds, proof_img_1_link, proof_img_2_link, proof_img_3_link, proof_vid_link, stage_1_time_seconds, stage_2_time_seconds, stage_3_time_seconds) " +
+            "VALUES " +
+            "(:id, :name, :curr_time, :prev_time, :stage1_proof, :stage2_proof, :stage3_proof, :proof_vid, :stage1_time, :stage2_time, :stage3_time) " +
+            "ON CONFLICT (id) DO UPDATE SET " +
+            "id = EXCLUDED.id, " +
+            "map_name = EXCLUDED.map_name, " +
+            "curr_wr_seconds = :curr_time, " +
+            "prev_wr_seconds = EXCLUDED.curr_wr_seconds, " +
+            "proof_img_1_link = :stage1_proof, " +
+            "proof_img_2_link = :stage2_proof, " +
+            "proof_img_3_link = :stage3_proof, " +
+            "proof_vid_link = :proof_vid, " +
+            "stage_1_time_seconds = :stage1_time, " +
+            "stage_2_time_seconds = :stage2_time, " +
+            "stage_3_time_seconds = :stage3_time ",
+            nativeQuery = true)
+    void upsert(
+            @Param("id")            Integer ID,
+            @Param("name")          String name,
+            @Param("curr_time")       Short newTime,
+            @Param("prev_time")     Short prevTime,
+            @Param("stage1_proof")  String stage_1_proof,
+            @Param("stage2_proof")  String stage_2_proof,
+            @Param("stage3_proof")  String stage_3_proof,
+            @Param("proof_vid")     String proof_vid,
+            @Param("stage1_time")  Short stage_1_time,
+            @Param("stage2_time")  Short stage_2_time,
+            @Param("stage3_time")  Short stage_3_time
+    );
 }

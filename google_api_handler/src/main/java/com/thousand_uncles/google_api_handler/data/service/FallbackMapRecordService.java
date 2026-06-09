@@ -9,6 +9,7 @@ import java.util.List;
 @Service
 @Profile("dev")
 public class FallbackMapRecordService {
+    @SuppressWarnings("unused")
     public void addRecord(Object record) {
         return;
     }
@@ -28,14 +29,14 @@ public class FallbackMapRecordService {
     // Update record by name
     @SuppressWarnings("unused")
     public boolean updateMapName(String oldName, String newName) {
-//        int updated = repository.updateMap_name(oldName, newName);
+//        int updated = com.thousand_uncles.data.repository.updateMap_name(oldName, newName);
         return false;
     }
 
     // Delete record by name
     @SuppressWarnings("unused")
     public boolean deleteRecord(String mapName) {
-//        int deleted = repository.deleteByMap_name(mapName);
+//        int deleted = com.thousand_uncles.data.repository.deleteByMap_name(mapName);
         return false;
     }
 
@@ -52,7 +53,7 @@ public class FallbackMapRecordService {
             Short stage_time_2,
             Short stage_time_3
     ){
-        /*int updated = repository.updateRecord(
+        /*int updated = com.thousand_uncles.data.repository.updateRecordByName(
                 map_name,
                 curr_wr_seconds,
                 proof_pic_1_link,

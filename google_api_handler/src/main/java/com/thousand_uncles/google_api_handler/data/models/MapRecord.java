@@ -1,5 +1,6 @@
 package com.thousand_uncles.google_api_handler.data.models;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
@@ -7,6 +8,10 @@ import jakarta.validation.constraints.NotNull;
 
 @MappedSuperclass
 public abstract class MapRecord {
+
+//    @Version
+//    private Long version;
+
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
@@ -24,21 +29,27 @@ public abstract class MapRecord {
     @Column(name = "proof_img_1_link", nullable = false)
     private String proof_img_1_link;
 
+    @Nullable
     @Column(name = "proof_img_2_link")
     private String proof_img_2_link;
 
+    @Nullable
     @Column(name = "proof_img_3_link")
     private String proof_img_3_link;
 
+    @Nullable
     @Column(name = "proof_vid_link")
     private String proof_vid_link;
 
+    @Nullable
     @Column(name = "stage_1_time_seconds", precision = 5)
     private Short stage_1_time_seconds;
 
+    @Nullable
     @Column(name = "stage_2_time_seconds", precision = 5)
     private Short stage_2_time_seconds;
 
+    @Nullable
     @Column(name = "stage_3_time_seconds", precision = 5)
     private Short stage_3_time_seconds;
 
@@ -48,7 +59,7 @@ public abstract class MapRecord {
 
     // Getters and Setters
 
-    //    ID
+//    ID
     @SuppressWarnings("unused")
     public Integer getId() {
         return id;
@@ -59,7 +70,7 @@ public abstract class MapRecord {
         this.id = id;
     }
 
-    //    map_name
+//    map_name
     @SuppressWarnings("unused")
     public String getMap_name() {
         return map_name;
@@ -70,7 +81,7 @@ public abstract class MapRecord {
         this.map_name = map_name;
     }
 
-    //    curr_wr_seconds
+//    curr_wr_seconds
     @SuppressWarnings("unused")
     public short getCurr_wr_seconds(){
         return curr_wr_seconds;
@@ -81,18 +92,18 @@ public abstract class MapRecord {
         this.curr_wr_seconds = curr_wr_seconds;
     }
 
-    //    prev_wr_seconds
+//    prev_wr_seconds
     @SuppressWarnings("unused")
     public short getPrev_wr_seconds(){
         return prev_wr_seconds;
     }
 
     @SuppressWarnings("unused")
-    public void setPrev_wr_seconds_wr_seconds(short prev_wr_seconds){
+    public void setPrev_wr_seconds(short prev_wr_seconds){
         this.prev_wr_seconds = prev_wr_seconds;
     }
 
-    //    proof_img_1_link
+//    proof_img_1_link
     @SuppressWarnings("unused")
     public String getProof_img_1_link(){
         return proof_img_1_link;
@@ -103,69 +114,76 @@ public abstract class MapRecord {
         this.proof_img_1_link = proof_img_1_link;
     }
 
-    //    proof_img_2_link
+//    proof_img_2_link
     @SuppressWarnings("unused")
+    @Nullable
     public String getProof_img_2_link(){
         return proof_img_2_link;
     }
 
     @SuppressWarnings("unused")
-    public void setProof_img_2_link(String proof_img_2_link){
+    public void setProof_img_2_link(@Nullable String proof_img_2_link){
         this.proof_img_2_link = proof_img_2_link;
     }
 
-    //    proof_img_3_link
+//    proof_img_3_link
     @SuppressWarnings("unused")
+    @Nullable
     public String getProof_img_3_link(){
         return proof_img_3_link;
     }
 
     @SuppressWarnings("unused")
-    public void setProof_img_3_link(String proof_img_3_link){
+    public void setProof_img_3_link(@Nullable String proof_img_3_link){
         this.proof_img_3_link = proof_img_3_link;
     }
 
-    //    proof_vid_link
+//    proof_vid_link
     @SuppressWarnings("unused")
+    @Nullable
     public String getProof_vid_link(){
         return proof_vid_link;
     }
 
     @SuppressWarnings("unused")
-    public void setProof_vid_link(String proof_vid_link){
+    public void setProof_vid_link(@Nullable String proof_vid_link){
         this.proof_vid_link = proof_vid_link;
     }
 
-    //    stage_1_time_seconds
+//    stage_1_time_seconds
     @SuppressWarnings("unused")
-    public short getStage_1_time_seconds(){
+    @Nullable
+    public Short getStage_1_time_seconds(){
         return stage_1_time_seconds;
     }
 
     @SuppressWarnings("unused")
-    public void setStage_1_time_seconds(short stage_1_time_seconds){
+    public void setStage_1_time_seconds(@Nullable Short stage_1_time_seconds){
         this.stage_1_time_seconds = stage_1_time_seconds;
     }
 
-    //    stage_2_time_seconds
+//    stage_2_time_seconds
     @SuppressWarnings("unused")
-    public short getStage_2_time_seconds(){
+    @Nullable
+    public Short getStage_2_time_seconds(){
         return stage_2_time_seconds;
     }
 
     @SuppressWarnings("unused")
-    public void setStage_2_time_seconds(short stage_2_time_seconds){
+
+    public void setStage_2_time_seconds(@Nullable Short stage_2_time_seconds){
         this.stage_2_time_seconds = stage_2_time_seconds;
     }
 
-    //    stage_3_time_seconds
+//    stage_3_time_seconds
     @SuppressWarnings("unused")
-    public short getStage_3_time_seconds(){
+    @Nullable
+    public Short getStage_3_time_seconds(){
         return stage_3_time_seconds;
     }
 
     @SuppressWarnings("unused")
-    public void setStage_3_time_seconds(short stage_3_time_seconds){
+    public void setStage_3_time_seconds(@Nullable Short stage_3_time_seconds){
         this.stage_3_time_seconds = stage_3_time_seconds;
     }
 

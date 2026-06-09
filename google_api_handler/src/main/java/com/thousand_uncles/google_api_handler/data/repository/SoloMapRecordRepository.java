@@ -39,7 +39,7 @@ public interface SoloMapRecordRepository extends JpaRepository<SoloMapRecord, In
             "m.stage_2_time_seconds = :stage2_time, " +
             "m.stage_3_time_seconds = :stage3_time " +
             "WHERE m.map_name = :name")
-    int updateRecord(
+    int updateRecordByName(
             @Param("name")          String name,
             @Param("newTime")       Short newTime,
             @Param("stage1_proof")  String stage_1_proof,
@@ -51,7 +51,87 @@ public interface SoloMapRecordRepository extends JpaRepository<SoloMapRecord, In
             @Param("stage3_time")  Short stage_3_time
     );
 
-//    @Modifying
-//    @Query("")
-//    int add
+    /*@Modifying
+    @Query("MERGE INTO SoloMapRecord m USING (VALUES (" +
+            ":id, :name, :time, :stage1_proof, :stage2_proof, :stage3_proof, :proof_vid, :stage1_time, :stage2_time, :stage3_time)" +
+            ") " +
+            "AS  v(" +
+            "id, name, time, stage1_proof, stage2_proof, stage3_proof, proof_vid, stage1_time, stage2_time, stage3_time) " +
+            "WHEN MATCHED THEN UPDATE SET " +
+            "m.id = v.id, " +
+            "m.map_name = v.name" +
+            "m.curr_wr_seconds = v.curr_wr_seconds, " +
+            "m.prev_wr_seconds = v.prev_wr_seconds, " +
+            "m.proof_img_1_link = v.stage1_proof, " +
+            "m.proof_img_2_link = v.stage2_proof, " +
+            "m.proof_img_3_link = v.stage3_proof, " +
+            "m.proof_vid_link = v.proof_vid, " +
+            "m.stage_1_time_seconds = v.stage1_time, " +
+            "m.stage_2_time_seconds = v.stage2_time, " +
+            "m.stage_3_time_seconds = v.stage3_time " +
+            "WHEN NOT MATCHED THEN INSERT (" +
+            "id, map_name, curr_wr_seconds, prev_wr_seconds, proof_img_1_link, proof_img_2_link, proof_img_3_link, proof_vid_link, stage_1_time_seconds, stage_2_time_seconds, stage_3_time_seconds) VALUES " +
+            "(v.id, v.name, v.time, v.stage1_proof, v.stage2_proof, v.stage3_proof, v.proof_vid, v.stage1_time, v.stage2_time, v.stage3_time)"
+    )
+    void upsert(
+            @Param("id")            Integer ID,
+            @Param("name")          String name,
+            @Param("newTime")       Short newTime,
+            @Param("stage1_proof")  String stage_1_proof,
+            @Param("stage2_proof")  String stage_2_proof,
+            @Param("stage3_proof")  String stage_3_proof,
+            @Param("proof_vid")     String proof_vid,
+            @Param("stage1_time")  Short stage_1_time,
+            @Param("stage2_time")  Short stage_2_time,
+            @Param("stage3_time")  Short stage_3_time
+    );*/
+
+    @Modifying
+    @Query(value = "INSERT INTO solo (id, map_name, curr_wr_seconds, prev_wr_seconds, proof_img_1_link, proof_img_2_link, proof_img_3_link, proof_vid_link, stage_1_time_seconds, stage_2_time_seconds, stage_3_time_seconds) " +
+            "VALUES " +
+            "(:id, :name, :curr_time, :prev_time, :stage1_proof, :stage2_proof, :stage3_proof, :proof_vid, :stage1_time, :stage2_time, :stage3_time) " +
+            "ON CONFLICT (id) DO UPDATE SET " +
+            "id = EXCLUDED.id, " +
+            "map_name = EXCLUDED.map_name, " +
+            "curr_wr_seconds = :curr_time, " +
+            "prev_wr_seconds = EXCLUDED.curr_wr_seconds, " +
+            "proof_img_1_link = :stage1_proof, " +
+            "proof_img_2_link = :stage2_proof, " +
+            "proof_img_3_link = :stage3_proof, " +
+            "proof_vid_link = :proof_vid, " +
+            "stage_1_time_seconds = :stage1_time, " +
+            "stage_2_time_seconds = :stage2_time, " +
+            "stage_3_time_seconds = :stage3_time ",
+            nativeQuery = true)
+    void upsert(
+            @Param("id")            Integer ID,
+            @Param("name")          String name,
+            @Param("curr_time")       Short newTime,
+            @Param("prev_time")     Short prevTime,
+            @Param("stage1_proof")  String stage_1_proof,
+            @Param("stage2_proof")  String stage_2_proof,
+            @Param("stage3_proof")  String stage_3_proof,
+            @Param("proof_vid")     String proof_vid,
+            @Param("stage1_time")  Short stage_1_time,
+            @Param("stage2_time")  Short stage_2_time,
+            @Param("stage3_time")  Short stage_3_time
+    );
+
+    @Modifying
+    @Query("INSERT INTO SoloMapRecord (id, map_name, curr_wr_seconds, prev_wr_seconds, proof_img_1_link, proof_img_2_link, proof_img_3_link, proof_vid_link, stage_1_time_seconds, stage_2_time_seconds, stage_3_time_seconds) " +
+            "VALUES " +
+            "(:id, :name, :curr_time, :prev_time, :stage1_proof, :stage2_proof, :stage3_proof, :proof_vid, :stage1_time, :stage2_time, :stage3_time)")
+    void addRecord(
+            @Param("id")            Integer ID,
+            @Param("name")          String name,
+            @Param("curr_time")       Short newTime,
+            @Param("prev_time")     Short prevTime,
+            @Param("stage1_proof")  String stage_1_proof,
+            @Param("stage2_proof")  String stage_2_proof,
+            @Param("stage3_proof")  String stage_3_proof,
+            @Param("proof_vid")     String proof_vid,
+            @Param("stage1_time")  Short stage_1_time,
+            @Param("stage2_time")  Short stage_2_time,
+            @Param("stage3_time")  Short stage_3_time
+    );
 }
