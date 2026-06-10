@@ -309,7 +309,7 @@ class UpdateTask extends TimerTask {
             try {
                 spreadsheetPrevRecordTimeInSeconds = RecordFormatter.StringToNumber(spreadsheetRecordValues.get(i).get(2));
             } catch (NumberFormatException e){
-                System.out.println("[ SPREADSHEET RECORD ERROR ] Issue with previous WR number for map " + map_name + ". String in spreadsheets: " + spreadsheetRecordValues.get(i).get(2) + ". Skipping..");
+                System.out.println("[ SPREADSHEET RECORD ERROR ] Issue with previous WR number for map " + map_name + ". String in spreadsheets: " + spreadsheetRecordValues.get(i).get(2) + ".");
             }
 
             String proof_pic_1_link;
@@ -378,7 +378,7 @@ class UpdateTask extends TimerTask {
             MapRecord databaseMapRecord;
 //            Database record object
             try {
-                databaseMapRecord = mapRecordServiceProd.getRecord(map_id, "any");
+                databaseMapRecord = mapRecordServiceProd.getRecord(map_id, category);
             } catch (NoSuchElementException e){
                 System.out.println("[ DATABASE RECORD ERROR ] Couldn't find " + map_name + " in the data, skipping comparison");
                 try {

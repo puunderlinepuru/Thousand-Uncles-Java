@@ -13,6 +13,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
+import com.thousand_uncles.google_api_handler.data.service.MapRecordServiceProd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,9 @@ public class GoogleAPI_Handler {
 
     @Autowired
     ApplicationContext applicationContext;
+
+    @Autowired
+    MapRecordServiceProd mapRecordServiceProd;
 
     private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
@@ -70,7 +74,7 @@ public class GoogleAPI_Handler {
 
 //        Show_Directories_And_Files.printFiles();
 
-        // Build a new authorized API client service.
+        // Build a new authorized API client com.thousand_uncles.data.service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 //        final String testSpreadsheetID = "1a09PuBN2hnJ58c8km_la3e0_sUAjQ8HatalX7fdMl50";
 
@@ -97,7 +101,7 @@ public class GoogleAPI_Handler {
 
         System.out.println("[ STATUS UPDATE ] Starting Update Task..");
         Timer timer = new Timer();
-        TimerTask timerTask = new UpdateTask(uncletopiaSpreadsheetID, valueInputOption, service, applicationContext);
+        TimerTask timerTask = new UpdateTask(uncletopiaSpreadsheetID, valueInputOption, service, applicationContext, mapRecordServiceProd);
         timer.schedule(timerTask, 200, 1800000);
     }
 }
