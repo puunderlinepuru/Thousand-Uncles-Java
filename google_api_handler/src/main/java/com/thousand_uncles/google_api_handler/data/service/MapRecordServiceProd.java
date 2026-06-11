@@ -23,7 +23,7 @@ import java.util.Objects;
 @Profile("prod")
 public class MapRecordServiceProd {
 
-    MapRecordServiceProd(){
+    public MapRecordServiceProd(){
         System.out.println("maprecordserviceprod initialized");
     }
 

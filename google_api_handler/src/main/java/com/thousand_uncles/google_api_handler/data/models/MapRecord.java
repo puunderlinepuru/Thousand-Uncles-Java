@@ -6,8 +6,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
+
 @MappedSuperclass
-public abstract class MapRecord {
+public abstract class MapRecord{
 
 //    @Version
 //    private Long version;

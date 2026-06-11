@@ -5,7 +5,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /big_data_1/postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql
       - ./init-scripts:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
@@ -13,23 +13,39 @@ services:
       - app-network
     restart: unless-stopped
 
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
   discord_bot:
     build:
       context: ./discord_bot
     container_name: discord_bot
     volumes:
-      - ./shared_resources_space:/shared/:ro
+      - ./shared_resources:/shared_resources/:ro
       - ./discord_bot/resources:/resources
     env_file:
       - token.env
-#    environment:
+    environment:
 #      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
 #      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
 #      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_RABBITMQ_HOST=172.19.0.2
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_PROFILE=prod
     depends_on:
       - postgres
-#    ports:
-#      - "8080:8080"
+      - rabbitmq
+    ports:
+      - "8081:8081"
     networks:
       - app-network
     restart: unless-stopped
@@ -39,13 +55,22 @@ services:
       context: ./google_api_handler
     container_name: google_api_handler
     volumes:
-      - ./shared_resources_space:/shared/
+      - ./shared_resources:/shared_resources/
+      - ./google_token:/tokens
     depends_on:
       - postgres
+      - rabbitmq
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_RABBITMQ_HOST=172.19.0.2
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_PROFILE=prod
     restart: unless-stopped
 
 volumes:
   postgres_data:
+  rabbitmq_data:
 
 networks:
   app-network:

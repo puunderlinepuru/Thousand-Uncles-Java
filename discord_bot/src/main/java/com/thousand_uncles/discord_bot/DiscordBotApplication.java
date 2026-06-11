@@ -6,6 +6,10 @@ import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.gateway.intent.Intent;
 import discord4j.gateway.intent.IntentSet;
 import discord4j.rest.RestClient;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
@@ -58,5 +62,20 @@ public class DiscordBotApplication {
     @Bean
     public RestClient discordRestClient(GatewayDiscordClient client) {
         return client.getRestClient();
+    }
+
+    @Bean
+    public DirectExchange testExchange() {
+        return new DirectExchange("test.exchange");
+    }
+
+    @Bean
+    public Queue testQueue() {
+        return new Queue("test.queue");
+    }
+
+    @Bean
+    public Binding testBinding() {
+        return BindingBuilder.bind(testQueue()).to(testExchange()).with("test.routing.key");
     }
 }

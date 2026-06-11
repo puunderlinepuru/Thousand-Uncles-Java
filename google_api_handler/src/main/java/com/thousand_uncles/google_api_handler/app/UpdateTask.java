@@ -1,14 +1,16 @@
 package com.thousand_uncles.google_api_handler.app;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.thousand_uncles.google_api_handler.app.util.GlobalThings;
 import com.thousand_uncles.google_api_handler.app.util.JSONHandler;
+import com.thousand_uncles.google_api_handler.data.service.MapRecordServiceProd;
 import com.thousand_uncles.google_api_handler.data.util.RecordFormatter;
 import com.thousand_uncles.google_api_handler.data.models.MapRecord;
-import com.thousand_uncles.google_api_handler.data.service.MapRecordServiceProd;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
@@ -111,37 +113,6 @@ class UpdateTask extends TimerTask {
         }
         return cleanRecords;
     }
-
-
-    /*protected void updateSheets() {
-        try {
-            // Updates the values in the specified range.
-            ValueRange body = new ValueRange()
-                    .setValues(values);
-            result = com.thousand_uncles.data.service.spreadsheets().values().update(spreadsheetId, "Sheet1!A2", body)
-                    .setValueInputOption(valueInputOption)
-                    .execute();
-            System.out.printf("%d cells updated.\n", result.getUpdatedCells());
-        } catch (GoogleJsonResponseException e) {
-            // TODO(developer) - handle error appropriately
-            GoogleJsonError error = e.getDetails();
-            if (error.getCode() == 404) {
-                System.out.printf("Spreadsheet not found with id '%s'.\n", spreadsheetId);
-            } else {
-                try {
-                    throw e;
-                } catch (GoogleJsonResponseException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        } catch (Exception ex) {
-            try {
-                throw ex;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }*/
 
     private void processAnyPercentSheetData(List<List<String>> spreadsheetRecordValues, String category){
         for (int i = 0; i < spreadsheetRecordValues.size(); i++) {

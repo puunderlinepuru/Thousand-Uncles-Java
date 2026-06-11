@@ -1,11 +1,11 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
-import com.thousand_uncles.discord_bot.bot.util.Config;
+import com.thousand_uncles.discord_bot.bot.config.Config;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
-import com.thousand_uncles.data.models.MapRecord;
-import com.thousand_uncles.data.models.SoloMapRecord;
-import com.thousand_uncles.data.service.MapRecordServiceProd;
-import com.thousand_uncles.data.util.RecordFormatter;
+import com.thousand_uncles.discord_bot.data.models.MapRecord;
+import com.thousand_uncles.discord_bot.data.models.SoloMapRecord;
+import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
+import com.thousand_uncles.discord_bot.data.util.RecordFormatter;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;

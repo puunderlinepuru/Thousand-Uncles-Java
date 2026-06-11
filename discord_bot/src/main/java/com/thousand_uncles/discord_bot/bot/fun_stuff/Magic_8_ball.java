@@ -33,7 +33,7 @@ public class Magic_8_ball {
     static final int magic8BallSize = 18;
 
     public static String getAnswers() {
-        int n = GlobalThings.rand.nextInt(magic8BallSize);
+        int n = GlobalThings.getRand().nextInt(magic8BallSize);
         return magic8Ball.get(n);
     }
 }

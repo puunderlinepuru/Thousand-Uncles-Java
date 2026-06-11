@@ -15,8 +15,6 @@ public class RandomLoadoutCommand implements SlashCommand {
 
 
     RandomLoadoutCommand(){
-        System.out.println("Generating random sequence seed...");
-        GlobalThings.rand = new Random();
 
         items = new String[9][][];
 
@@ -85,19 +83,19 @@ public class RandomLoadoutCommand implements SlashCommand {
     public Mono<Void> handle(ChatInputInteractionEvent event) {
 
 //        Class
-        int tf2_class = GlobalThings.rand.nextInt(9);
+        int tf2_class = GlobalThings.getRand().nextInt(9);
         String response = "You're playing:\n" + classes[tf2_class];
 
 //        Primary
-        int n = GlobalThings.rand.nextInt(items[tf2_class][0].length);
+        int n = GlobalThings.getRand().nextInt(items[tf2_class][0].length);
         response += "\n Primary: " + items[tf2_class][0][n];
 
 //        Secondary
-        n = GlobalThings.rand.nextInt(items[tf2_class][1].length);
+        n = GlobalThings.getRand().nextInt(items[tf2_class][1].length);
         response += "\n Secondary: " + items[tf2_class][1][n];
 
 //        Melee
-        n = GlobalThings.rand.nextInt(items[tf2_class][2].length);
+        n = GlobalThings.getRand().nextInt(items[tf2_class][2].length);
         response += "\n Melee: " + items[tf2_class][2][n];
 
 

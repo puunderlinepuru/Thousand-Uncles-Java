@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface MapRecordRepository extends JpaRepository<MapRecord, Integer> {
 
-    @Query("SELECT m FROM MapRecord m WHERE m.map_name = :name")
+    /*@Query("SELECT m FROM MapRecord m WHERE m.map_name = :name")
     MapRecord findByMap_name(@Param("name") String name);
 
     @Query("SELECT m FROM MapRecord m WHERE LOWER(m.map_name) LIKE LOWER(CONCAT('%', :name, '%'))")
@@ -48,7 +48,7 @@ public interface MapRecordRepository extends JpaRepository<MapRecord, Integer> {
             @Param("stage1_time")  Short stage_1_time,
             @Param("stage2_time")  Short stage_2_time,
             @Param("stage3_time")  Short stage_3_time
-    );
+    );*/
 
 //    @Modifying
 //    @Query("")

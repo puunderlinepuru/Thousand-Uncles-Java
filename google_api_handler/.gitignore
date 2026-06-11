@@ -46,3 +46,6 @@ build/
 /target/maven-status/
 /target/surefire-reports/
 /target/test-classes/
+/target/original-google_api_handler-0.0.1-SNAPSHOT.jar
+/target/google_api_handler-0.0.1-SNAPSHOT.jar
+/google_token/StoredCredential

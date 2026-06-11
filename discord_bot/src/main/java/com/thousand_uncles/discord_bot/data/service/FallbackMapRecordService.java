@@ -1,6 +1,6 @@
 package com.thousand_uncles.discord_bot.data.service;
 
-import com.thousand_uncles.data.models.MapRecord;
+import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 

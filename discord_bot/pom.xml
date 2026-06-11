@@ -76,12 +76,9 @@
 		</dependency>
 
 <!--		RabbitMQ-->
-		<!-- Source: https://mvnrepository.com/artifact/com.rabbitmq/amqp-client -->
 		<dependency>
-			<groupId>com.rabbitmq</groupId>
-			<artifactId>amqp-client</artifactId>
-			<version>5.29.0</version>
-			<scope>compile</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 
 
@@ -90,12 +87,6 @@
 			<groupId>com.discord4j</groupId>
 			<artifactId>discord4j-core</artifactId>
 			<version>3.3.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.thousand_uncles</groupId>
-			<artifactId>data</artifactId>
-			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>

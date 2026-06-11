@@ -36,7 +36,7 @@ public class CoinFlipCommand implements SlashCommand {
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .orElse(null);
 
-        short rolled = (short) GlobalThings.rand.nextInt(102);
+        short rolled = (short) GlobalThings.getRand().nextInt(102);
 
         if (rolled > 50) {
 //            heads

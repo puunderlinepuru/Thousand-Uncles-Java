@@ -1,8 +1,10 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.thousand_uncles.discord_bot.bot.util.AppNotifications;
 import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
-import com.thousand_uncles.discord_bot.bot.util.Config;
+import com.thousand_uncles.discord_bot.bot.config.Config;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
 import discord4j.core.GatewayDiscordClient;
@@ -14,6 +16,7 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.Message;
 import discord4j.core.spec.InteractionApplicationCommandCallbackReplyMono;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -34,6 +37,9 @@ public class CheckCommand implements SlashCommand {
 
     @Autowired
     private GatewayDiscordClient client;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private Config config;
@@ -121,6 +127,19 @@ public class CheckCommand implements SlashCommand {
         for (int i = 0; i < availableToCheckCategories.size(); i++) {
             availableCategoriesOptions.add(i, SelectMenu.Option.of(availableToCheckCategories.get(i), availableToCheckCategories.get(i)));
         }
+
+        try{
+            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectNode objectNode = objectMapper.valueToTree(foundMap);
+            objectNode.put("category", category);
+            String jsonString = objectMapper.writeValueAsString(objectNode);
+            rabbitTemplate.convertAndSend("test.exchange", "test.routing.key", jsonString);
+            System.out.println("sent");
+        }catch (Exception e) {
+            System.out.println("error: " + e);
+        }
+
+
         return event.reply()
                 .withEphemeral(true)
                 .withContent("Record for " + foundMap.getMap_name() + " - " + "%" + ":\n" +

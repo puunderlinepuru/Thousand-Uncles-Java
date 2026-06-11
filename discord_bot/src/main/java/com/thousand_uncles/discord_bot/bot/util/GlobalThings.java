@@ -7,7 +7,13 @@ import java.util.Random;
 
 @Component
 public class GlobalThings {
-    public static Random rand;
+    private static Random rand;
+
+    GlobalThings(){
+        System.out.println("Generating random sequence seed...");
+        rand = new Random();
+    }
+
     private static final List<String> mapIDS = (List<String>) YamlReader.yamlRead("../shared_resources/maps.yaml").get("maps");
 
     public static List<String> getMapIDS() {return mapIDS;}

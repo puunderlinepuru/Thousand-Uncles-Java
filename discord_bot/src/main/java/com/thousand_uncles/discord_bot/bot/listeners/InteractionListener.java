@@ -1,5 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.listeners;
 
+import com.thousand_uncles.discord_bot.bot.config.Config;
 import com.thousand_uncles.discord_bot.bot.util.*;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;

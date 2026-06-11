@@ -13,9 +13,13 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
+import com.thousand_uncles.google_api_handler.app.util.UpdateValues;
+import com.thousand_uncles.google_api_handler.data.service.FallbackMapRecordService;
 import com.thousand_uncles.google_api_handler.data.service.MapRecordServiceProd;
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -30,6 +34,7 @@ public class GoogleAPI_Handler {
 
     @Autowired
     MapRecordServiceProd mapRecordServiceProd;
+
 
     private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
@@ -52,7 +57,7 @@ public class GoogleAPI_Handler {
      */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {
-        // Load client secrets.
+        // Load client secrets.static
         InputStream in = GoogleAPI_Handler.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Credentials resource not found: " + CREDENTIALS_FILE_PATH);
@@ -90,13 +95,13 @@ public class GoogleAPI_Handler {
                         .setApplicationName(APPLICATION_NAME)
                         .build();
 
-        UpdateValuesResponse result = null;
         String valueInputOption = "RAW";
+
+        UpdateValues updateValues = new UpdateValues(service, valueInputOption);
 
         System.out.println("[ STATUS UPDATE ] Initializing Google API Connection..");
         System.out.println("[ INFO ] \n SpreadsheetID: " + uncletopiaSpreadsheetID + "\n" +
                 "Tried updating values on spreadsheets to: " + valuesToUpdateOnSpreadsheet + "\n" +
-                "Got response requesting update: " + result + "\n" +
                 "InputOption used for updates: " + valueInputOption + "\n");
 
         System.out.println("[ STATUS UPDATE ] Starting Update Task..");

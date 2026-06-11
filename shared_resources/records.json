@@ -1,0 +1,257 @@
+{
+  "control point" : { },
+  "cp_altitude" : {
+    "curr_time" : "0:40",
+    "prev_time" : "0:44",
+    "image_proof1_link" : "https://ibb.co/gLy60LQd",
+    "image_proof2_link" : "YT vid (old)",
+    "image_proof3_link" : "<- leave a comment with link to the proof of record time"
+  },
+  "cp_brew" : {
+    "curr_time" : "2:48",
+    "prev_time" : "4:17",
+    "image_proof1_link" : "https://ibb.co/8ct1BSC"
+  },
+  "cp_cargo" : {
+    "curr_time" : "0:40",
+    "prev_time" : "1:06",
+    "image_proof1_link" : "https://ibb.co/GvWpJGQn"
+  },
+  "cp_dustbowl" : {
+    "curr_time" : "5:23",
+    "prev_time" : "5:34",
+    "image_proof1_link" : "1:41",
+    "image_proof2_link" : "1:54",
+    "image_proof3_link" : "1:48",
+    "video_proof_link" : "YT vid"
+  },
+  "cp_egypt" : {
+    "curr_time" : "6:04",
+    "prev_time" : "6:30",
+    "image_proof1_link" : "1:30",
+    "image_proof2_link" : "2:08",
+    "image_proof3_link" : "2:26",
+    "video_proof_link" : "YT vid"
+  },
+  "cp_fulgur" : {
+    "curr_time" : "1:42",
+    "prev_time" : "1:53",
+    "image_proof1_link" : "https://ibb.co/mCSBYVRd"
+  },
+  "cp_gorge" : {
+    "curr_time" : "3:01",
+    "prev_time" : "3:09",
+    "image_proof1_link" : "https://ibb.co/rGsGvLMw"
+  },
+  "cp_hardwood" : {
+    "curr_time" : "2:47",
+    "prev_time" : "3:05",
+    "image_proof1_link" : "https://ibb.co/mCm25JB3"
+  },
+  "cp_junction" : {
+    "curr_time" : "2:46",
+    "prev_time" : "2:48",
+    "image_proof1_link" : "https://ibb.co/5x6nJ8Gy"
+  },
+  "cp_mercenarypark" : {
+    "curr_time" : "3:28",
+    "prev_time" : "4:28",
+    "image_proof1_link" : "https://ibb.co/qYFKk4m7",
+    "image_proof2_link" : "YT vid",
+    "image_proof3_link" : "YT vid (Engie POV) (old)"
+  },
+  "cp_mossrock" : {
+    "curr_time" : "0:45",
+    "prev_time" : "1:05",
+    "image_proof1_link" : "https://ibb.co/5x5dT5vN"
+  },
+  "cp_mountainlab" : {
+    "curr_time" : "2:56",
+    "prev_time" : "5:08",
+    "image_proof1_link" : "https://ibb.co/5WwxBWWg"
+  },
+  "cp_overgrown" : {
+    "curr_time" : "2:43",
+    "prev_time" : "3:08",
+    "image_proof1_link" : "https://ibb.co/bMW7Dfkk"
+  },
+  "territory control" : { },
+  "tc_hydro" : {
+    "curr_time" : "5:29",
+    "prev_time" : "6:54",
+    "image_proof1_link" : "1:43",
+    "image_proof2_link" : "2:00",
+    "image_proof3_link" : "1:46"
+  },
+  "capture the flag" : { },
+  "ctf_2fort" : {
+    "curr_time" : "5:04",
+    "prev_time" : "5:39",
+    "image_proof1_link" : "https://ibb.co/5xFxFZ65"
+  },
+  "ctf_applejack" : {
+    "curr_time" : "3:24",
+    "prev_time" : "3:55",
+    "image_proof1_link" : "https://ibb.co/hRR3YbH0"
+  },
+  "ctf_turbine" : {
+    "curr_time" : "2:46",
+    "prev_time" : "3:34",
+    "image_proof1_link" : "https://ibb.co/2GF5fqt"
+  },
+  "ctf_doublecross" : {
+    "curr_time" : "4:05",
+    "prev_time" : "5:11",
+    "image_proof1_link" : "https://ibb.co/BHDQVFd2"
+  },
+  "ctf_pelican_peak" : {
+    "curr_time" : "4:30",
+    "prev_time" : "4:44",
+    "image_proof1_link" : "https://ibb.co/C5nyPFWx"
+  },
+  "ctf_well" : {
+    "curr_time" : "3:38",
+    "prev_time" : "4:10",
+    "image_proof1_link" : "https://ibb.co/ks6VJRFx"
+  },
+  "ctf_landfall" : {
+    "curr_time" : "3:24",
+    "prev_time" : "5:08",
+    "image_proof1_link" : "https://ibb.co/HT605NgB"
+  },
+  "ctf_sawmill" : {
+    "curr_time" : "2:31",
+    "prev_time" : "3:05",
+    "image_proof1_link" : "https://ibb.co/d44h5G2x"
+  },
+  "koth (from round start)" : { },
+  "koth_highpass" : {
+    "curr_time" : "3:34",
+    "prev_time" : "x",
+    "image_proof1_link" : "YT vid"
+  },
+  "koth_lakeside_event" : { },
+  "koth_sawmill" : {
+    "curr_time" : "3:52",
+    "prev_time" : "x",
+    "image_proof1_link" : "YT vid"
+  },
+  "koth_viaduct_event" : { },
+  "payload" : { },
+  "pl_aquarius" : {
+    "curr_time" : "2:57",
+    "prev_time" : "3:25",
+    "image_proof1_link" : "https://ibb.co/tPHZXZNs"
+  },
+  "pl_badwater" : {
+    "curr_time" : "3:47",
+    "prev_time" : "3:51",
+    "image_proof1_link" : "https://ibb.co/XxwMyh7q"
+  },
+  "pl_barnblitz" : {
+    "curr_time" : "4:30",
+    "prev_time" : "4:35",
+    "image_proof1_link" : "https://ibb.co/fGN9Cm52"
+  },
+  "pl_borneo" : {
+    "curr_time" : "4:24",
+    "prev_time" : "5:27",
+    "image_proof1_link" : "https://ibb.co/Z6tq2xWH"
+  },
+  "pl_camber" : {
+    "curr_time" : "4:41",
+    "prev_time" : "4:43",
+    "image_proof1_link" : "https://ibb.co/ds8Z6n8f"
+  },
+  "pl_cashworks" : {
+    "curr_time" : "5:15",
+    "prev_time" : "5:40",
+    "image_proof1_link" : "https://ibb.co/DxJFWQB"
+  },
+  "pl_chilly" : {
+    "curr_time" : "5:00",
+    "prev_time" : "5:20",
+    "image_proof1_link" : "https://ibb.co/wG6CQQm"
+  },
+  "pl_citadel" : {
+    "curr_time" : "5:16",
+    "prev_time" : "5:48",
+    "image_proof1_link" : "https://ibb.co/JwNZ0ycq"
+  },
+  "pl_emerge" : {
+    "curr_time" : "3:32",
+    "prev_time" : "4:16",
+    "image_proof1_link" : "https://ibb.co/tTYdLcNg"
+  },
+  "pl_frontier" : {
+    "curr_time" : "6:51",
+    "prev_time" : "7:09",
+    "image_proof1_link" : "https://ibb.co/qMV4dDZ1"
+  },
+  "pl_goldrush" : {
+    "curr_time" : "7:27",
+    "prev_time" : "10:32",
+    "image_proof1_link" : "1:59",
+    "image_proof2_link" : "2:22",
+    "image_proof3_link" : "3:06",
+    "video_proof_link" : "YT vid"
+  },
+  "pl_hoodoo" : {
+    "curr_time" : "7:16",
+    "prev_time" : "8:09",
+    "image_proof1_link" : "3:19",
+    "image_proof2_link" : "1:52",
+    "image_proof3_link" : "2:05",
+    "video_proof_link" : "YT vid"
+  },
+  "pl_odyssey" : {
+    "curr_time" : "6:06",
+    "prev_time" : "7:28",
+    "image_proof1_link" : "https://ibb.co/N6fhWbCB"
+  },
+  "pl_phoenix" : {
+    "curr_time" : "4:55",
+    "prev_time" : "6:42",
+    "image_proof1_link" : "https://ibb.co/MyQP6YrG"
+  },
+  "pl_pier" : {
+    "curr_time" : "5:47",
+    "prev_time" : "5:53",
+    "image_proof1_link" : "https://ibb.co/RpY29MCS",
+    "image_proof2_link" : "",
+    "image_proof3_link" : "\"Ubering engies is fun and totally a good strat\" - Anonymous Medic"
+  },
+  "pl_precipice_event" : {
+    "curr_time" : "4:44",
+    "prev_time" : "5:59",
+    "image_proof1_link" : "https://ibb.co/WN0msf3V"
+  },
+  "pl_snowycoast" : {
+    "curr_time" : "3:55",
+    "prev_time" : "3:56",
+    "image_proof1_link" : "https://ibb.co/hJSqrXng"
+  },
+  "pl_swiftwater" : {
+    "curr_time" : "4:29",
+    "prev_time" : "5:10",
+    "image_proof1_link" : "https://ibb.co/VWqjXS2S"
+  },
+  "pl_thundermountain" : {
+    "curr_time" : "9:48",
+    "prev_time" : "13:37",
+    "image_proof1_link" : "2:34",
+    "image_proof2_link" : "2:43",
+    "image_proof3_link" : "4:31",
+    "video_proof_link" : "YT vid"
+  },
+  "pl_upward" : {
+    "curr_time" : "5:16",
+    "prev_time" : "6:16",
+    "image_proof1_link" : "https://ibb.co/pvvc1gh1"
+  },
+  "pl_venice" : {
+    "curr_time" : "4:07",
+    "prev_time" : "6:26",
+    "image_proof1_link" : "https://ibb.co/jvyzwk7s"
+  }
+}
