@@ -1,7 +1,11 @@
 package com.thousand_uncles.discord_bot.bot.listeners;
 
-import com.thousand_uncles.discord_bot.bot.config.Config;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.thousand_uncles.discord_bot.bot.util.Config;
 import com.thousand_uncles.discord_bot.bot.util.*;
+import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
+import com.thousand_uncles.discord_bot.data.models.GeneralizedMapRecord;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
 import discord4j.common.util.Snowflake;
@@ -16,6 +20,7 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.Role;
 import discord4j.core.object.reaction.Reaction;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -30,11 +35,18 @@ public class InteractionListener {
     ApplicationContext applicationContext;
 
     @Autowired
+    RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    MapRecordServiceProd mapRecordServiceProd;
+
+    @Autowired
     Config config;
 
     GatewayDiscordClient client;
 
     String REGION_ROLE_MESSAGE_ID;
+    String ADMI_ROLE_ID;
     String SERVER_ID;
     String NA_ROLE_ID;
     String EU_ROLE_ID;
@@ -45,6 +57,7 @@ public class InteractionListener {
         this.client = client;
         System.out.println("InteractionListener initialized");
         REGION_ROLE_MESSAGE_ID = config.getRegion_role_message_id();
+        ADMI_ROLE_ID = config.getAdmi_role_id();
         SERVER_ID = config.getServer_id();
         NA_ROLE_ID = config.getNa_role_id();
         EU_ROLE_ID = config.getEu_role_id();
@@ -68,7 +81,62 @@ public class InteractionListener {
     }
 
     public Mono<Void> onButton (ButtonInteractionEvent event){
-        System.out.println("button");
+        String customId = event.getCustomId();
+        System.out.println("button: " + customId);
+
+        if (customId.startsWith("approve-")){
+            if (event.getMessage().isEmpty()){ return Mono.empty();}
+
+            Member whoClicked = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
+
+            if (!whoClicked.getRoleIds().contains(Snowflake.of(ADMI_ROLE_ID))){
+                return Mono.empty();
+            }
+
+            String[] partsOfCustomID = customId.split("-");
+            String category = partsOfCustomID[1];
+            String map = partsOfCustomID[2];
+            short mapTime = Short.parseShort(partsOfCustomID[3]);
+
+            GeneralizedMapRecord generalizedMapRecord;
+            generalizedMapRecord = mapRecordServiceProd.getFromHold(category, GlobalThings.getMapIDS().indexOf(map));
+
+            MapRecord foundMap = new AnyPercentMapRecord();
+
+            switch (category){
+                case "any":
+                    AnyPercentMapRecord anyPercentMapRecord = new AnyPercentMapRecord();
+                    anyPercentMapRecord.setId(GlobalThings.getMapIDS().indexOf(map));
+                    anyPercentMapRecord.setMap_name(map);
+                    anyPercentMapRecord.setCurr_wr_seconds(mapTime);
+                    anyPercentMapRecord.setPrev_wr_seconds((short) 0);
+                    anyPercentMapRecord.setProof_img_1_link(generalizedMapRecord.getProof_img_1_link());
+                    anyPercentMapRecord.setProof_img_2_link(generalizedMapRecord.getProof_img_2_link());
+                    anyPercentMapRecord.setProof_img_3_link(generalizedMapRecord.getProof_img_3_link());
+                    anyPercentMapRecord.setProof_vid_link(generalizedMapRecord.getProof_vid_link());
+                    anyPercentMapRecord.setStage_1_time_seconds(generalizedMapRecord.getStage_1_time_seconds());
+                    anyPercentMapRecord.setStage_2_time_seconds(generalizedMapRecord.getStage_2_time_seconds());
+                    anyPercentMapRecord.setStage_3_time_seconds(generalizedMapRecord.getStage_3_time_seconds());
+
+                    foundMap = anyPercentMapRecord;
+            }
+
+            try{
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectNode objectNode = objectMapper.valueToTree(foundMap);
+                objectNode.put("category", category);
+                String jsonString = objectMapper.writeValueAsString(objectNode);
+                rabbitTemplate.convertAndSend("test.exchange", "test.routing.key", jsonString);
+                System.out.println("sent");
+            }catch (Exception e) {
+                System.out.println("error: " + e);
+            }
+
+            Message recordApprovalMessage = event.getMessage().get();
+            recordApprovalMessage.edit()
+                    .withComponents()
+                    .block();
+        }
 
         if (event.getMessageId().equals(Snowflake.of(REGION_ROLE_MESSAGE_ID))){
             Member member = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
@@ -79,9 +147,8 @@ public class InteractionListener {
                     .collectList()
                     .block();
             assert memberRoleIDs != null;
-            String buttonName = event.getCustomId();
 
-            switch (buttonName){
+            switch (customId){
                 case "button_EU":
                     if (memberRoleIDs.contains(Snowflake.of(EU_ROLE_ID))) {
                         member.removeRole(Snowflake.of(EU_ROLE_ID)).block();

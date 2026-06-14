@@ -1,0 +1,12 @@
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/config/DataApplication.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/config/DataSourceConfig.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/config/DatabaseConfig.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/models/AnyPercentMapRecord.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/models/MapRecord.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/models/SoloMapRecord.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/repository/AnyPercentMapRecordRepository.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/repository/SoloMapRecordRepository.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/service/FallbackMapRecordService.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/service/MapRecordService.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/util/MapRecordUtil.java
+/home/labobotomy/Thousand-Uncles-Java/data/src/main/java/com/thousand_uncles/data/util/RecordFormatter.java

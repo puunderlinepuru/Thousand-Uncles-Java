@@ -2,3 +2,5 @@
 /.env
 /shared_resources_space/records.json
 token.env
+/data/target/data-1.0-SNAPSHOT.jar
+/data/target/data-1.0-SNAPSHOT.jar.original

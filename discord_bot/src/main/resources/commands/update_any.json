@@ -1,0 +1,48 @@
+{
+  "name": "update_any",
+  "description": "Updates a map in available table",
+  "options": [
+    {
+      "name": "map",
+      "description": "map name",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "time",
+      "description": "what's the time?",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "proof_img_link",
+      "description": "proof",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "proof_img_link_2",
+      "description": "proof",
+      "type": 3,
+      "required": false
+    },
+    {
+      "name": "proof_img_link_3",
+      "description": "proof",
+      "type": 3,
+      "required": false
+    },
+    {
+      "name": "proof_vid_link",
+      "description": "video proof",
+      "type": 3,
+      "required": false
+    },
+    {
+      "name": "stage_times",
+      "description": "format - \"s1:s1, s2:s2, s3:s3\"",
+      "type": 3,
+      "required": false
+    }
+  ]
+}

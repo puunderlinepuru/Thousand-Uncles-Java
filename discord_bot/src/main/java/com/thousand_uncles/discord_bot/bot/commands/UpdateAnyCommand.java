@@ -1,7 +1,8 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
-import com.thousand_uncles.discord_bot.bot.config.Config;
+import com.thousand_uncles.discord_bot.bot.util.Config;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
+import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.models.SoloMapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
@@ -9,6 +10,8 @@ import com.thousand_uncles.discord_bot.data.util.RecordFormatter;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.Button;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -16,7 +19,7 @@ import reactor.core.publisher.Mono;
 
 @SuppressWarnings("unused")
 @Component
-public class UpdateCommand implements SlashCommand{
+public class UpdateAnyCommand implements SlashCommand{
 
     @Autowired
     Config config;
@@ -27,17 +30,13 @@ public class UpdateCommand implements SlashCommand{
 
     @Override
     public String getName() {
-        return "update";
+        return "update_any";
     }
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event){
         MapRecordServiceProd mapRecordServiceProd = applicationContext.getBean(MapRecordServiceProd.class);
 
-        String category = event.getOption("category")
-                .flatMap(ApplicationCommandInteractionOption::getValue)
-                .map(ApplicationCommandInteractionOptionValue::asString)
-                .orElse(null);
         String mapName = event.getOption("map")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
@@ -71,13 +70,6 @@ public class UpdateCommand implements SlashCommand{
 
         int mapTime, stage_1_time = 0, stage_2_time = 0, stage_3_time = 0;
 
-//        check category for valid
-        if (!config.getAvailable_categories().getUpdate().contains(category)){
-            return event.reply()
-                    .withEphemeral(true)
-                    .withContent("Beep Boop.. I don't think I know this category (you can't update any% yet) :p");
-        }
-
 //        check map for valid
         int mapID = GlobalThings.getMapIDS().indexOf(mapName);
         if (mapID == -1) {
@@ -98,7 +90,7 @@ public class UpdateCommand implements SlashCommand{
 
         MapRecord existingRecord;
         try{
-            existingRecord = mapRecordServiceProd.getRecord(mapID, category);
+            existingRecord = mapRecordServiceProd.getRecord(mapID, "any");
         } catch (Exception e) {
             existingRecord = null;
         }
@@ -141,16 +133,7 @@ public class UpdateCommand implements SlashCommand{
             }
         }
 
-        MapRecord newRecord;
-
-        assert category != null;
-        if (category.equals("solo")){
-            newRecord = new SoloMapRecord();
-        } else {
-            return event.reply()
-                    .withEphemeral(true)
-                    .withContent("Beep Boop.. Can't create new record, something's wrong with the category :p");
-        }
+        AnyPercentMapRecord newRecord = new AnyPercentMapRecord();
 
         newRecord.setId(mapID);
         newRecord.setMap_name(mapName);
@@ -169,13 +152,30 @@ public class UpdateCommand implements SlashCommand{
             newRecord.setStage_3_time_seconds((short) stage_3_time);
         }
 
-        mapRecordServiceProd.addRecord(newRecord);
+//        mapRecordServiceProd.addRecord(newRecord);
+        mapRecordServiceProd.putOnHold(
+                "any",
+                mapID,
+                mapName,
+                (short) mapTime,
+                (short) 0,
+                img1_link,
+                img2_link,
+                img3_link,
+                vid_link,
+                (short) stage_1_time,
+                (short) stage_2_time,
+                (short) stage_3_time,
+                "");
 
         return event.reply()
                 .withEphemeral(false)
-                .withContent(mapName + " WR for category " + category + "% Updated! \n" +
+                .withContent(mapName + " WR for category Any% Updated! \n" +
                         "new  WR set -> " + timeOption + "\n" +
                         newRecord.getProof_img_1_link() + "\n" +
-                        "I think it's updated.. check if it updated now");
+                        "Record noted down, waiting for approval :p")
+                .withComponents(ActionRow.of(
+                        Button.primary("approve-any-" + mapName + "-" + mapTime, "Validate (for admis)")
+                ));
     }
 }

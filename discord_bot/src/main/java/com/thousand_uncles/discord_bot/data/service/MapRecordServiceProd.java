@@ -1,9 +1,11 @@
 package com.thousand_uncles.discord_bot.data.service;
 
 import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
+import com.thousand_uncles.discord_bot.data.models.GeneralizedMapRecord;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.models.SoloMapRecord;
 import com.thousand_uncles.discord_bot.data.repository.AnyPercentMapRecordRepository;
+import com.thousand_uncles.discord_bot.data.repository.ConfirmWorthyRepository;
 import com.thousand_uncles.discord_bot.data.repository.SoloMapRecordRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -30,6 +33,10 @@ public class MapRecordServiceProd {
     @SuppressWarnings("unused")
     @Autowired(required = false)
     private AnyPercentMapRecordRepository anyPercentMapRecordRepository;
+
+    @SuppressWarnings("unused")
+    @Autowired(required = false)
+    private ConfirmWorthyRepository confirmWorthyRepository;
 
     @SuppressWarnings("unused")
     @PersistenceContext
@@ -135,5 +142,189 @@ public class MapRecordServiceProd {
             case "any" -> anyPercentMapRecordRepository.findByMap_nameContaining(partialName);
             default -> null;
         };
+    }
+
+    public MapRecord saveSolo(
+            int ID,
+            String map_name,
+            short curr_wr_time,
+            short prev_wr_time,
+            String the_hero,
+            String proof_1_link,
+            String proof_2_link,
+            String proof_3_link,
+            String proof_vid_link,
+            Short stage_1_time,
+            Short stage_2_time,
+            Short stage_3_time
+    ){
+        SoloMapRecord recordToSave = new SoloMapRecord();
+        recordToSave.setId(ID);
+        recordToSave.setMap_name(map_name);
+        recordToSave.setCurr_wr_seconds(curr_wr_time);
+        recordToSave.setPrev_wr_seconds(prev_wr_time);
+        recordToSave.setThe_hero(the_hero);
+        recordToSave.setProof_img_1_link(proof_1_link);
+        recordToSave.setProof_img_2_link(proof_2_link);
+        recordToSave.setProof_img_3_link(proof_3_link);
+        recordToSave.setProof_vid_link(proof_vid_link);
+        recordToSave.setStage_1_time_seconds(stage_1_time);
+        recordToSave.setStage_2_time_seconds(stage_2_time);
+        recordToSave.setStage_3_time_seconds(stage_3_time);
+
+        return soloMapRecordRepository.save(recordToSave);
+    }
+
+    public MapRecord saveAny(
+            int ID,
+            String map_name,
+            short curr_wr_time,
+            short prev_wr_time,
+            String proof_1_link,
+            String proof_2_link,
+            String proof_3_link,
+            String proof_vid_link,
+            Short stage_1_time,
+            Short stage_2_time,
+            Short stage_3_time
+    ){
+        AnyPercentMapRecord recordToSave = new AnyPercentMapRecord();
+        recordToSave.setId(ID);
+        recordToSave.setMap_name(map_name);
+        recordToSave.setCurr_wr_seconds(curr_wr_time);
+        recordToSave.setPrev_wr_seconds(prev_wr_time);
+        recordToSave.setProof_img_1_link(proof_1_link);
+        recordToSave.setProof_img_2_link(proof_2_link);
+        recordToSave.setProof_img_3_link(proof_3_link);
+        recordToSave.setProof_vid_link(proof_vid_link);
+        recordToSave.setStage_1_time_seconds(stage_1_time);
+        recordToSave.setStage_2_time_seconds(stage_2_time);
+        recordToSave.setStage_3_time_seconds(stage_3_time);
+
+        return anyPercentMapRecordRepository.save(recordToSave);
+    }
+
+    public MapRecord updateSolo(
+            int ID,
+            String map_name,
+            short curr_wr_time,
+            short prev_wr_time,
+            String the_hero,
+            String proof_1_link,
+            String proof_2_link,
+            String proof_3_link,
+            String proof_vid_link,
+            Short stage_1_time,
+            Short stage_2_time,
+            Short stage_3_time
+    )  throws NoSuchElementException {
+        SoloMapRecord recordToUpdate = soloMapRecordRepository.findById(ID).orElseThrow();
+        recordToUpdate.setId(ID);
+        recordToUpdate.setMap_name(map_name);
+        recordToUpdate.setCurr_wr_seconds(curr_wr_time);
+        recordToUpdate.setPrev_wr_seconds(prev_wr_time);
+        recordToUpdate.setThe_hero(the_hero);
+        recordToUpdate.setProof_img_1_link(proof_1_link);
+        recordToUpdate.setProof_img_2_link(proof_2_link);
+        recordToUpdate.setProof_img_3_link(proof_3_link);
+        recordToUpdate.setProof_vid_link(proof_vid_link);
+        recordToUpdate.setStage_1_time_seconds(stage_1_time);
+        recordToUpdate.setStage_2_time_seconds(stage_2_time);
+        recordToUpdate.setStage_3_time_seconds(stage_3_time);
+
+        return soloMapRecordRepository.save(recordToUpdate);
+    }
+
+    public MapRecord updateAny(
+            int ID,
+            String map_name,
+            short curr_wr_time,
+            short prev_wr_time,
+            String proof_1_link,
+            String proof_2_link,
+            String proof_3_link,
+            String proof_vid_link,
+            Short stage_1_time,
+            Short stage_2_time,
+            Short stage_3_time
+    )  throws NoSuchElementException {
+        AnyPercentMapRecord recordToUpdate = anyPercentMapRecordRepository.findById(ID).orElseThrow();
+        recordToUpdate.setId(ID);
+        recordToUpdate.setMap_name(map_name);
+        recordToUpdate.setCurr_wr_seconds(curr_wr_time);
+        recordToUpdate.setPrev_wr_seconds(prev_wr_time);
+        recordToUpdate.setProof_img_1_link(proof_1_link);
+        recordToUpdate.setProof_img_2_link(proof_2_link);
+        recordToUpdate.setProof_img_3_link(proof_3_link);
+        recordToUpdate.setProof_vid_link(proof_vid_link);
+        recordToUpdate.setStage_1_time_seconds(stage_1_time);
+        recordToUpdate.setStage_2_time_seconds(stage_2_time);
+        recordToUpdate.setStage_3_time_seconds(stage_3_time);
+
+        return anyPercentMapRecordRepository.save(recordToUpdate);
+    }
+
+    public GeneralizedMapRecord putOnHold(
+            String category,
+            int ID,
+            String map_name,
+            short curr_wr_time,
+            short prev_wr_time,
+            String proof_1_link,
+            String proof_2_link,
+            String proof_3_link,
+            String proof_vid_link,
+            Short stage_1_time,
+            Short stage_2_time,
+            Short stage_3_time,
+            String additional
+    ) {
+        GeneralizedMapRecord recordToUpdate = new GeneralizedMapRecord();
+        recordToUpdate.setCategory(category);
+        recordToUpdate.setMap_id(ID);
+        recordToUpdate.setMap_name(map_name);
+        recordToUpdate.setCurr_wr_seconds(curr_wr_time);
+        recordToUpdate.setPrev_wr_seconds(prev_wr_time);
+        recordToUpdate.setProof_img_1_link(proof_1_link);
+        recordToUpdate.setProof_img_2_link(proof_2_link);
+        recordToUpdate.setProof_img_3_link(proof_3_link);
+        recordToUpdate.setProof_vid_link(proof_vid_link);
+        recordToUpdate.setStage_1_time_seconds(stage_1_time);
+        recordToUpdate.setStage_2_time_seconds(stage_2_time);
+        recordToUpdate.setStage_3_time_seconds(stage_3_time);
+        recordToUpdate.setAdditional(additional);
+
+        return confirmWorthyRepository.save(recordToUpdate);
+//        confirmWorthyRepository.addRecord(
+//                category,
+//                ID,
+//                map_name,
+//                curr_wr_time,
+//                prev_wr_time,
+//                proof_1_link,
+//                proof_2_link,
+//                proof_3_link,
+//                proof_vid_link,
+//                stage_1_time,
+//                stage_2_time,
+//                stage_3_time,
+//                additional
+//        );
+    }
+
+    public void removeFromHold(
+            String category,
+            int map_id
+    ){
+
+    }
+
+    public GeneralizedMapRecord getFromHold(
+            String category,
+            int map_id
+    ){
+        GeneralizedMapRecord foundRecord = confirmWorthyRepository.findMapByCategory(map_id, category);
+        confirmWorthyRepository.delete(foundRecord);
+        return foundRecord;
     }
 }

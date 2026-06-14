@@ -7,11 +7,9 @@ import com.thousand_uncles.google_api_handler.data.models.MapRecord;
 import com.thousand_uncles.google_api_handler.data.models.SoloMapRecord;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.hibernate.mapping.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

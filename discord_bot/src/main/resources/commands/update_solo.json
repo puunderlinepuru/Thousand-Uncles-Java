@@ -1,10 +1,10 @@
 {
-  "name": "update",
+  "name": "update_solo",
   "description": "Updates a map in available table",
   "options": [
     {
-      "name": "category",
-      "description": "run category: any, solo",
+      "name": "the_hero",
+      "description": "who beat it?",
       "type": 3,
       "required": true
     },

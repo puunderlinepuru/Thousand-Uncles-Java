@@ -1,4 +1,4 @@
-package com.thousand_uncles.discord_bot.bot.config;
+package com.thousand_uncles.discord_bot.bot.util;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,6 +19,7 @@ public class Config {
     private String currently_gaming_channel_id;
     private String region_role_message_id;
     private String role_on_join_id;
+    private String admi_role_id;
     private String na_role_id;
     private String eu_role_id;
     private String au_role_id;
@@ -55,6 +56,13 @@ public class Config {
     }
     public void setRegion_role_message_id(String region_role_message_id) {
         this.region_role_message_id = region_role_message_id;
+    }
+
+    public String getAdmi_role_id() {
+        return admi_role_id;
+    }
+    public void setAdmi_role_id(String admi_role_id) {
+        this.admi_role_id = admi_role_id;
     }
 
     public String getRole_on_join_id() {

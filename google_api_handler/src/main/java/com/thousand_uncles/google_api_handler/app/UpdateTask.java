@@ -8,6 +8,7 @@ import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.thousand_uncles.google_api_handler.app.util.GlobalThings;
 import com.thousand_uncles.google_api_handler.app.util.JSONHandler;
+import com.thousand_uncles.google_api_handler.app.util.UpdateValues;
 import com.thousand_uncles.google_api_handler.data.service.MapRecordServiceProd;
 import com.thousand_uncles.google_api_handler.data.util.RecordFormatter;
 import com.thousand_uncles.google_api_handler.data.models.MapRecord;
@@ -56,6 +57,8 @@ class UpdateTask extends TimerTask {
         category = "solo";
         System.out.println("[ STATE CHANGE ] Comparing spreadsheet records to database.. ");
         processSoloSheetData(spreadsheetRecordValues, category);
+
+//        UpdateValues.updateSheets(List.of(List.of("hewwo")), "Sheet1", "A3");
     }
 
     protected List<List<Object>> readSheets(String sheet, String topLeft, String bottomRight) {
@@ -397,8 +400,6 @@ class UpdateTask extends TimerTask {
                 System.out.println("[ JSON INFO ] Beaten records: \n" + beatenRecords.toPrettyString());
                 JSONHandler.writeRecordsJSON("records.json", spreadsheetRecordValues);
             }
-//        write or not write
-//        updateSheets();
         } catch (IOException e) {
             JSONHandler.writeRecordsJSON("records.json", spreadsheetRecordValues);
         }

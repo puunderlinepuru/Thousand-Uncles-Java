@@ -33,19 +33,20 @@ public class UpdateValues {
 
     static Sheets service;
     static String valueInputOption;
+    static final String spreadsheetId = "1YtpbwvqTOiBRN4Sm9SXlNJCq6qPb2dvW3SBmwu5poNs";
 
     public UpdateValues(Sheets service, String valueInputOption){
         UpdateValues.service = service;
         UpdateValues.valueInputOption = valueInputOption;
     }
 
-    public static void updateSheets(String spreadsheetId, List<List<Object>> values) {
+    public static void updateSheets(List<List<Object>> values, String sheetName, String topLeft) {
         UpdateValuesResponse result = null;
         try {
             // Updates the values in the specified range.
             ValueRange body = new ValueRange()
                     .setValues(values);
-            result = service.spreadsheets().values().update(spreadsheetId, "Sheet1!A2", body)
+            result = service.spreadsheets().values().update(spreadsheetId, sheetName+"!" + topLeft, body)
                     .setValueInputOption(valueInputOption)
                     .execute();
             System.out.printf("%d cells updated.\n", result.getUpdatedCells());

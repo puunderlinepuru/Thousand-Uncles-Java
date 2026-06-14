@@ -6,9 +6,10 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.util.List;
 import java.util.Map;
 
-public class YamlReader {
+public class YAMLHandler {
     static File file;
 
     @SuppressWarnings("unused")
@@ -25,7 +26,7 @@ public class YamlReader {
     }
 
     @SuppressWarnings("unused")
-    public static void yamlWrite(String fileName, Map<String, Object> data) {
+    public static void yamlWriteList(String fileName, Map<String, List<String>> data) {
         file = new File( fileName );
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
