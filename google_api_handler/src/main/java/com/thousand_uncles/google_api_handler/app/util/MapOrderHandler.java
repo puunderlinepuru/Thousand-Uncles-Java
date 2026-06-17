@@ -22,6 +22,7 @@ public class MapOrderHandler {
         YAMLHandler.yamlWriteList("shared_resources/ordered_maps.yaml", mapOrderMap);
     }
 
+    @SuppressWarnings("unused")
     public static void updateEverything(String sheetName){
 
     }
@@ -30,6 +31,7 @@ public class MapOrderHandler {
         return mapOrderList;
     }
 
+    @SuppressWarnings("unused")
     public static void setMapOrderList(List<String> mapOrderList) {
         MapOrderHandler.mapOrderList = mapOrderList;
     }

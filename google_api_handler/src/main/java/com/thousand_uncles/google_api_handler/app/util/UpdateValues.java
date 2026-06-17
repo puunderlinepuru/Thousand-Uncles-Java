@@ -2,46 +2,33 @@ package com.thousand_uncles.google_api_handler.app.util;
 
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.sheets.v4.Sheets;
-import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.google.auth.http.HttpCredentialsAdapter;
-import com.google.auth.oauth2.GoogleCredentials;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 /* Class to demonstrate the use of Spreadsheet Update Values API */
 public class UpdateValues {
-    /**
-     * Sets values in a range of a spreadsheet.
-     *
-     * @param spreadsheetId    - Id of the spreadsheet.
-     * @param range            - Range of cells of the spreadsheet.
-     * @param valueInputOption - Determines how input data should be interpreted.
-     * @param values           - List of rows of values to input.
-     * @return spreadsheet with updated values
-     * @throws IOException - if credentials file not found.
-     */
 
-    static Sheets service;
-    static String valueInputOption;
-    static final String spreadsheetId = "1YtpbwvqTOiBRN4Sm9SXlNJCq6qPb2dvW3SBmwu5poNs";
+    private static Sheets service;
+    private static String valueInputOption;
+    private static final String spreadsheetId = "1YtpbwvqTOiBRN4Sm9SXlNJCq6qPb2dvW3SBmwu5poNs";
 
-    public UpdateValues(Sheets service, String valueInputOption){
+    private UpdateValues(){
+
+    }
+
+    public static void setService(Sheets service) {
         UpdateValues.service = service;
+    }
+
+    public static void setValueInputOption(String valueInputOption) {
         UpdateValues.valueInputOption = valueInputOption;
     }
 
     public static void updateSheets(List<List<Object>> values, String sheetName, String topLeft) {
-        UpdateValuesResponse result = null;
+        UpdateValuesResponse result;
         try {
             // Updates the values in the specified range.
             ValueRange body = new ValueRange()

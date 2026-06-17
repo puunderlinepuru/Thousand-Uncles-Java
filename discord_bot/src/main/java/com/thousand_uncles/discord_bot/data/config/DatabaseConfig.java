@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Profile;
 @SuppressWarnings("unused")
 public class DatabaseConfig {
 
-    @Bean
     @SuppressWarnings("unused")
+    @Bean
     @Profile("dev")
     public MapRecordServiceProd mapRecordService(FallbackMapRecordService fallbackService) {
         /*return new MapRecordServiceProd() {

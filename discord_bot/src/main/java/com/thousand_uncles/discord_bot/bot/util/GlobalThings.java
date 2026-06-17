@@ -18,6 +18,7 @@ public class GlobalThings {
 
     public static List<String> getMapIDS() {return mapIDS;}
 
+    @SuppressWarnings("unused")
     public static Integer getMapID(String mapName) {return mapIDS.indexOf(mapName);}
 
     public static Random getRand() {return rand;}

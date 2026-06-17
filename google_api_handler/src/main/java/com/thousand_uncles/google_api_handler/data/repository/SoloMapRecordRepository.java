@@ -13,20 +13,24 @@ import java.util.List;
 @Repository
 public interface SoloMapRecordRepository extends JpaRepository<SoloMapRecord, Integer> {
 
+    @SuppressWarnings("unused")
     @Query("SELECT m FROM SoloMapRecord m WHERE m.map_name = :name")
     MapRecord findByMap_name(@Param("name") String name);
 
     @Query("SELECT m FROM SoloMapRecord m WHERE LOWER(m.map_name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<MapRecord> findByMap_nameContaining(@Param("name") String name);
 
+    @SuppressWarnings("unused")
     @Modifying
     @Query("UPDATE SoloMapRecord m SET m.map_name = :newName WHERE m.map_name = :oldName")
     int updateMap_name(@Param("oldName") String oldName, @Param("newName") String newName);
 
+    @SuppressWarnings("unused")
     @Modifying
     @Query("DELETE FROM SoloMapRecord m WHERE m.map_name = :name")
     int deleteByMap_name(@Param("name") String name);
 
+    @SuppressWarnings("unused")
     @Modifying
     @Query("UPDATE SoloMapRecord m SET " +
             "m.prev_wr_seconds = m.curr_wr_seconds, " +
@@ -51,41 +55,7 @@ public interface SoloMapRecordRepository extends JpaRepository<SoloMapRecord, In
             @Param("stage3_time")  Short stage_3_time
     );
 
-    /*@Modifying
-    @Query("MERGE INTO SoloMapRecord m USING (VALUES (" +
-            ":id, :name, :time, :stage1_proof, :stage2_proof, :stage3_proof, :proof_vid, :stage1_time, :stage2_time, :stage3_time)" +
-            ") " +
-            "AS  v(" +
-            "id, name, time, stage1_proof, stage2_proof, stage3_proof, proof_vid, stage1_time, stage2_time, stage3_time) " +
-            "WHEN MATCHED THEN UPDATE SET " +
-            "m.id = v.id, " +
-            "m.map_name = v.name" +
-            "m.curr_wr_seconds = v.curr_wr_seconds, " +
-            "m.prev_wr_seconds = v.prev_wr_seconds, " +
-            "m.proof_img_1_link = v.stage1_proof, " +
-            "m.proof_img_2_link = v.stage2_proof, " +
-            "m.proof_img_3_link = v.stage3_proof, " +
-            "m.proof_vid_link = v.proof_vid, " +
-            "m.stage_1_time_seconds = v.stage1_time, " +
-            "m.stage_2_time_seconds = v.stage2_time, " +
-            "m.stage_3_time_seconds = v.stage3_time " +
-            "WHEN NOT MATCHED THEN INSERT (" +
-            "id, map_name, curr_wr_seconds, prev_wr_seconds, proof_img_1_link, proof_img_2_link, proof_img_3_link, proof_vid_link, stage_1_time_seconds, stage_2_time_seconds, stage_3_time_seconds) VALUES " +
-            "(v.id, v.name, v.time, v.stage1_proof, v.stage2_proof, v.stage3_proof, v.proof_vid, v.stage1_time, v.stage2_time, v.stage3_time)"
-    )
-    void upsert(
-            @Param("id")            Integer ID,
-            @Param("name")          String name,
-            @Param("newTime")       Short newTime,
-            @Param("stage1_proof")  String stage_1_proof,
-            @Param("stage2_proof")  String stage_2_proof,
-            @Param("stage3_proof")  String stage_3_proof,
-            @Param("proof_vid")     String proof_vid,
-            @Param("stage1_time")  Short stage_1_time,
-            @Param("stage2_time")  Short stage_2_time,
-            @Param("stage3_time")  Short stage_3_time
-    );*/
-
+    @SuppressWarnings("unused")
     @Modifying
     @Query(value = "INSERT INTO solo (id, map_name, curr_wr_seconds, prev_wr_seconds, proof_img_1_link, proof_img_2_link, proof_img_3_link, proof_vid_link, stage_1_time_seconds, stage_2_time_seconds, stage_3_time_seconds) " +
             "VALUES " +
@@ -117,6 +87,7 @@ public interface SoloMapRecordRepository extends JpaRepository<SoloMapRecord, In
             @Param("stage3_time")  Short stage_3_time
     );
 
+    @SuppressWarnings("unused")
     @Modifying
     @Query("INSERT INTO SoloMapRecord (id, map_name, curr_wr_seconds, prev_wr_seconds, proof_img_1_link, proof_img_2_link, proof_img_3_link, proof_vid_link, stage_1_time_seconds, stage_2_time_seconds, stage_3_time_seconds) " +
             "VALUES " +

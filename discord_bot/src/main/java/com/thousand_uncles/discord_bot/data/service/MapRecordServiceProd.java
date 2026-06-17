@@ -1,7 +1,7 @@
 package com.thousand_uncles.discord_bot.data.service;
 
 import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
-import com.thousand_uncles.discord_bot.data.models.GeneralizedMapRecord;
+import com.thousand_uncles.discord_bot.data.models.ConfirmWorthyMapRecord;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.models.SoloMapRecord;
 import com.thousand_uncles.discord_bot.data.repository.AnyPercentMapRecordRepository;
@@ -76,32 +76,6 @@ public class MapRecordServiceProd {
         return foundMap;
     }
 
-    // Read record by name
-    /*@SuppressWarnings("unused")
-    public MapRecord getRecordByName(String mapName) {
-        return anyPercentMapRecordRepository.findByMap_name(mapName);
-    }*/
-
-    // Read all records
-    /*@SuppressWarnings("unused")
-    public List<MapRecord> getAllRecords() {
-        return com.thousand_uncles.data.repository.findAll();
-    }*/
-
-    // Update record by name
-    /*@SuppressWarnings("unused")
-    public boolean updateMapName(String oldName, String newName) {
-        int updated = com.thousand_uncles.data.repository.updateMap_name(oldName, newName);
-        return updated > 0;
-    }*/
-
-    // Delete record by name
-    /*@SuppressWarnings("unused")
-    public boolean deleteRecord(Object record) {
-        int deleted = com.thousand_uncles.data.repository.deleteByMap_name(mapName);
-        return deleted > 0;
-    }*/
-
 //    Modify existing WR
     @SuppressWarnings("unused")
     public boolean updateWR(MapRecord record){
@@ -144,6 +118,7 @@ public class MapRecordServiceProd {
         };
     }
 
+    @SuppressWarnings("unused")
     public MapRecord saveSolo(
             int ID,
             String map_name,
@@ -175,6 +150,7 @@ public class MapRecordServiceProd {
         return soloMapRecordRepository.save(recordToSave);
     }
 
+    @SuppressWarnings("unused")
     public MapRecord saveAny(
             int ID,
             String map_name,
@@ -204,6 +180,7 @@ public class MapRecordServiceProd {
         return anyPercentMapRecordRepository.save(recordToSave);
     }
 
+    @SuppressWarnings("unused")
     public MapRecord updateSolo(
             int ID,
             String map_name,
@@ -235,6 +212,7 @@ public class MapRecordServiceProd {
         return soloMapRecordRepository.save(recordToUpdate);
     }
 
+    @SuppressWarnings("unused")
     public MapRecord updateAny(
             int ID,
             String map_name,
@@ -264,7 +242,8 @@ public class MapRecordServiceProd {
         return anyPercentMapRecordRepository.save(recordToUpdate);
     }
 
-    public GeneralizedMapRecord putOnHold(
+
+    public ConfirmWorthyMapRecord putOnHold(
             String category,
             int ID,
             String map_name,
@@ -279,7 +258,7 @@ public class MapRecordServiceProd {
             Short stage_3_time,
             String additional
     ) {
-        GeneralizedMapRecord recordToUpdate = new GeneralizedMapRecord();
+        ConfirmWorthyMapRecord recordToUpdate = new ConfirmWorthyMapRecord();
         recordToUpdate.setCategory(category);
         recordToUpdate.setMap_id(ID);
         recordToUpdate.setMap_name(map_name);
@@ -295,23 +274,9 @@ public class MapRecordServiceProd {
         recordToUpdate.setAdditional(additional);
 
         return confirmWorthyRepository.save(recordToUpdate);
-//        confirmWorthyRepository.addRecord(
-//                category,
-//                ID,
-//                map_name,
-//                curr_wr_time,
-//                prev_wr_time,
-//                proof_1_link,
-//                proof_2_link,
-//                proof_3_link,
-//                proof_vid_link,
-//                stage_1_time,
-//                stage_2_time,
-//                stage_3_time,
-//                additional
-//        );
     }
 
+    @SuppressWarnings("unused")
     public void removeFromHold(
             String category,
             int map_id
@@ -319,11 +284,11 @@ public class MapRecordServiceProd {
 
     }
 
-    public GeneralizedMapRecord getFromHold(
+    public ConfirmWorthyMapRecord getFromHold(
             String category,
             int map_id
     ){
-        GeneralizedMapRecord foundRecord = confirmWorthyRepository.findMapByCategory(map_id, category);
+        ConfirmWorthyMapRecord foundRecord = confirmWorthyRepository.findMapByCategory(map_id, category);
         confirmWorthyRepository.delete(foundRecord);
         return foundRecord;
     }

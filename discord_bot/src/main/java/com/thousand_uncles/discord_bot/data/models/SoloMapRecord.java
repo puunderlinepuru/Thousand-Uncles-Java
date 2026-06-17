@@ -11,6 +11,7 @@ public class SoloMapRecord extends MapRecord {
     @Column(name = "the_hero")
     private String the_hero;
 
+    @SuppressWarnings("unused")
     public String getThe_hero() {
         return the_hero;
     }

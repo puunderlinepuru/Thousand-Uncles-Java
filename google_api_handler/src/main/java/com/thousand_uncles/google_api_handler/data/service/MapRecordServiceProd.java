@@ -48,32 +48,6 @@ public class MapRecordServiceProd {
         return foundMap;
     }
 
-    // Read record by name
-    /*@SuppressWarnings("unused")
-    public MapRecord getRecordByName(String mapName) {
-        return anyPercentMapRecordRepository.findByMap_name(mapName);
-    }*/
-
-    // Read all records
-    /*@SuppressWarnings("unused")
-    public List<MapRecord> getAllRecords() {
-        return com.thousand_uncles.data.repository.findAll();
-    }*/
-
-    // Update record by name
-    /*@SuppressWarnings("unused")
-    public boolean updateMapName(String oldName, String newName) {
-        int updated = com.thousand_uncles.data.repository.updateMap_name(oldName, newName);
-        return updated > 0;
-    }*/
-
-    // Delete record by name
-    /*@SuppressWarnings("unused")
-    public boolean deleteRecord(Object record) {
-        int deleted = com.thousand_uncles.data.repository.deleteByMap_name(mapName);
-        return deleted > 0;
-    }*/
-
     // Search records by partial name
     @SuppressWarnings("unused")
     public List<MapRecord> searchRecords(String partialName, String category) {
@@ -84,7 +58,7 @@ public class MapRecordServiceProd {
         };
     }
 
-    public MapRecord saveSolo(
+    public SoloMapRecord saveSolo(
             int ID,
             String map_name,
             short curr_wr_time,
@@ -115,7 +89,7 @@ public class MapRecordServiceProd {
         return soloMapRecordRepository.save(recordToSave);
     }
 
-    public MapRecord saveAny(
+    public AnyPercentMapRecord saveAny(
             int ID,
             String map_name,
             short curr_wr_time,
@@ -144,11 +118,10 @@ public class MapRecordServiceProd {
         return anyPercentMapRecordRepository.save(recordToSave);
     }
 
-    public MapRecord updateSolo(
+    public SoloMapRecord updateSolo(
             int ID,
             String map_name,
             short curr_wr_time,
-            short prev_wr_time,
             String the_hero,
             String proof_1_link,
             String proof_2_link,
@@ -161,8 +134,8 @@ public class MapRecordServiceProd {
         SoloMapRecord recordToUpdate = soloMapRecordRepository.findById(ID).orElseThrow();
         recordToUpdate.setId(ID);
         recordToUpdate.setMap_name(map_name);
+        recordToUpdate.setPrev_wr_seconds(recordToUpdate.getCurr_wr_seconds());
         recordToUpdate.setCurr_wr_seconds(curr_wr_time);
-        recordToUpdate.setPrev_wr_seconds(prev_wr_time);
         recordToUpdate.setThe_hero(the_hero);
         recordToUpdate.setProof_img_1_link(proof_1_link);
         recordToUpdate.setProof_img_2_link(proof_2_link);
@@ -175,11 +148,10 @@ public class MapRecordServiceProd {
         return soloMapRecordRepository.save(recordToUpdate);
     }
 
-    public MapRecord updateAny(
+    public AnyPercentMapRecord updateAny(
             int ID,
             String map_name,
             short curr_wr_time,
-            short prev_wr_time,
             String proof_1_link,
             String proof_2_link,
             String proof_3_link,
@@ -191,8 +163,8 @@ public class MapRecordServiceProd {
         AnyPercentMapRecord recordToUpdate = anyPercentMapRecordRepository.findById(ID).orElseThrow();
         recordToUpdate.setId(ID);
         recordToUpdate.setMap_name(map_name);
+        recordToUpdate.setPrev_wr_seconds(recordToUpdate.getCurr_wr_seconds());
         recordToUpdate.setCurr_wr_seconds(curr_wr_time);
-        recordToUpdate.setPrev_wr_seconds(prev_wr_time);
         recordToUpdate.setProof_img_1_link(proof_1_link);
         recordToUpdate.setProof_img_2_link(proof_2_link);
         recordToUpdate.setProof_img_3_link(proof_3_link);

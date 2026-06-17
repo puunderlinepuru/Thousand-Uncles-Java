@@ -2,5 +2,6 @@
 /.env
 /shared_resources_space/records.json
 token.env
+/google_token/StoredCredential
 /data/target/data-1.0-SNAPSHOT.jar
 /data/target/data-1.0-SNAPSHOT.jar.original

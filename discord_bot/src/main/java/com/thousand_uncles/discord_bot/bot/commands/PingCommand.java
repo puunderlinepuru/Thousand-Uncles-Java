@@ -4,6 +4,7 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+@SuppressWarnings("unused")
 @Component
 public class PingCommand implements SlashCommand {
     @Override

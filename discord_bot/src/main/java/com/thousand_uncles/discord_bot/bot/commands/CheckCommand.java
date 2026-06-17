@@ -1,8 +1,5 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.thousand_uncles.discord_bot.bot.util.AppNotifications;
 import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
 import com.thousand_uncles.discord_bot.bot.util.Config;
@@ -22,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -56,10 +51,6 @@ public class CheckCommand implements SlashCommand {
         try {
             MapRecordServiceProd mapRecordServiceProd = applicationContext.getBean(MapRecordServiceProd.class);
 
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            JsonNode jsonNode = objectMapper.readTree(new File("shared/records.json"));
-
-            @SuppressWarnings("")
             String partialMapName = event.getOption("map")
                     .flatMap(ApplicationCommandInteractionOption::getValue)
                     .map(ApplicationCommandInteractionOptionValue::asString)
@@ -71,8 +62,6 @@ public class CheckCommand implements SlashCommand {
                     .flatMap(ApplicationCommandInteractionOption::getValue)
                     .map(ApplicationCommandInteractionOptionValue::asString)
                     .orElse("any");
-
-//            JsonNode mapNode = jsonNode.get(map);
 
 
             List<MapRecord> searchedMaps = mapRecordServiceProd.searchRecords(partialMapName, category);

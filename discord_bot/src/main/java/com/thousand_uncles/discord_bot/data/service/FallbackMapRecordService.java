@@ -11,7 +11,6 @@ import java.util.List;
 public class FallbackMapRecordService {
     @SuppressWarnings("unused")
     public void addRecord(Object record) {
-        return;
     }
 
     // Read record by name
@@ -53,17 +52,6 @@ public class FallbackMapRecordService {
             Short stage_time_2,
             Short stage_time_3
     ){
-        /*int updated = com.thousand_uncles.data.repository.updateRecordByName(
-                map_name,
-                curr_wr_seconds,
-                proof_pic_1_link,
-                proof_pic_2_link,
-                proof_pic_3_link,
-                proof_vid_link,
-                stage_time_1,
-                stage_time_2,
-                stage_time_3
-        );*/
         return false;
     }
 

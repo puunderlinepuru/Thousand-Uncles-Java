@@ -13,20 +13,24 @@ import java.util.List;
 @Repository
 public interface AnyPercentMapRecordRepository extends JpaRepository<AnyPercentMapRecord, Integer> {
 
+    @SuppressWarnings("unused")
     @Query("SELECT m FROM AnyPercentMapRecord m WHERE m.map_name = :name")
     MapRecord findByMap_name(@Param("name") String name);
 
     @Query("SELECT m FROM AnyPercentMapRecord m WHERE LOWER(m.map_name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<MapRecord> findByMap_nameContaining(@Param("name") String name);
 
+    @SuppressWarnings("unused")
     @Modifying
     @Query("UPDATE AnyPercentMapRecord m SET m.map_name = :newName WHERE m.map_name = :oldName")
     int updateMap_name(@Param("oldName") String oldName, @Param("newName") String newName);
 
+    @SuppressWarnings("unused")
     @Modifying
     @Query("DELETE FROM AnyPercentMapRecord m WHERE m.map_name = :name")
     int deleteByMap_name(@Param("name") String name);
 
+    @SuppressWarnings("unused")
     @Modifying
     @Query("UPDATE AnyPercentMapRecord m SET " +
             "m.prev_wr_seconds = m.curr_wr_seconds, " +
@@ -50,8 +54,4 @@ public interface AnyPercentMapRecordRepository extends JpaRepository<AnyPercentM
             @Param("stage2_time")  Short stage_2_time,
             @Param("stage3_time")  Short stage_3_time
     );
-
-//    @Modifying
-//    @Query("")
-//    int add
 }

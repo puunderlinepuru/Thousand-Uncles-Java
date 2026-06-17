@@ -12,14 +12,10 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
-import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.thousand_uncles.google_api_handler.app.util.UpdateValues;
-import com.thousand_uncles.google_api_handler.data.service.FallbackMapRecordService;
 import com.thousand_uncles.google_api_handler.data.service.MapRecordServiceProd;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -97,7 +93,8 @@ public class GoogleAPI_Handler {
 
         String valueInputOption = "RAW";
 
-        UpdateValues updateValues = new UpdateValues(service, valueInputOption);
+        UpdateValues.setService(service);
+        UpdateValues.setValueInputOption(valueInputOption);
 
         System.out.println("[ STATUS UPDATE ] Initializing Google API Connection..");
         System.out.println("[ INFO ] \n SpreadsheetID: " + uncletopiaSpreadsheetID + "\n" +

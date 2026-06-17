@@ -1,14 +1,12 @@
 package com.thousand_uncles.google_api_handler.app;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.api.client.googleapis.json.GoogleJsonError;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.sheets.v4.Sheets;
-import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.thousand_uncles.google_api_handler.app.util.GlobalThings;
 import com.thousand_uncles.google_api_handler.app.util.JSONHandler;
-import com.thousand_uncles.google_api_handler.app.util.UpdateValues;
+import com.thousand_uncles.google_api_handler.data.models.AnyPercentMapRecord;
+import com.thousand_uncles.google_api_handler.data.models.SoloMapRecord;
 import com.thousand_uncles.google_api_handler.data.service.MapRecordServiceProd;
 import com.thousand_uncles.google_api_handler.data.util.RecordFormatter;
 import com.thousand_uncles.google_api_handler.data.models.MapRecord;
@@ -18,11 +16,9 @@ import java.io.IOException;
 import java.util.*;
 
 class UpdateTask extends TimerTask {
-    UpdateValuesResponse result;
     String valueInputOption;
     Sheets service;
     String spreadsheetId;
-    List<List<Object>> valuesToUpdateOnSpreadsheet;
 
     ApplicationContext applicationContext;
 
@@ -121,7 +117,7 @@ class UpdateTask extends TimerTask {
         for (int i = 0; i < spreadsheetRecordValues.size(); i++) {
 
 //            Name
-            String map_name = spreadsheetRecordValues.get(i).get(0);
+            String map_name = spreadsheetRecordValues.get(i).getFirst();
 
 //            mapName = checkName()
 
@@ -168,7 +164,7 @@ class UpdateTask extends TimerTask {
 //            Stage times for multistage maps
             if (spreadsheetRecordValues.get(i).get(3).charAt(0) != 'h')
             {
-//                System.out.println("[ SPREADSHEET RECORD INFO ] Not a link detected, processing as stage times.. ");
+//                System.out.println("[ SPREADSHEET RECORD INFO ] Not a link detected, processing as stage times. ");
                 stage_time_1 = RecordFormatter.StringToNumber(spreadsheetRecordValues.get(i).get(3));
                 stage_time_2 = RecordFormatter.StringToNumber(spreadsheetRecordValues.get(i).get(4));
                 stage_time_3 = RecordFormatter.StringToNumber(spreadsheetRecordValues.get(i).get(5));
@@ -201,7 +197,7 @@ class UpdateTask extends TimerTask {
             } catch (NoSuchElementException e){
                 System.out.println("[ DATABASE RECORD ERROR ] Couldn't find " + map_name + " in the data, skipping comparison");
                 try {
-                    mapRecordServiceProd.saveAny(map_id, map_name, spreadsheetRecordTimeInSeconds, spreadsheetPrevRecordTimeInSeconds, proof_pic_1_link, proof_pic_2_link, proof_pic_3_link, proof_vid_link, stage_time_1, stage_time_2, stage_time_3);
+                    AnyPercentMapRecord savedRecord = mapRecordServiceProd.saveAny(map_id, map_name, spreadsheetRecordTimeInSeconds, spreadsheetPrevRecordTimeInSeconds, proof_pic_1_link, proof_pic_2_link, proof_pic_3_link, proof_vid_link, stage_time_1, stage_time_2, stage_time_3);
                 } catch (Exception exception) {
                     System.out.println("[ DATABASE RECORD ERROR ] Error adding new record to database: \n" + exception);
                 }
@@ -213,18 +209,6 @@ class UpdateTask extends TimerTask {
                 databaseRecordTimeInSeconds = databaseMapRecord.getCurr_wr_seconds();
             } catch (Exception e) {
                 System.out.println("[ DATABASE RECORD MESSAGE ] " + map_name + " doesn't have valid WR time. I don't know what to do, skipping... ");
-                /*mapRecordService.addRecord(
-                        map_name,
-                        spreadsheetRecordTimeInSeconds,
-                        spreadsheetPrevRecordTimeInSeconds,
-                        proof_pic_1_link,
-                        proof_pic_2_link,
-                        proof_pic_3_link,
-                        proof_vid_link,
-                        stage_time_1,
-                        stage_time_2,
-                        stage_time_3
-                );*/
                 continue;
             }
 
@@ -233,7 +217,7 @@ class UpdateTask extends TimerTask {
             }
 
             System.out.println("[ RECORD BEATEN ] for map " + map_name + ": " + databaseRecordTimeInSeconds + " -> " + spreadsheetRecordTimeInSeconds);
-            mapRecordServiceProd.updateAny(map_id, map_name, spreadsheetPrevRecordTimeInSeconds, (short) databaseRecordTimeInSeconds, proof_pic_1_link, proof_pic_2_link, proof_pic_3_link, proof_vid_link, stage_time_1, stage_time_2, stage_time_3);
+            AnyPercentMapRecord updatedRecord = mapRecordServiceProd.updateAny(map_id, map_name, spreadsheetPrevRecordTimeInSeconds, proof_pic_1_link, proof_pic_2_link, proof_pic_3_link, proof_vid_link, stage_time_1, stage_time_2, stage_time_3);
         }
 
         System.out.println("[ STATE UPDATE ] Comparing Spreadsheet values to JSON values.. ");
@@ -310,10 +294,8 @@ class UpdateTask extends TimerTask {
                 System.out.println(" couldn't get image link, it might be blank, skipping ");
                 if (spreadsheetRecordValues.get(i+1).getFirst().isEmpty()){
                     i++;
-                    continue;
-                } else {
-                    continue;
                 }
+                continue;
             }
             if (spreadsheetRecordValues.get(i).get(4).isEmpty()){
                 System.out.println("[ SPREADSHEET RECORD ERROR ] Proof image field is empty for map " + map_name + ", skipping");
@@ -323,7 +305,7 @@ class UpdateTask extends TimerTask {
 //            Stage times for multistage maps
             if (spreadsheetRecordValues.get(i).get(4).charAt(0) != 'h')
             {
-//                System.out.println("[ SPREADSHEET RECORD INFO ] Not a link detected, processing as stage times.. ");
+//                System.out.println("[ SPREADSHEET RECORD INFO ] Not a link detected, processing as stage times. ");
                 stage_time_1 = RecordFormatter.StringToNumber(spreadsheetRecordValues.get(i).get(4));
                 stage_time_2 = RecordFormatter.StringToNumber(spreadsheetRecordValues.get(i).get(5));
                 stage_time_3 = RecordFormatter.StringToNumber(spreadsheetRecordValues.get(i).get(6));
@@ -356,7 +338,7 @@ class UpdateTask extends TimerTask {
             } catch (NoSuchElementException e){
                 System.out.println("[ DATABASE RECORD ERROR ] Couldn't find " + map_name + " in the data, skipping comparison");
                 try {
-                    mapRecordServiceProd.saveSolo(map_id, map_name, spreadsheetRecordTimeInSeconds, spreadsheetPrevRecordTimeInSeconds, theHero, proof_pic_1_link, proof_pic_2_link, proof_pic_3_link, proof_vid_link, stage_time_1, stage_time_2, stage_time_3);
+                    SoloMapRecord savedRecord = mapRecordServiceProd.saveSolo(map_id, map_name, spreadsheetRecordTimeInSeconds, spreadsheetPrevRecordTimeInSeconds, theHero, proof_pic_1_link, proof_pic_2_link, proof_pic_3_link, proof_vid_link, stage_time_1, stage_time_2, stage_time_3);
                 } catch (Exception exception) {
                     System.out.println("[ DATABASE RECORD ERROR ] Error adding new record to database: \n" + exception);
                 }
@@ -368,18 +350,6 @@ class UpdateTask extends TimerTask {
                 databaseRecordTimeInSeconds = databaseMapRecord.getCurr_wr_seconds();
             } catch (Exception e) {
                 System.out.println("[ DATABASE RECORD MESSAGE ] " + map_name + " doesn't have valid WR time. I don't know what to do, skipping... ");
-                /*mapRecordService.addRecord(
-                        map_name,
-                        spreadsheetRecordTimeInSeconds,
-                        spreadsheetPrevRecordTimeInSeconds,
-                        proof_pic_1_link,
-                        proof_pic_2_link,
-                        proof_pic_3_link,
-                        proof_vid_link,
-                        stage_time_1,
-                        stage_time_2,
-                        stage_time_3
-                );*/
                 continue;
             }
 
@@ -388,7 +358,14 @@ class UpdateTask extends TimerTask {
             }
 
             System.out.println("[ RECORD BEATEN ] for map " + map_name + ": " + databaseRecordTimeInSeconds + " -> " + spreadsheetRecordTimeInSeconds);
-            mapRecordServiceProd.updateSolo(map_id, map_name, spreadsheetPrevRecordTimeInSeconds, (short) databaseRecordTimeInSeconds, theHero, proof_pic_1_link, proof_pic_2_link, proof_pic_3_link, proof_vid_link, stage_time_1, stage_time_2, stage_time_3);
+            switch(category){
+                case "any":
+                    mapRecordServiceProd.updateAny(map_id, map_name, spreadsheetPrevRecordTimeInSeconds, proof_pic_1_link, proof_pic_2_link, proof_pic_3_link, proof_vid_link, stage_time_1, stage_time_2, stage_time_3);
+                    break;
+                case "solo":
+                    SoloMapRecord updatedRecord = mapRecordServiceProd.updateSolo(map_id, map_name, spreadsheetPrevRecordTimeInSeconds, theHero, proof_pic_1_link, proof_pic_2_link, proof_pic_3_link, proof_vid_link, stage_time_1, stage_time_2, stage_time_3);
+                    break;
+            }
         }
 
         System.out.println("[ STATE UPDATE ] Comparing Spreadsheet values to JSON values.. ");

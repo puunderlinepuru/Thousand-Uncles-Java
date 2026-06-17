@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "confirm_worthy")
-public class GeneralizedMapRecord{
+public class ConfirmWorthyMapRecord {
 
-    public GeneralizedMapRecord(){}
+    public ConfirmWorthyMapRecord(){}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,27 +35,21 @@ public class GeneralizedMapRecord{
     @Column(name = "proof_img_1_link", nullable = false)
     private String proof_img_1_link;
 
-    @Nullable
     @Column(name = "proof_img_2_link")
     private String proof_img_2_link;
 
-    @Nullable
     @Column(name = "proof_img_3_link")
     private String proof_img_3_link;
 
-    @Nullable
     @Column(name = "proof_vid_link")
     private String proof_vid_link;
 
-    @Nullable
     @Column(name = "stage_1_time_seconds", precision = 5)
     private Short stage_1_time_seconds;
 
-    @Nullable
     @Column(name = "stage_2_time_seconds", precision = 5)
     private Short stage_2_time_seconds;
 
-    @Nullable
     @Column(name = "stage_3_time_seconds", precision = 5)
     private Short stage_3_time_seconds;
 
@@ -158,7 +152,7 @@ public class GeneralizedMapRecord{
     }
 
     @SuppressWarnings("unused")
-    public void setStage_1_time_seconds(short stage_1_time_seconds){
+    public void setStage_1_time_seconds(Short stage_1_time_seconds){
         this.stage_1_time_seconds = stage_1_time_seconds;
     }
 
@@ -170,7 +164,7 @@ public class GeneralizedMapRecord{
     }
 
     @SuppressWarnings("unused")
-    public void setStage_2_time_seconds(short stage_2_time_seconds){
+    public void setStage_2_time_seconds(Short stage_2_time_seconds){
         this.stage_2_time_seconds = stage_2_time_seconds;
     }
 
@@ -182,7 +176,7 @@ public class GeneralizedMapRecord{
     }
 
     @SuppressWarnings("unused")
-    public void setStage_3_time_seconds(short stage_3_time_seconds){
+    public void setStage_3_time_seconds(Short stage_3_time_seconds){
         this.stage_3_time_seconds = stage_3_time_seconds;
     }
 
@@ -202,6 +196,7 @@ public class GeneralizedMapRecord{
         this.additional = additional;
     }
 
+    @SuppressWarnings("unused")
     public String getCategory() {
         return category;
     }
@@ -210,6 +205,7 @@ public class GeneralizedMapRecord{
         this.category = category;
     }
 
+    @SuppressWarnings("unused")
     public Integer getMap_id() {
         return map_id;
     }

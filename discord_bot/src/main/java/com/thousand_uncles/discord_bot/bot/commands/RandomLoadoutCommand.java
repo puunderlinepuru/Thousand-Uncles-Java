@@ -5,8 +5,7 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.Random;
-
+@SuppressWarnings("unused")
 @Component
 public class RandomLoadoutCommand implements SlashCommand {
     String[][][] items;

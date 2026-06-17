@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 @Component
 public class GlobalCommandRegistrar implements ApplicationRunner {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -36,6 +37,7 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
                 .collectMap(ApplicationCommandData::name)
                 .block();
 
+        assert discordCommands != null;
         if (discordCommands.isEmpty()) {
             discordCommands = applicationService
                     .getGlobalApplicationCommands(applicationId)
@@ -45,6 +47,7 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
             System.out.println(applicationId);
             System.out.println(applicationService.getGuildApplicationCommands(applicationId, guildId).collectMap(ApplicationCommandData::name).block());
 
+            assert discordCommands != null;
             long commandId = Long.parseLong(String.valueOf(discordCommands.get(commandName).id()));
 
             applicationService
@@ -90,17 +93,6 @@ public class GlobalCommandRegistrar implements ApplicationRunner {
                     .readValue(resource.getInputStream(), ApplicationCommandRequest.class);
             commands.add(request);
         }
-
-        /* Bulk overwrite commands. This is now idempotent, so it is safe to use this even when only 1 command
-        is changed/added/removed
-        */
-
-//        try {
-//            deleteCommand(applicationId, applicationService, "check");
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-
 
         applicationService.bulkOverwriteGlobalApplicationCommand(applicationId, commands)
                 .doOnNext(ignore -> LOGGER.debug("Successfully registered Global Commands"))

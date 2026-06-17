@@ -6,16 +6,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
 
-import java.io.Serializable;
-
 @MappedSuperclass
 public abstract class MapRecord{
 
-//    @Version
-//    private Long version;
-
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private Integer id;
 
@@ -31,27 +25,21 @@ public abstract class MapRecord{
     @Column(name = "proof_img_1_link", nullable = false)
     private String proof_img_1_link;
 
-    @Nullable
     @Column(name = "proof_img_2_link")
     private String proof_img_2_link;
 
-    @Nullable
     @Column(name = "proof_img_3_link")
     private String proof_img_3_link;
 
-    @Nullable
     @Column(name = "proof_vid_link")
     private String proof_vid_link;
 
-    @Nullable
     @Column(name = "stage_1_time_seconds", precision = 5)
     private Short stage_1_time_seconds;
 
-    @Nullable
     @Column(name = "stage_2_time_seconds", precision = 5)
     private Short stage_2_time_seconds;
 
-    @Nullable
     @Column(name = "stage_3_time_seconds", precision = 5)
     private Short stage_3_time_seconds;
 
@@ -160,7 +148,7 @@ public abstract class MapRecord{
     }
 
     @SuppressWarnings("unused")
-    public void setStage_1_time_seconds(short stage_1_time_seconds){
+    public void setStage_1_time_seconds(Short stage_1_time_seconds){
         this.stage_1_time_seconds = stage_1_time_seconds;
     }
 
@@ -172,7 +160,7 @@ public abstract class MapRecord{
     }
 
     @SuppressWarnings("unused")
-    public void setStage_2_time_seconds(short stage_2_time_seconds){
+    public void setStage_2_time_seconds(Short stage_2_time_seconds){
         this.stage_2_time_seconds = stage_2_time_seconds;
     }
 
@@ -184,7 +172,7 @@ public abstract class MapRecord{
     }
 
     @SuppressWarnings("unused")
-    public void setStage_3_time_seconds(short stage_3_time_seconds){
+    public void setStage_3_time_seconds(Short stage_3_time_seconds){
         this.stage_3_time_seconds = stage_3_time_seconds;
     }
 

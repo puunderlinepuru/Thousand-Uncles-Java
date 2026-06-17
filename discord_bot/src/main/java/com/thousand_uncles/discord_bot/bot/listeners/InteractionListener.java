@@ -1,12 +1,15 @@
 package com.thousand_uncles.discord_bot.bot.listeners;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.thousand_uncles.discord_bot.bot.util.Config;
 import com.thousand_uncles.discord_bot.bot.util.*;
 import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
-import com.thousand_uncles.discord_bot.data.models.GeneralizedMapRecord;
+import com.thousand_uncles.discord_bot.data.models.ConfirmWorthyMapRecord;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
+import com.thousand_uncles.discord_bot.data.models.SoloMapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
@@ -25,6 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -89,19 +95,21 @@ public class InteractionListener {
 
             Member whoClicked = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
 
+            assert whoClicked != null;
             if (!whoClicked.getRoleIds().contains(Snowflake.of(ADMI_ROLE_ID))){
                 return Mono.empty();
             }
 
             String[] partsOfCustomID = customId.split("-");
+            System.out.println("Button press, got parts: " + Arrays.toString(partsOfCustomID));
             String category = partsOfCustomID[1];
             String map = partsOfCustomID[2];
             short mapTime = Short.parseShort(partsOfCustomID[3]);
 
-            GeneralizedMapRecord generalizedMapRecord;
-            generalizedMapRecord = mapRecordServiceProd.getFromHold(category, GlobalThings.getMapIDS().indexOf(map));
+            ConfirmWorthyMapRecord confirmWorthyMapRecord;
+            confirmWorthyMapRecord = mapRecordServiceProd.getFromHold(category, GlobalThings.getMapIDS().indexOf(map));
 
-            MapRecord foundMap = new AnyPercentMapRecord();
+            MapRecord foundMap = null;
 
             switch (category){
                 case "any":
@@ -110,15 +118,44 @@ public class InteractionListener {
                     anyPercentMapRecord.setMap_name(map);
                     anyPercentMapRecord.setCurr_wr_seconds(mapTime);
                     anyPercentMapRecord.setPrev_wr_seconds((short) 0);
-                    anyPercentMapRecord.setProof_img_1_link(generalizedMapRecord.getProof_img_1_link());
-                    anyPercentMapRecord.setProof_img_2_link(generalizedMapRecord.getProof_img_2_link());
-                    anyPercentMapRecord.setProof_img_3_link(generalizedMapRecord.getProof_img_3_link());
-                    anyPercentMapRecord.setProof_vid_link(generalizedMapRecord.getProof_vid_link());
-                    anyPercentMapRecord.setStage_1_time_seconds(generalizedMapRecord.getStage_1_time_seconds());
-                    anyPercentMapRecord.setStage_2_time_seconds(generalizedMapRecord.getStage_2_time_seconds());
-                    anyPercentMapRecord.setStage_3_time_seconds(generalizedMapRecord.getStage_3_time_seconds());
+                    anyPercentMapRecord.setProof_img_1_link(confirmWorthyMapRecord.getProof_img_1_link());
+                    anyPercentMapRecord.setProof_img_2_link(confirmWorthyMapRecord.getProof_img_2_link());
+                    anyPercentMapRecord.setProof_img_3_link(confirmWorthyMapRecord.getProof_img_3_link());
+                    anyPercentMapRecord.setProof_vid_link(confirmWorthyMapRecord.getProof_vid_link());
+                    anyPercentMapRecord.setStage_1_time_seconds(confirmWorthyMapRecord.getStage_1_time_seconds());
+                    anyPercentMapRecord.setStage_2_time_seconds(confirmWorthyMapRecord.getStage_2_time_seconds());
+                    anyPercentMapRecord.setStage_3_time_seconds(confirmWorthyMapRecord.getStage_3_time_seconds());
 
                     foundMap = anyPercentMapRecord;
+                    break;
+                case "solo":
+                    String theHero;
+                    try {
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        String theHeroString = confirmWorthyMapRecord.getAdditional();
+                        JsonNode theHeroNode = objectMapper.readTree(theHeroString);
+                        System.out.println(" Upon transforming json to the hero got: " + theHeroNode);
+                        theHero = theHeroNode.get("the_hero").asText();
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    SoloMapRecord soloMapRecord = new SoloMapRecord();
+                    soloMapRecord.setId(GlobalThings.getMapIDS().indexOf(map));
+                    soloMapRecord.setMap_name(map);
+                    soloMapRecord.setCurr_wr_seconds(mapTime);
+                    soloMapRecord.setPrev_wr_seconds((short) 0);
+                    soloMapRecord.setThe_hero(theHero);
+                    soloMapRecord.setProof_img_1_link(confirmWorthyMapRecord.getProof_img_1_link());
+                    soloMapRecord.setProof_img_2_link(confirmWorthyMapRecord.getProof_img_2_link());
+                    soloMapRecord.setProof_img_3_link(confirmWorthyMapRecord.getProof_img_3_link());
+                    soloMapRecord.setProof_vid_link(confirmWorthyMapRecord.getProof_vid_link());
+                    soloMapRecord.setStage_1_time_seconds(confirmWorthyMapRecord.getStage_1_time_seconds());
+                    soloMapRecord.setStage_2_time_seconds(confirmWorthyMapRecord.getStage_2_time_seconds());
+                    soloMapRecord.setStage_3_time_seconds(confirmWorthyMapRecord.getStage_3_time_seconds());
+
+                    foundMap = soloMapRecord;
+                    break;
             }
 
             try{
@@ -239,7 +276,7 @@ public class InteractionListener {
     private Mono<Void> foundMapResponse(SelectMenuInteractionEvent event, MapRecord foundMap, String recordCategory){
         AppNotifications.DISCORD_INTERACTION_INFO("Found Map");
         List<String> availableToCheckCategories = config.getAvailable_categories().getCheck();
-        List<SelectMenu.Option> availableCategoriesOptions = new java.util.ArrayList<>(List.of());
+        List<SelectMenu.Option> availableCategoriesOptions = new ArrayList<>(List.of());
         for (int i = 0; i < availableToCheckCategories.size(); i++) {
             availableCategoriesOptions.add(i, SelectMenu.Option.of(availableToCheckCategories.get(i), availableToCheckCategories.get(i)));
         }

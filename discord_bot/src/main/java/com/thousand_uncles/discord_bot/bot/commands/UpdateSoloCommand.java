@@ -1,5 +1,8 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.thousand_uncles.discord_bot.bot.util.Config;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
@@ -19,7 +22,7 @@ import reactor.core.publisher.Mono;
 
 @SuppressWarnings("unused")
 @Component
-public class UpdateAnyCommand implements SlashCommand{
+public class UpdateSoloCommand implements SlashCommand{
 
     @Autowired
     Config config;
@@ -30,13 +33,17 @@ public class UpdateAnyCommand implements SlashCommand{
 
     @Override
     public String getName() {
-        return "update_any";
+        return "update_solo";
     }
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event){
         MapRecordServiceProd mapRecordServiceProd = applicationContext.getBean(MapRecordServiceProd.class);
 
+        String theHero = event.getOption("the_hero")
+                .flatMap(ApplicationCommandInteractionOption::getValue)
+                .map(ApplicationCommandInteractionOptionValue::asString)
+                .orElse(null);
         String mapName = event.getOption("map")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
@@ -65,8 +72,6 @@ public class UpdateAnyCommand implements SlashCommand{
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .orElse(null);
-
-        System.out.println("hello");
 
         int mapTime, stage_1_time = 0, stage_2_time = 0, stage_3_time = 0;
 
@@ -103,6 +108,16 @@ public class UpdateAnyCommand implements SlashCommand{
             }
         }
 
+//        THE HERO
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode theHeroNode = objectMapper.createObjectNode();
+        theHeroNode.put("the_hero", theHero);
+        String theHeroString;
+        try {
+            theHeroString = objectMapper.writeValueAsString(theHeroNode);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
 
 //        ?check img if valid?
@@ -154,7 +169,7 @@ public class UpdateAnyCommand implements SlashCommand{
 
 //        mapRecordServiceProd.addRecord(newRecord);
         ConfirmWorthyMapRecord savedRecord = mapRecordServiceProd.putOnHold(
-                "any",
+                "solo",
                 mapID,
                 mapName,
                 (short) mapTime,
@@ -166,16 +181,17 @@ public class UpdateAnyCommand implements SlashCommand{
                 (short) stage_1_time,
                 (short) stage_2_time,
                 (short) stage_3_time,
-                "");
+                theHeroString);
 
         return event.reply()
                 .withEphemeral(false)
-                .withContent(mapName + " WR for category Any% Updated! \n" +
+                .withContent(mapName + " WR for category Solo% Updated! \n" +
                         "new  WR set -> " + timeOption + "\n" +
+                        "**The Hero:** " + theHero + "\n" +
                         newRecord.getProof_img_1_link() + "\n" +
                         "Record noted down, waiting for approval :p")
                 .withComponents(ActionRow.of(
-                        Button.primary("approve-any-" + mapName + "-" + mapTime, "Validate (for admis)")
+                        Button.primary("approve-solo-" + mapName + "-" + mapTime, "Validate (for admis)")
                 ));
     }
 }
