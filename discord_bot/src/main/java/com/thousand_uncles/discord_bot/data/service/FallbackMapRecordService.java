@@ -9,6 +9,10 @@ import java.util.List;
 @Service
 @Profile("dev")
 public class FallbackMapRecordService {
+
+    FallbackMapRecordService(){
+        System.out.println("Fallback record service initialized");
+    }
     @SuppressWarnings("unused")
     public void addRecord(Object record) {
     }

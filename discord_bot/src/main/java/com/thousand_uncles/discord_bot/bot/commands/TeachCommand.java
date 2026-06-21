@@ -1,6 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
-import com.thousand_uncles.discord_bot.bot.util.YamlReader;
+import com.thousand_uncles.discord_bot.bot.util.YAMLHandler;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
@@ -25,13 +25,13 @@ public class TeachCommand implements SlashCommand{
                 .map(ApplicationCommandInteractionOptionValue::asString).flatMap(String::describeConstable).orElseThrow();
 
 
-        Map<String, ArrayList<String>> dictionary = YamlReader.yamlDictionaryRead("resources/dictionary.yml");
+        Map<String, ArrayList<String>> dictionary = YAMLHandler.yamlDictionaryRead("resources/dictionary.yml");
         ArrayList <String> words = dictionary.get("words");
         int wordCount = words.size();
         words.add(phrase);
         dictionary.put("words", words);
 
-        YamlReader.yamlDictionaryWrite("resources/dictionary.yml", dictionary);
+        YAMLHandler.yamlDictionaryWrite("resources/dictionary.yml", dictionary);
         return event.reply()
                 .withEphemeral(false)
                 .withContent("Added  \"" + phrase + "\" to dictionary. Total: " + wordCount);
