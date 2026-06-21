@@ -10,6 +10,7 @@ import com.thousand_uncles.discord_bot.data.repository.SoloMapRecordRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ import java.util.Objects;
 
 @Service
 @Transactional
-//@Profile("prod")
+@Profile("prod")
 public class MapRecordServiceProd {
 
     MapRecordServiceProd(){

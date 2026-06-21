@@ -9,8 +9,8 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class YamlReader {
-    static File file;
+public class YAMLHandler {
+    private static File file;
 
     @SuppressWarnings("unused")
     public static Map<String, Object> yamlRead(String fileName) {

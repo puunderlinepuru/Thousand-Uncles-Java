@@ -17,20 +17,19 @@ import discord4j.core.spec.InteractionApplicationCommandCallbackReplyMono;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import java.util.List;
 
 @SuppressWarnings("unused")
 @Component
+@Profile("prod")
 public class CheckCommand implements SlashCommand {
 
     @SuppressWarnings("unassigned")
     @Autowired
     private ApplicationContext applicationContext;
-
-    @Autowired
-    MapRecordServiceProd mapRecordServiceProd;
 
     @Autowired
     private GatewayDiscordClient client;

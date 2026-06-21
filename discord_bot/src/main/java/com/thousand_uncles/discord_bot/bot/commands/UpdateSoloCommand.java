@@ -95,7 +95,7 @@ public class UpdateSoloCommand implements SlashCommand{
 
         MapRecord existingRecord;
         try{
-            existingRecord = mapRecordServiceProd.getRecord(mapID, "any");
+            existingRecord = mapRecordServiceProd.getRecord(mapID, "solo");
         } catch (Exception e) {
             existingRecord = null;
         }

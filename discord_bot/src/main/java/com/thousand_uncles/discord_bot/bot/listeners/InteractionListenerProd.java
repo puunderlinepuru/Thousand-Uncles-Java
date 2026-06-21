@@ -26,6 +26,7 @@ import discord4j.core.object.reaction.Reaction;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -34,8 +35,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unused")
+@Profile("prod")
 @Component
-public class InteractionListener {
+public class InteractionListenerProd {
 
     @Autowired
     ApplicationContext applicationContext;
@@ -59,7 +61,7 @@ public class InteractionListener {
     String AU_ROLE_ID;
     String ASIA_ROLE_ID;
 
-    public InteractionListener(GatewayDiscordClient client, Config config) {
+    public InteractionListenerProd(GatewayDiscordClient client, Config config) {
         this.client = client;
         System.out.println("InteractionListener initialized");
         REGION_ROLE_MESSAGE_ID = config.getRegion_role_message_id();
@@ -86,7 +88,7 @@ public class InteractionListener {
         return Mono.empty();
     }
 
-    public Mono<Void> onButton (ButtonInteractionEvent event){
+    public Mono<Void> onButton(ButtonInteractionEvent event){
         String customId = event.getCustomId();
         System.out.println("button: " + customId);
 
