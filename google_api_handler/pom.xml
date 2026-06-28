@@ -119,6 +119,9 @@
                   <mainClass>com.thousand_uncles.google_api_handler.SheetsApp</mainClass> <!-- Replace with your main class -->
                 </transformer>
               </transformers>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>stuffed</shadedClassifierName>
+              <outputDirectory>./build/</outputDirectory>
             </configuration>
           </execution>
         </executions>
