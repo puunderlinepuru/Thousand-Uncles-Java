@@ -10,12 +10,24 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("unused")
 @Component
 public class BotActions {
+    GatewayDiscordClient client;
+    Config config;
 
     BotActions(GatewayDiscordClient client, Config config){
+        this.client = client;
+        this.config = config;
+
+        signalSetup();
+
+
+    }
+
+
+    private void signalSetup(){
         final String READY_MESSAGE = config.getReady_message();
 
         assert client != null;
-        if (READY_MESSAGE != null && !READY_MESSAGE.isEmpty()){
+        if (READY_MESSAGE != null && !READY_MESSAGE.isEmpty()) {
             final String SERVER_ID = config.getServer_id();
             final String MEME_CHANNEL_ID = config.getMeme_channel_id();
 
@@ -26,5 +38,11 @@ public class BotActions {
             assert channel != null;
             channel.createMessage().withContent(READY_MESSAGE).block();
         }
+    }
+
+    private void timeoutSkyro(){
+        assert client != null;
+
+
     }
 }

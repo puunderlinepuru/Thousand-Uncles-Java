@@ -8,6 +8,8 @@ import java.util.Random;
 @Component
 public class GlobalThings {
     private static Random rand;
+    private static boolean appLocked = false;
+    private static int pets = 0;
 
     GlobalThings(){
         System.out.println("Generating random sequence seed...");
@@ -22,4 +24,20 @@ public class GlobalThings {
     public static Integer getMapID(String mapName) {return mapIDS.indexOf(mapName);}
 
     public static Random getRand() {return rand;}
+
+    public static boolean isAppLocked() {
+        return appLocked;
+    }
+
+    public static void setAppLocked(boolean isAppLocked) {
+        GlobalThings.appLocked = isAppLocked;
+    }
+
+    public static void setPets(int pets) {
+        GlobalThings.pets = pets;
+    }
+
+    public static int getPets() {
+        return pets;
+    }
 }

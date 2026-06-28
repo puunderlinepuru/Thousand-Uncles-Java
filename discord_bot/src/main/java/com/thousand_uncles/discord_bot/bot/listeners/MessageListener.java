@@ -4,14 +4,23 @@ import com.thousand_uncles.discord_bot.bot.fun_stuff.Magic_8_ball;
 import com.thousand_uncles.discord_bot.bot.fun_stuff.RandomDictionary;
 import com.thousand_uncles.discord_bot.bot.fun_stuff.RandomNumberInRange;
 import com.thousand_uncles.discord_bot.bot.util.Config;
+import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
+import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
+import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.Button;
+import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
+import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.spec.GuildMemberEditSpec;
+import discord4j.core.spec.InteractionApplicationCommandCallbackReplyMono;
+import discord4j.core.spec.MessageCreateMono;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import java.time.Duration;
@@ -49,8 +58,18 @@ public class MessageListener {
         final Message message = event.getMessage();
         final String messageContent = message.getContent();
 
+        if(GlobalThings.isAppLocked()){
+            return Mono.empty();
+        }
+
         //        Bot Check
         if (message.getAuthor().map(User::isBot).orElse(false)) {return Mono.empty();}
+
+        if (messageContent.toLowerCase().contains("invincible")){
+            return message.getChannel()
+                    .flatMap(channel -> channel.createMessage("https://tenor.com/view/invulnerable-gif-22484955"))
+                    .then();
+        }
 
 //  @rock BLOCK
 
@@ -125,12 +144,26 @@ public class MessageListener {
             {
                 response = Magic_8_ball.getAnswers();
             } else {
-                response = RandomDictionary.getWisdom();
+                response = RandomDictionary.getWisdom().orElse(null);
+                if (response == null){
+                    return petMessage(message);
+                }
             }
             return message.getChannel()
                     .flatMap(channel -> channel.createMessage(response))
                     .then();
         }
         return Mono.empty();
+    }
+
+    private Mono<Void> petMessage(Message message){
+        GlobalThings.setAppLocked(true);
+
+        return message.getChannel()
+                .flatMap(channel -> channel.createMessage()
+                        .withContent("You have hit the rock tax. Pet me meow \n pet pet pet c:<")
+                        .withComponents(ActionRow.of(
+                                Button.primary("petButton", "Pet"))))
+                .then();
     }
 }

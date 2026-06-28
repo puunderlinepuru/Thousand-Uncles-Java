@@ -13,6 +13,7 @@ import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.event.domain.message.ReactionAddEvent;
 import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.Button;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
@@ -27,6 +28,8 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 
+// I HAVEN'T UPDATED IT IN A WHILE
+
 @SuppressWarnings("unused")
 @Profile("dev")
 @Component
@@ -34,9 +37,6 @@ public class InteractionListenerDev {
 
     @Autowired
     ApplicationContext applicationContext;
-
-    @Autowired
-    RabbitTemplate rabbitTemplate;
 
     @Autowired
     Config config;
@@ -79,10 +79,10 @@ public class InteractionListenerDev {
     }
 
     public Mono<Void> onButton(ButtonInteractionEvent event){
-        String customId = event.getCustomId();
-        System.out.println("button: " + customId);
+        String customID = event.getCustomId();
+        System.out.println("button: " + customID);
 
-        if (customId.startsWith("approve-")){
+        if (customID.startsWith("approve-")){
             if (event.getMessage().isEmpty()){ return Mono.empty();}
 
             Member whoClicked = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
@@ -97,49 +97,13 @@ public class InteractionListenerDev {
                     .withContent("I am running in offline mode, as pu when I'll be online so I can verify the record :p")
                     .block();
         }
-
+//        Region role assignment
         if (event.getMessageId().equals(Snowflake.of(REGION_ROLE_MESSAGE_ID))){
-            Member member = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
+            return assignRegionRole(event, customID);
+        }
 
-            assert member != null;
-            List<Snowflake> memberRoleIDs = member.getRoles()
-                    .map(Role::getId)
-                    .collectList()
-                    .block();
-            assert memberRoleIDs != null;
-
-            switch (customId){
-                case "button_EU":
-                    if (memberRoleIDs.contains(Snowflake.of(EU_ROLE_ID))) {
-                        member.removeRole(Snowflake.of(EU_ROLE_ID)).block();
-                    } else {
-                        member.addRole(Snowflake.of(EU_ROLE_ID)).block();
-                    }
-                    break;
-                case "button_NA":
-                    if (memberRoleIDs.contains(Snowflake.of(NA_ROLE_ID))) {
-                        member.removeRole(Snowflake.of(NA_ROLE_ID)).block();
-                    } else {
-                        member.addRole(Snowflake.of(NA_ROLE_ID)).block();
-                    }
-                    break;
-                case "button_AU":
-                    if (memberRoleIDs.contains(Snowflake.of(AU_ROLE_ID))) {
-                        member.removeRole(Snowflake.of(AU_ROLE_ID)).block();
-                    } else {
-                        member.addRole(Snowflake.of(AU_ROLE_ID)).block();
-                    }
-                    break;
-                case "button_Asia":
-                    if (memberRoleIDs.contains(Snowflake.of(ASIA_ROLE_ID))) {
-                        member.removeRole(Snowflake.of(ASIA_ROLE_ID)).block();
-                    } else {
-                        member.addRole(Snowflake.of(ASIA_ROLE_ID)).block();
-                    }
-                    break;
-            }
-
-            return event.deferEdit();
+        if (customID.equals("petButton")){
+            return petHandle(event);
         }
 
         return Mono.empty();
@@ -194,6 +158,77 @@ public class InteractionListenerDev {
         }
 
         return  Mono.empty();
+    }
+
+    private Mono<Void> assignRegionRole(ButtonInteractionEvent event, String customID){
+        Member member = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
+
+        assert member != null;
+        List<Snowflake> memberRoleIDs = member.getRoles()
+                .map(Role::getId)
+                .collectList()
+                .block();
+        assert memberRoleIDs != null;
+
+        switch (customID){
+            case "button_EU":
+                if (memberRoleIDs.contains(Snowflake.of(EU_ROLE_ID))) {
+                    member.removeRole(Snowflake.of(EU_ROLE_ID)).block();
+                } else {
+                    member.addRole(Snowflake.of(EU_ROLE_ID)).block();
+                }
+                break;
+            case "button_NA":
+                if (memberRoleIDs.contains(Snowflake.of(NA_ROLE_ID))) {
+                    member.removeRole(Snowflake.of(NA_ROLE_ID)).block();
+                } else {
+                    member.addRole(Snowflake.of(NA_ROLE_ID)).block();
+                }
+                break;
+            case "button_AU":
+                if (memberRoleIDs.contains(Snowflake.of(AU_ROLE_ID))) {
+                    member.removeRole(Snowflake.of(AU_ROLE_ID)).block();
+                } else {
+                    member.addRole(Snowflake.of(AU_ROLE_ID)).block();
+                }
+                break;
+            case "button_Asia":
+                if (memberRoleIDs.contains(Snowflake.of(ASIA_ROLE_ID))) {
+                    member.removeRole(Snowflake.of(ASIA_ROLE_ID)).block();
+                } else {
+                    member.addRole(Snowflake.of(ASIA_ROLE_ID)).block();
+                }
+                break;
+        }
+
+        return event.deferEdit();
+    }
+
+    private Mono<Void> petHandle(ButtonInteractionEvent event){
+
+        System.out.println("a");
+        int pets = GlobalThings.getPets();
+        pets++;
+        System.out.println("pets: " + pets);
+        if (pets >= 10){
+            GlobalThings.setAppLocked(false);
+            GlobalThings.setPets(0);
+            return event.getMessage().get()
+                    .edit()
+                    .withContentOrNull("Good.")
+                    .withComponents()
+                    .then(event.deferEdit());
+        } else {
+            GlobalThings.setPets(pets);
+            return event.getMessage().get()
+                    .edit()
+                    .withContentOrNull("You have hit the rock tax. Pet me meow \n" +
+                            "pet pet pet c:<\n" +
+                            "pets: " + pets)
+                    .withComponents(ActionRow.of(
+                            Button.primary("petButton", "Pet")))
+                    .then(event.deferEdit());
+        }
     }
 
     private Mono<Void> foundMapResponse(SelectMenuInteractionEvent event, MapRecord foundMap, String recordCategory){

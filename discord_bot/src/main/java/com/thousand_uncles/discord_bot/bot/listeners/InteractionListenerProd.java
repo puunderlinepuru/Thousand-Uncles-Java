@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.thousand_uncles.discord_bot.bot.fun_stuff.Roulette;
 import com.thousand_uncles.discord_bot.bot.util.Config;
 import com.thousand_uncles.discord_bot.bot.util.*;
 import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
@@ -18,6 +19,7 @@ import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.event.domain.message.ReactionAddEvent;
 import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.Button;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
@@ -81,7 +83,6 @@ public class InteractionListenerProd {
         client.on(Event.class, this::generalEvent).subscribe();
     }
 
-
     public Mono<Void> generalEvent(Event event){
         System.out.println("Event type: " + event.getClass());
 
@@ -89,136 +90,21 @@ public class InteractionListenerProd {
     }
 
     public Mono<Void> onButton(ButtonInteractionEvent event){
-        String customId = event.getCustomId();
-        System.out.println("button: " + customId);
+        String customID = event.getCustomId();
+        System.out.println("button: " + customID);
 
-        if (customId.startsWith("approve-")){
-            if (event.getMessage().isEmpty()){ return Mono.empty();}
-
-            Member whoClicked = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
-
-            assert whoClicked != null;
-            if (!whoClicked.getRoleIds().contains(Snowflake.of(ADMI_ROLE_ID))){
-                return Mono.empty();
-            }
-
-            String[] partsOfCustomID = customId.split("-");
-            System.out.println("Button press, got parts: " + Arrays.toString(partsOfCustomID));
-            String category = partsOfCustomID[1];
-            String map = partsOfCustomID[2];
-            short mapTime = Short.parseShort(partsOfCustomID[3]);
-
-            ConfirmWorthyMapRecord confirmWorthyMapRecord;
-            confirmWorthyMapRecord = mapRecordServiceProd.getFromHold(category, GlobalThings.getMapIDS().indexOf(map));
-
-            MapRecord foundMap = null;
-
-            switch (category){
-                case "any":
-                    AnyPercentMapRecord anyPercentMapRecord = new AnyPercentMapRecord();
-                    anyPercentMapRecord.setId(GlobalThings.getMapIDS().indexOf(map));
-                    anyPercentMapRecord.setMap_name(map);
-                    anyPercentMapRecord.setCurr_wr_seconds(mapTime);
-                    anyPercentMapRecord.setPrev_wr_seconds((short) 0);
-                    anyPercentMapRecord.setProof_img_1_link(confirmWorthyMapRecord.getProof_img_1_link());
-                    anyPercentMapRecord.setProof_img_2_link(confirmWorthyMapRecord.getProof_img_2_link());
-                    anyPercentMapRecord.setProof_img_3_link(confirmWorthyMapRecord.getProof_img_3_link());
-                    anyPercentMapRecord.setProof_vid_link(confirmWorthyMapRecord.getProof_vid_link());
-                    anyPercentMapRecord.setStage_1_time_seconds(confirmWorthyMapRecord.getStage_1_time_seconds());
-                    anyPercentMapRecord.setStage_2_time_seconds(confirmWorthyMapRecord.getStage_2_time_seconds());
-                    anyPercentMapRecord.setStage_3_time_seconds(confirmWorthyMapRecord.getStage_3_time_seconds());
-
-                    foundMap = anyPercentMapRecord;
-                    break;
-                case "solo":
-                    String theHero;
-                    try {
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        String theHeroString = confirmWorthyMapRecord.getAdditional();
-                        JsonNode theHeroNode = objectMapper.readTree(theHeroString);
-                        System.out.println(" Upon transforming json to the hero got: " + theHeroNode);
-                        theHero = theHeroNode.get("the_hero").asText();
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    SoloMapRecord soloMapRecord = new SoloMapRecord();
-                    soloMapRecord.setId(GlobalThings.getMapIDS().indexOf(map));
-                    soloMapRecord.setMap_name(map);
-                    soloMapRecord.setCurr_wr_seconds(mapTime);
-                    soloMapRecord.setPrev_wr_seconds((short) 0);
-                    soloMapRecord.setThe_hero(theHero);
-                    soloMapRecord.setProof_img_1_link(confirmWorthyMapRecord.getProof_img_1_link());
-                    soloMapRecord.setProof_img_2_link(confirmWorthyMapRecord.getProof_img_2_link());
-                    soloMapRecord.setProof_img_3_link(confirmWorthyMapRecord.getProof_img_3_link());
-                    soloMapRecord.setProof_vid_link(confirmWorthyMapRecord.getProof_vid_link());
-                    soloMapRecord.setStage_1_time_seconds(confirmWorthyMapRecord.getStage_1_time_seconds());
-                    soloMapRecord.setStage_2_time_seconds(confirmWorthyMapRecord.getStage_2_time_seconds());
-                    soloMapRecord.setStage_3_time_seconds(confirmWorthyMapRecord.getStage_3_time_seconds());
-
-                    foundMap = soloMapRecord;
-                    break;
-            }
-
-            try{
-                ObjectMapper objectMapper = new ObjectMapper();
-                ObjectNode objectNode = objectMapper.valueToTree(foundMap);
-                objectNode.put("category", category);
-                String jsonString = objectMapper.writeValueAsString(objectNode);
-                rabbitTemplate.convertAndSend("test.exchange", "test.routing.key", jsonString);
-                System.out.println("sent");
-            }catch (Exception e) {
-                System.out.println("error: " + e);
-            }
-
-            Message recordApprovalMessage = event.getMessage().get();
-            recordApprovalMessage.edit()
-                    .withComponents()
-                    .block();
+//        Record validation
+        if (customID.startsWith("approve-")){
+            return approveMap(event, customID);
         }
 
+//        Region role assignment
         if (event.getMessageId().equals(Snowflake.of(REGION_ROLE_MESSAGE_ID))){
-            Member member = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
+            return assignRegionRole(event, customID);
+        }
 
-            assert member != null;
-            List<Snowflake> memberRoleIDs = member.getRoles()
-                    .map(Role::getId)
-                    .collectList()
-                    .block();
-            assert memberRoleIDs != null;
-
-            switch (customId){
-                case "button_EU":
-                    if (memberRoleIDs.contains(Snowflake.of(EU_ROLE_ID))) {
-                        member.removeRole(Snowflake.of(EU_ROLE_ID)).block();
-                    } else {
-                        member.addRole(Snowflake.of(EU_ROLE_ID)).block();
-                    }
-                    break;
-                case "button_NA":
-                    if (memberRoleIDs.contains(Snowflake.of(NA_ROLE_ID))) {
-                        member.removeRole(Snowflake.of(NA_ROLE_ID)).block();
-                    } else {
-                        member.addRole(Snowflake.of(NA_ROLE_ID)).block();
-                    }
-                    break;
-                case "button_AU":
-                    if (memberRoleIDs.contains(Snowflake.of(AU_ROLE_ID))) {
-                        member.removeRole(Snowflake.of(AU_ROLE_ID)).block();
-                    } else {
-                        member.addRole(Snowflake.of(AU_ROLE_ID)).block();
-                    }
-                    break;
-                case "button_Asia":
-                    if (memberRoleIDs.contains(Snowflake.of(ASIA_ROLE_ID))) {
-                        member.removeRole(Snowflake.of(ASIA_ROLE_ID)).block();
-                    } else {
-                        member.addRole(Snowflake.of(ASIA_ROLE_ID)).block();
-                    }
-                    break;
-            }
-
-            return event.deferEdit();
+        if (customID.equals("petButton")){
+            return petHandle(event);
         }
 
         return Mono.empty();
@@ -230,6 +116,8 @@ public class InteractionListenerProd {
         System.out.println("select menu");
         String selectedOption = event.getValues().getFirst();
         String customID = event.getCustomId();
+        System.out.println("selectedOption: " + selectedOption + "\n" +
+                "customID: " + customID);
 
         if (customID.startsWith("check") || customID.startsWith("update")){
             String[] parts = customID.split("-");
@@ -247,6 +135,10 @@ public class InteractionListenerProd {
                 return mapNotFoundResponse(event);
             }
             return foundMapResponse(event, gotMap, selectedOption);
+        }
+
+        if(customID.startsWith("roulette")){
+            return Roulette.handleSet(event, selectedOption);
         }
 
 //        Looking for map time
@@ -273,6 +165,164 @@ public class InteractionListenerProd {
         }
 
         return  Mono.empty();
+    }
+
+    private Mono<Void> approveMap(ButtonInteractionEvent event, String customID){
+
+        if (event.getMessage().isEmpty()){ return Mono.empty();}
+
+        Member whoClicked = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
+
+        assert whoClicked != null;
+        if (!whoClicked.getRoleIds().contains(Snowflake.of(ADMI_ROLE_ID))){
+            return Mono.empty();
+        }
+
+        String[] partsOfCustomID = customID.split("-");
+        System.out.println("Button press, got parts: " + Arrays.toString(partsOfCustomID));
+        String category = partsOfCustomID[1];
+        String map = partsOfCustomID[2];
+        short mapTime = Short.parseShort(partsOfCustomID[3]);
+
+        ConfirmWorthyMapRecord confirmWorthyMapRecord;
+        confirmWorthyMapRecord = mapRecordServiceProd.getFromHold(category, GlobalThings.getMapIDS().indexOf(map));
+
+        MapRecord foundMap = null;
+
+        switch (category){
+            case "any":
+                AnyPercentMapRecord anyPercentMapRecord = new AnyPercentMapRecord();
+                anyPercentMapRecord.setId(GlobalThings.getMapIDS().indexOf(map));
+                anyPercentMapRecord.setMap_name(map);
+                anyPercentMapRecord.setCurr_wr_seconds(mapTime);
+                anyPercentMapRecord.setPrev_wr_seconds((short) 0);
+                anyPercentMapRecord.setProof_img_1_link(confirmWorthyMapRecord.getProof_img_1_link());
+                anyPercentMapRecord.setProof_img_2_link(confirmWorthyMapRecord.getProof_img_2_link());
+                anyPercentMapRecord.setProof_img_3_link(confirmWorthyMapRecord.getProof_img_3_link());
+                anyPercentMapRecord.setProof_vid_link(confirmWorthyMapRecord.getProof_vid_link());
+                anyPercentMapRecord.setStage_1_time_seconds(confirmWorthyMapRecord.getStage_1_time_seconds());
+                anyPercentMapRecord.setStage_2_time_seconds(confirmWorthyMapRecord.getStage_2_time_seconds());
+                anyPercentMapRecord.setStage_3_time_seconds(confirmWorthyMapRecord.getStage_3_time_seconds());
+
+                foundMap = anyPercentMapRecord;
+                break;
+            case "solo":
+                String theHero;
+                try {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String theHeroString = confirmWorthyMapRecord.getAdditional();
+                    JsonNode theHeroNode = objectMapper.readTree(theHeroString);
+                    System.out.println(" Upon transforming json to the hero got: " + theHeroNode);
+                    theHero = theHeroNode.get("the_hero").asText();
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+
+                SoloMapRecord soloMapRecord = new SoloMapRecord();
+                soloMapRecord.setId(GlobalThings.getMapIDS().indexOf(map));
+                soloMapRecord.setMap_name(map);
+                soloMapRecord.setCurr_wr_seconds(mapTime);
+                soloMapRecord.setPrev_wr_seconds((short) 0);
+                soloMapRecord.setThe_hero(theHero);
+                soloMapRecord.setProof_img_1_link(confirmWorthyMapRecord.getProof_img_1_link());
+                soloMapRecord.setProof_img_2_link(confirmWorthyMapRecord.getProof_img_2_link());
+                soloMapRecord.setProof_img_3_link(confirmWorthyMapRecord.getProof_img_3_link());
+                soloMapRecord.setProof_vid_link(confirmWorthyMapRecord.getProof_vid_link());
+                soloMapRecord.setStage_1_time_seconds(confirmWorthyMapRecord.getStage_1_time_seconds());
+                soloMapRecord.setStage_2_time_seconds(confirmWorthyMapRecord.getStage_2_time_seconds());
+                soloMapRecord.setStage_3_time_seconds(confirmWorthyMapRecord.getStage_3_time_seconds());
+
+                foundMap = soloMapRecord;
+                break;
+        }
+
+        try{
+            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectNode objectNode = objectMapper.valueToTree(foundMap);
+            objectNode.put("category", category);
+            String jsonString = objectMapper.writeValueAsString(objectNode);
+            rabbitTemplate.convertAndSend("test.exchange", "test.routing.key", jsonString);
+            System.out.println("sent");
+        }catch (Exception e) {
+            System.out.println("error: " + e);
+        }
+
+        Message recordApprovalMessage = event.getMessage().get();
+        recordApprovalMessage.edit()
+                .withComponents()
+                .block();
+        return Mono.empty();
+    }
+
+    private Mono<Void> assignRegionRole(ButtonInteractionEvent event, String customID){
+        Member member = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
+
+        assert member != null;
+        List<Snowflake> memberRoleIDs = member.getRoles()
+                .map(Role::getId)
+                .collectList()
+                .block();
+        assert memberRoleIDs != null;
+
+        switch (customID){
+            case "button_EU":
+                if (memberRoleIDs.contains(Snowflake.of(EU_ROLE_ID))) {
+                    member.removeRole(Snowflake.of(EU_ROLE_ID)).block();
+                } else {
+                    member.addRole(Snowflake.of(EU_ROLE_ID)).block();
+                }
+                break;
+            case "button_NA":
+                if (memberRoleIDs.contains(Snowflake.of(NA_ROLE_ID))) {
+                    member.removeRole(Snowflake.of(NA_ROLE_ID)).block();
+                } else {
+                    member.addRole(Snowflake.of(NA_ROLE_ID)).block();
+                }
+                break;
+            case "button_AU":
+                if (memberRoleIDs.contains(Snowflake.of(AU_ROLE_ID))) {
+                    member.removeRole(Snowflake.of(AU_ROLE_ID)).block();
+                } else {
+                    member.addRole(Snowflake.of(AU_ROLE_ID)).block();
+                }
+                break;
+            case "button_Asia":
+                if (memberRoleIDs.contains(Snowflake.of(ASIA_ROLE_ID))) {
+                    member.removeRole(Snowflake.of(ASIA_ROLE_ID)).block();
+                } else {
+                    member.addRole(Snowflake.of(ASIA_ROLE_ID)).block();
+                }
+                break;
+        }
+
+        return event.deferEdit();
+    }
+
+    private Mono<Void> petHandle(ButtonInteractionEvent event){
+
+        System.out.println("a");
+        int pets = GlobalThings.getPets();
+        pets++;
+        System.out.println("pets: " + pets);
+        if (pets >= 10){
+            GlobalThings.setAppLocked(false);
+            GlobalThings.setPets(0);
+            return event.getMessage().get()
+                    .edit()
+                    .withContentOrNull("Good.")
+                    .withComponents()
+                    .then(event.deferEdit());
+        } else {
+            GlobalThings.setPets(pets);
+            return event.getMessage().get()
+                    .edit()
+                    .withContentOrNull("You have hit the rock tax. Pet me meow \n" +
+                            "pet pet pet c:<\n" +
+                            "pets: " + pets)
+                    .withComponents(ActionRow.of(
+                            Button.primary("petButton", "Pet")))
+                    .then(event.deferEdit());
+        }
     }
 
     private Mono<Void> foundMapResponse(SelectMenuInteractionEvent event, MapRecord foundMap, String recordCategory){
