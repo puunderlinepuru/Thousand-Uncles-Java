@@ -35,6 +35,7 @@ map_order:
 - ctf_doublecross
 - ctf_landfall
 - ctf_pelican_peak
+- ctf_sawmill
 - ctf_turbine
 - ctf_well
 - koth_highpass
@@ -100,3 +101,4 @@ map_order:
 - pl_vigil
 - pl_yokohama
 - placeholder
+- tc_hydro
