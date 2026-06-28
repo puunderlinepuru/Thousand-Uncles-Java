@@ -3,14 +3,8 @@
   "description": "for gimmicks and testing and stuff",
   "options": [
     {
-      "name": "meme_text",
-      "description": "I have to write something here",
-      "type": 3,
-      "required": true
-    },
-    {
-      "name": "funny_gif",
-      "description": "I have to write something here",
+      "name": "sin",
+      "description": "Forgive me father for I have synthed",
       "type": 3,
       "required": true
     }

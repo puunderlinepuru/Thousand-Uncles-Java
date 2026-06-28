@@ -100,3 +100,5 @@ maps: #Their IDs in database correspond to indexes in this file. - CP_ALTITUDE =
   - "pl_vesper"
   - "pl_vigil"
   - "pl_yokohama"
+  - "tc_hydro"
+  - "ctf_sawmill"

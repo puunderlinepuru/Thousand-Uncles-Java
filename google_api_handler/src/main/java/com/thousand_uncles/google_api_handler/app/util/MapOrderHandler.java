@@ -8,7 +8,6 @@ import java.util.Map;
 
 @Component
 public class MapOrderHandler {
-
     private static List<String> mapOrderList = (List<String>) YAMLHandler.yamlRead("shared_resources/ordered_maps.yaml").get("map_order");
 
     public static void main(String[] args) {

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import reactor.core.publisher.Mono;
+
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Map;
@@ -15,7 +17,7 @@ import java.util.Map;
 @Component
 public class MiscStuffCommand implements SlashCommand {
 
-    private final File file = new File("resources/meme_suggestions.yaml");
+    private final File file = new File("resources/sins.txt");
 
     @Override
     public String getName() {
@@ -30,32 +32,24 @@ public class MiscStuffCommand implements SlashCommand {
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .orElse("something");*/
 
-        String memeText = event.getOption("meme_text")
+        String sin = event.getOption("sin")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .orElse("something");
 
-        String funnyGif= event.getOption("funny_gif")
-                .flatMap(ApplicationCommandInteractionOption::getValue)
-                .map(ApplicationCommandInteractionOptionValue::asString)
-                .orElse("something");
-
-
-            DumperOptions options = new DumperOptions();
-            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            Yaml yaml = new Yaml(options);
-
-            try{
-                Map<String, Object> data = Map.of(memeText, funnyGif);
-                FileWriter writer = new FileWriter(file, true);
-                yaml.dump(data, writer);
-                writer.close();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        try{
+            FileWriter writer = new FileWriter(file, true);
+            BufferedWriter bw = new BufferedWriter(writer);
+            bw.newLine();
+            bw.write(sin);
+            bw.newLine();
+            bw.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         return event.reply()
                 .withEphemeral(true)
-                .withContent("saved!");
+                .withContent("oh wow..");
     }
 }

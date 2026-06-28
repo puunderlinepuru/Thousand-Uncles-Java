@@ -24,7 +24,7 @@ app:
 #  asia_role_id: "1436112087830106133"
 
   # UNIVERSAL
-  ready_message: "?"
+  ready_message: ""
   users_to_timeout:
     #  Hunger
     - "229734102071246850"
