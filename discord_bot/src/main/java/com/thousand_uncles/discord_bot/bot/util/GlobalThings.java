@@ -1,5 +1,9 @@
 package com.thousand_uncles.discord_bot.bot.util;
 
+import discord4j.common.util.Snowflake;
+import discord4j.core.GatewayDiscordClient;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.channel.MessageChannel;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,10 +14,24 @@ public class GlobalThings {
     private static Random rand;
     private static boolean appLocked = false;
     private static int pets = 0;
+    private static MessageChannel theCave;
+    GatewayDiscordClient client;
+    Config config;
 
-    GlobalThings(){
+    GlobalThings(GatewayDiscordClient client, Config config){
+        this.client = client;
+        this.config = config;
+
+
         System.out.println("Generating random sequence seed...");
         rand = new Random();
+
+        final String SERVER_ID = config.getServer_id();
+        final String MEME_CHANNEL_ID = config.getMeme_channel_id();
+
+        Guild server = client.getGuildById(Snowflake.of(SERVER_ID)).block();
+        assert server != null;
+        theCave = (MessageChannel) server.getChannelById(Snowflake.of(MEME_CHANNEL_ID)).block();
     }
 
     private static final List<String> mapIDS = (List<String>) YAMLHandler.yamlRead("shared_resources/maps.yaml").get("maps");
@@ -39,5 +57,9 @@ public class GlobalThings {
 
     public static int getPets() {
         return pets;
+    }
+
+    public static MessageChannel getTheCave() {
+        return theCave;
     }
 }

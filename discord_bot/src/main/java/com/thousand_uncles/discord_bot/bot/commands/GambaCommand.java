@@ -1,10 +1,7 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
 import com.thousand_uncles.discord_bot.bot.fun_stuff.Roulette;
-import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.object.command.ApplicationCommandInteractionOption;
-import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -16,9 +13,17 @@ public class GambaCommand implements SlashCommand{
         return "gamba";
     }
 
+    /**
+     * Roulette flow:
+     * 1 - Roulette.getRouletteMenu - Prints all available bet types with select menu
+     * 2 - InteractionListener -> Roulette.handleSet for selectedOption;
+     * 3 - Roulette.handleSet -> Roulette.TypeHandlers.set[type] - presents Modal
+     * 4 - ModalListener -> ModalListener.RouletteSubmissionHandlers - gets data
+     * 5 - ModalListener.RouletteSubmissionHandlers -> Roulette.Rolls.[type] - calls roll and gets [number rolled, W/L, payout amount]
+     * 6 - ModalListener.RouletteSubmissionHandlers gets result and prints out.
+     */
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
-
         return Roulette.getRouletteMenu(event);
 
 //        return Roulette.Rolls.rollStraightUp()

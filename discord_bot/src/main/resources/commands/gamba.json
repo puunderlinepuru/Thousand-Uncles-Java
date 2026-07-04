@@ -1,18 +1,4 @@
 {
   "name": "gamba",
-  "description": "Try to land on a number between 0 and 36",
-  "options": [
-    {
-      "name": "number",
-      "description": "number from 0 to 36",
-      "type": 4,
-      "required": true
-    },
-    {
-      "name": "bet",
-      "description": "bet amount",
-      "type": 4,
-      "required": true
-    }
-  ]
+  "description": "Unnecessarily complicated European roulette"
 }
