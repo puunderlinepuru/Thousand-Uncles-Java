@@ -1,26 +1,48 @@
-package com.thousand_uncles.google_api_handler.app.util;
+package com.thousand_uncles.google_api_handler.app.listeners;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.thousand_uncles.google_api_handler.app.util.MapOrderHandler;
+import com.thousand_uncles.google_api_handler.app.util.UpdateValues;
 import com.thousand_uncles.google_api_handler.data.models.AnyPercentMapRecord;
 import com.thousand_uncles.google_api_handler.data.models.SoloMapRecord;
 import com.thousand_uncles.google_api_handler.data.service.MapRecordServiceProd;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @SuppressWarnings("unused")
 @Component
-public class MessageReceiver {
+public class ValidateListener {
     @Autowired
     MapRecordServiceProd mapRecordServiceProd;
 
+    @Bean
+    public DirectExchange validateExchange() {
+        return new DirectExchange("validate.exchange");
+    }
 
-    @RabbitListener(queues = "test.queue")
+    @Bean
+    public org.springframework.amqp.core.Queue validateQueue() {
+        return new Queue("validate.queue");
+    }
+
+    @SuppressWarnings("unused")
+    @Bean
+    public Binding validateBinding() {
+        return BindingBuilder.bind(validateQueue()).to(validateExchange()).with("validate.routing.key");
+    }
+
+    @RabbitListener(queues = "validate.queue")
     public void receiveMessage(String message) {
         System.out.println("Received message: " + message);
             try {

@@ -11,3 +11,19 @@ spring:
 
   profiles:
     active: prod
+
+  datasource:
+    url: ${SPING_DATASOURCE_URL:jdbc:postgresql://192.168.1.2:5432/thousand_uncles_db}
+    username: ${SPRING_DATASOURCE_URL:admin}
+    password: ${SPRING_DATASOURCE_PASSWORD:mypassword}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  jta:
+    enabled: true

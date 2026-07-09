@@ -103,7 +103,7 @@ public class GoogleAPI_Handler {
 
         System.out.println("[ STATUS UPDATE ] Starting Update Task..");
         Timer timer = new Timer();
-        TimerTask timerTask = new UpdateTask(uncletopiaSpreadsheetID, valueInputOption, service, applicationContext, mapRecordServiceProd);
-        timer.schedule(timerTask, 200, 1800000);
+//        TimerTask timerTask = new UpdateTask(uncletopiaSpreadsheetID, valueInputOption, service, applicationContext, mapRecordServiceProd);
+//        timer.schedule(timerTask, 200, 1800000);
     }
 }
