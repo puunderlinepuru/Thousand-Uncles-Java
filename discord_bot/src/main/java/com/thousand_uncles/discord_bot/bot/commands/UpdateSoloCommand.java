@@ -3,7 +3,7 @@ package com.thousand_uncles.discord_bot.bot.commands;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.thousand_uncles.discord_bot.bot.util.Config;
+import com.thousand_uncles.discord_bot.bot.config.Config;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
 import com.thousand_uncles.discord_bot.data.models.ConfirmWorthyMapRecord;

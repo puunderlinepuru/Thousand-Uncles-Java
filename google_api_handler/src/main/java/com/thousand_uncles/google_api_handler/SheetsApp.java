@@ -1,16 +1,11 @@
 package com.thousand_uncles.google_api_handler;
 
-import com.thousand_uncles.google_api_handler.app.GoogleAPI_Handler;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import com.thousand_uncles.google_api_handler.app.spreadsheet.GoogleAPI_Handler;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import java.io.IOException;
 import java.security.GeneralSecurityException;

@@ -1,5 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.util;
 
+import com.thousand_uncles.discord_bot.bot.config.Config;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.Guild;
@@ -15,6 +16,7 @@ public class GlobalThings {
     private static boolean appLocked = false;
     private static int pets = 0;
     private static MessageChannel theCave;
+    private static MessageChannel currentlyGaming;
     GatewayDiscordClient client;
     Config config;
 
@@ -27,11 +29,13 @@ public class GlobalThings {
         rand = new Random();
 
         final String SERVER_ID = config.getServer_id();
-        final String MEME_CHANNEL_ID = config.getMeme_channel_id();
+        final String THE_CAVE_CHANNEL_ID = config.getThe_cave_channel_id();
+        final String CURRENTLY_GAMING_CHANNEL_ID = config.getCurrently_gaming_channel_id();
 
         Guild server = client.getGuildById(Snowflake.of(SERVER_ID)).block();
         assert server != null;
-        theCave = (MessageChannel) server.getChannelById(Snowflake.of(MEME_CHANNEL_ID)).block();
+        theCave = (MessageChannel) server.getChannelById(Snowflake.of(THE_CAVE_CHANNEL_ID)).block();
+        currentlyGaming = (MessageChannel) server.getChannelById(Snowflake.of(CURRENTLY_GAMING_CHANNEL_ID)).block();
     }
 
     private static final List<String> mapIDS = (List<String>) YAMLHandler.yamlRead("shared_resources/maps.yaml").get("maps");
@@ -59,7 +63,11 @@ public class GlobalThings {
         return pets;
     }
 
-    public static MessageChannel getTheCave() {
+    public MessageChannel getTheCave() {
         return theCave;
+    }
+
+    public MessageChannel getCurrentlyGaming() {
+        return currentlyGaming;
     }
 }

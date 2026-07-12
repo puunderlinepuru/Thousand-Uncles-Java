@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.thousand_uncles.discord_bot.bot.fun_stuff.Roulette;
-import com.thousand_uncles.discord_bot.bot.util.Config;
+import com.thousand_uncles.discord_bot.bot.config.Config;
 import com.thousand_uncles.discord_bot.bot.util.*;
 import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
 import com.thousand_uncles.discord_bot.data.models.ConfirmWorthyMapRecord;

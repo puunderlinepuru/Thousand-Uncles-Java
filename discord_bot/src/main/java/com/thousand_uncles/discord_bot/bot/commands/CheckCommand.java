@@ -2,7 +2,7 @@ package com.thousand_uncles.discord_bot.bot.commands;
 
 import com.thousand_uncles.discord_bot.bot.util.AppNotifications;
 import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
-import com.thousand_uncles.discord_bot.bot.util.Config;
+import com.thousand_uncles.discord_bot.bot.config.Config;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
 import discord4j.core.GatewayDiscordClient;

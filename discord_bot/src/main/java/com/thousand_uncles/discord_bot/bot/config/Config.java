@@ -1,4 +1,4 @@
-package com.thousand_uncles.discord_bot.bot.util;
+package com.thousand_uncles.discord_bot.bot.config;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,6 +16,7 @@ public class Config {
 
     private String server_id;
     private String meme_channel_id;
+    private String the_cave_channel_id;
     private String currently_gaming_channel_id;
     private String region_role_message_id;
     private String role_on_join_id;
@@ -44,6 +45,14 @@ public class Config {
     @SuppressWarnings("unused")
     public void setMeme_channel_id(String meme_channel_id) {
         this.meme_channel_id = meme_channel_id;
+    }
+
+    public String getThe_cave_channel_id() {
+        return the_cave_channel_id;
+    }
+
+    public void setThe_cave_channel_id(String the_cave_channel_id) {
+        this.the_cave_channel_id = the_cave_channel_id;
     }
 
     public String getCurrently_gaming_channel_id() {

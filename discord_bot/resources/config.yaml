@@ -1,6 +1,7 @@
 app:
   # ROLLING
   server_id: "1306287199259463710"
+  the_cave_channel_id: "1491854639232974968"
   meme_channel_id: "1491854639232974968"
   currently_gaming_channel_id: "1390704864648106074"
   region_role_message_id: "1441765982342479883"
@@ -13,6 +14,7 @@ app:
 
   # TESTING
 #  server_id: "1326570611975258227"
+#  the_cave_channel_id: "1436478432618877141"
 #  meme_channel_id: "1436478432618877141"
 #  currently_gaming_channel_id: "1494327564250910832"
 #  region_role_message_id: "1504527220125995141"

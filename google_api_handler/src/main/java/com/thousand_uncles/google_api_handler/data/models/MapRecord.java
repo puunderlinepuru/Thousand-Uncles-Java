@@ -16,11 +16,11 @@ public abstract class MapRecord{
     @Column(name = "map_name")
     private String map_name;
 
-    @Column(name = "curr_wr_seconds", nullable = false, precision = 5)
-    private Short curr_wr_seconds; // SmallInt usually maps to Short or Integer in Java
+    @Column(name = "curr_wr_seconds", nullable = false, precision = 6)
+    private Double curr_wr_seconds; // SmallInt usually maps to Short or Integer in Java
 
-    @Column(name = "prev_wr_seconds", nullable = false, precision = 5)
-    private Short prev_wr_seconds;
+    @Column(name = "prev_wr_seconds", nullable = false, precision = 6)
+    private Double prev_wr_seconds;
 
     @Column(name = "proof_img_1_link", nullable = false)
     private String proof_img_1_link;
@@ -34,14 +34,14 @@ public abstract class MapRecord{
     @Column(name = "proof_vid_link")
     private String proof_vid_link;
 
-    @Column(name = "stage_1_time_seconds", precision = 5)
-    private Short stage_1_time_seconds;
+    @Column(name = "stage_1_time_seconds", precision = 6)
+    private Double stage_1_time_seconds;
 
-    @Column(name = "stage_2_time_seconds", precision = 5)
-    private Short stage_2_time_seconds;
+    @Column(name = "stage_2_time_seconds", precision = 6)
+    private Double stage_2_time_seconds;
 
-    @Column(name = "stage_3_time_seconds", precision = 5)
-    private Short stage_3_time_seconds;
+    @Column(name = "stage_3_time_seconds", precision = 6)
+    private Double stage_3_time_seconds;
 
     // Constructors
     @SuppressWarnings("unused")
@@ -73,23 +73,23 @@ public abstract class MapRecord{
 
     //    curr_wr_seconds
     @SuppressWarnings("unused")
-    public short getCurr_wr_seconds(){
+    public Double getCurr_wr_seconds(){
         return curr_wr_seconds;
     }
 
     @SuppressWarnings("unused")
-    public void setCurr_wr_seconds(short curr_wr_seconds){
+    public void setCurr_wr_seconds(Double curr_wr_seconds){
         this.curr_wr_seconds = curr_wr_seconds;
     }
 
     //    prev_wr_seconds
     @SuppressWarnings("unused")
-    public short getPrev_wr_seconds(){
+    public Double getPrev_wr_seconds(){
         return prev_wr_seconds;
     }
 
     @SuppressWarnings("unused")
-    public void setPrev_wr_seconds(short prev_wr_seconds){
+    public void setPrev_wr_seconds(Double prev_wr_seconds){
         this.prev_wr_seconds = prev_wr_seconds;
     }
 
@@ -143,36 +143,36 @@ public abstract class MapRecord{
     //    stage_1_time_seconds
     @SuppressWarnings("unused")
     @Nullable
-    public Short getStage_1_time_seconds(){
+    public Double getStage_1_time_seconds(){
         return stage_1_time_seconds;
     }
 
     @SuppressWarnings("unused")
-    public void setStage_1_time_seconds(Short stage_1_time_seconds){
+    public void setStage_1_time_seconds(Double stage_1_time_seconds){
         this.stage_1_time_seconds = stage_1_time_seconds;
     }
 
     //    stage_2_time_seconds
     @SuppressWarnings("unused")
     @Nullable
-    public Short getStage_2_time_seconds(){
+    public Double getStage_2_time_seconds(){
         return stage_2_time_seconds;
     }
 
     @SuppressWarnings("unused")
-    public void setStage_2_time_seconds(Short stage_2_time_seconds){
+    public void setStage_2_time_seconds(Double stage_2_time_seconds){
         this.stage_2_time_seconds = stage_2_time_seconds;
     }
 
     //    stage_3_time_seconds
     @SuppressWarnings("unused")
     @Nullable
-    public Short getStage_3_time_seconds(){
+    public Double getStage_3_time_seconds(){
         return stage_3_time_seconds;
     }
 
     @SuppressWarnings("unused")
-    public void setStage_3_time_seconds(Short stage_3_time_seconds){
+    public void setStage_3_time_seconds(Double stage_3_time_seconds){
         this.stage_3_time_seconds = stage_3_time_seconds;
     }
 

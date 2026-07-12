@@ -1,6 +1,7 @@
 package com.thousand_uncles.discord_bot.bot;
 
-import com.thousand_uncles.discord_bot.bot.util.Config;
+import com.thousand_uncles.discord_bot.bot.config.Config;
+import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.Guild;
@@ -12,14 +13,13 @@ import org.springframework.stereotype.Component;
 public class BotActions {
     GatewayDiscordClient client;
     Config config;
+    GlobalThings globalThings;
 
-    BotActions(GatewayDiscordClient client, Config config){
+    BotActions(GatewayDiscordClient client, Config config, GlobalThings globalThings){
         this.client = client;
         this.config = config;
-
+        this.globalThings = globalThings;
         signalSetup();
-
-
     }
 
 
@@ -28,21 +28,20 @@ public class BotActions {
 
         assert client != null;
         if (READY_MESSAGE != null && !READY_MESSAGE.isEmpty()) {
-            final String SERVER_ID = config.getServer_id();
-            final String MEME_CHANNEL_ID = config.getMeme_channel_id();
 
-            Guild server = client.getGuildById(Snowflake.of(SERVER_ID)).block();
-            assert server != null;
-            MessageChannel channel = (MessageChannel) server.getChannelById(Snowflake.of(MEME_CHANNEL_ID)).block();
-
-            assert channel != null;
-            channel.createMessage().withContent(READY_MESSAGE).block();
+            globalThings.getTheCave().createMessage().withContent(READY_MESSAGE).block();
         }
     }
 
     private void timeoutSkyro(){
         assert client != null;
+    }
 
+    public void sendIntoCave(String message){
+        globalThings.getTheCave().createMessage(message).block();
+    }
 
+    public void sendIntoCurrentlyGaming(String message){
+        globalThings.getCurrentlyGaming().createMessage(message).block();
     }
 }

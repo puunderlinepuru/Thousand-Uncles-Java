@@ -1,7 +1,6 @@
 package com.thousand_uncles.google_api_handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thousand_uncles.google_api_handler.app.listeners.EventListener;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 
-@Component
-public class Test {
+//@Component
+public class TestComponent {
 
     RabbitTemplate rabbitTemplate;
 
@@ -24,7 +23,23 @@ public class Test {
     @Autowired
     Binding eventBinding;
 
-    Test(RabbitTemplate rabbitTemplate){
+    /*@Bean
+    public DirectExchange eventExchange() {
+        return new DirectExchange("tf2.round.completed");
+    }
+
+    @Bean
+    public org.springframework.amqp.core.Queue eventQueue() {
+        return new Queue("tf2.round.completed");
+    }
+
+    @SuppressWarnings("unused")
+    @Bean
+    public Binding eventBinding() {
+        return BindingBuilder.bind(eventQueue()).to(eventExchange()).with("tf2.round.completed");
+    }*/
+
+    TestComponent(RabbitTemplate rabbitTemplate){
         this.rabbitTemplate = rabbitTemplate;
         System.out.println("init");
         sendTest();

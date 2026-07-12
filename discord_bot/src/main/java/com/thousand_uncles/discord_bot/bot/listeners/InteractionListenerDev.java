@@ -2,7 +2,7 @@ package com.thousand_uncles.discord_bot.bot.listeners;
 
 import com.thousand_uncles.discord_bot.bot.util.AppNotifications;
 import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
-import com.thousand_uncles.discord_bot.bot.util.Config;
+import com.thousand_uncles.discord_bot.bot.config.Config;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
@@ -19,7 +19,6 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.Role;
 import discord4j.core.object.reaction.Reaction;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;

@@ -17,21 +17,21 @@ public class EventListener {
 
     @Bean
     public DirectExchange eventExchange() {
-        return new DirectExchange("event.exchange");
+        return new DirectExchange("tf2.round.completed");
     }
 
     @Bean
     public org.springframework.amqp.core.Queue eventQueue() {
-        return new Queue("event.queue");
+        return new Queue("tf2.round.completed");
     }
 
     @SuppressWarnings("unused")
     @Bean
     public Binding eventBinding() {
-        return BindingBuilder.bind(eventQueue()).to(eventExchange()).with("event.routing.key");
+        return BindingBuilder.bind(eventQueue()).to(eventExchange()).with("tf2.round.completed");
     }
 
-    @RabbitListener(queues = "event.queue")
+    @RabbitListener(queues = "tf2.round.completed")
     public void receiveMessage(String message) {
         System.out.println("Received message: " + message);
 

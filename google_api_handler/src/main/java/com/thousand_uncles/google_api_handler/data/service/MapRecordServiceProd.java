@@ -58,7 +58,7 @@ public class MapRecordServiceProd {
         };
     }
 
-    public SoloMapRecord saveSolo(
+    /*public SoloMapRecord saveSolo(
             int ID,
             String map_name,
             short curr_wr_time,
@@ -87,20 +87,20 @@ public class MapRecordServiceProd {
         recordToSave.setStage_3_time_seconds(stage_3_time);
 
         return soloMapRecordRepository.save(recordToSave);
-    }
+    }*/
 
     public AnyPercentMapRecord saveAny(
             int ID,
             String map_name,
-            short curr_wr_time,
-            short prev_wr_time,
+            Double curr_wr_time,
+            Double prev_wr_time,
             String proof_1_link,
             String proof_2_link,
             String proof_3_link,
             String proof_vid_link,
-            Short stage_1_time,
-            Short stage_2_time,
-            Short stage_3_time
+            Double stage_1_time,
+            Double stage_2_time,
+            Double stage_3_time
     ){
         AnyPercentMapRecord recordToSave = new AnyPercentMapRecord();
         recordToSave.setId(ID);
@@ -118,7 +118,7 @@ public class MapRecordServiceProd {
         return anyPercentMapRecordRepository.save(recordToSave);
     }
 
-    public SoloMapRecord updateSolo(
+    /*public SoloMapRecord updateSolo(
             int ID,
             String map_name,
             short curr_wr_time,
@@ -146,19 +146,19 @@ public class MapRecordServiceProd {
         recordToUpdate.setStage_3_time_seconds(stage_3_time);
 
         return soloMapRecordRepository.save(recordToUpdate);
-    }
+    }*/
 
     public AnyPercentMapRecord updateAny(
             int ID,
             String map_name,
-            short curr_wr_time,
+            Double curr_wr_time,
             String proof_1_link,
             String proof_2_link,
             String proof_3_link,
             String proof_vid_link,
-            Short stage_1_time,
-            Short stage_2_time,
-            Short stage_3_time
+            Double stage_1_time,
+            Double stage_2_time,
+            Double stage_3_time
     )  throws NoSuchElementException {
         AnyPercentMapRecord recordToUpdate = anyPercentMapRecordRepository.findById(ID).orElseThrow();
         recordToUpdate.setId(ID);

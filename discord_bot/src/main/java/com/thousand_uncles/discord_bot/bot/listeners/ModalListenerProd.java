@@ -7,6 +7,7 @@ import com.thousand_uncles.discord_bot.bot.util.Triple;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ModalSubmitInteractionEvent;
 import discord4j.core.object.component.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -17,6 +18,9 @@ import java.util.List;
 @Component
 public class ModalListenerProd {
     GatewayDiscordClient client;
+
+    @Autowired
+    static GlobalThings globalThings;
 
     ModalListenerProd(GatewayDiscordClient client){
         this.client = client;
@@ -411,10 +415,10 @@ public class ModalListenerProd {
             String betRollResultContent = user + "'s " + betType + " bet on: " + bet + "\n" +
                     "Rolled: " + rollResult.getFirst() + "\n";
             if (rollResult.getSecond()){
-                GlobalThings.getTheCave().createMessage()
+                globalThings.getTheCave().createMessage()
                         .withContent(betRollResultContent + Roulette.getContentW() + rollResult.getThird()).block();
             } else {
-                GlobalThings.getTheCave().createMessage()
+                globalThings.getTheCave().createMessage()
                         .withContent(betRollResultContent + Roulette.getContentL() + rollResult.getThird()).block();
             }
             return Mono.empty();

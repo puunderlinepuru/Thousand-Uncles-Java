@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.thousand_uncles.google_api_handler.app.util.MapOrderHandler;
-import com.thousand_uncles.google_api_handler.app.util.UpdateValues;
+import com.thousand_uncles.google_api_handler.app.spreadsheet.UpdateValues;
 import com.thousand_uncles.google_api_handler.data.models.AnyPercentMapRecord;
 import com.thousand_uncles.google_api_handler.data.models.SoloMapRecord;
 import com.thousand_uncles.google_api_handler.data.service.MapRecordServiceProd;
@@ -16,12 +16,11 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @SuppressWarnings("unused")
-@Component
+//@Component
 public class ValidateListener {
     @Autowired
     MapRecordServiceProd mapRecordServiceProd;

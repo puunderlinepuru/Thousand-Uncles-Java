@@ -1,4 +1,4 @@
-package com.thousand_uncles.google_api_handler.app.util;
+package com.thousand_uncles.google_api_handler.app.spreadsheet;
 
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
