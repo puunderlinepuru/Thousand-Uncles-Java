@@ -1,6 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
-import com.thousand_uncles.discord_bot.bot.config.Config;
+import com.thousand_uncles.discord_bot.bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
 import com.thousand_uncles.discord_bot.data.models.ConfirmWorthyMapRecord;
@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 public class UpdateAnyCommand implements SlashCommand{
 
     @Autowired
-    Config config;
+    BotConfig botConfig;
 
     @SuppressWarnings("unused")
     @Autowired

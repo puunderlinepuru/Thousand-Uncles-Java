@@ -1,12 +1,10 @@
 package com.thousand_uncles.discord_bot.data.service;
 
-import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
-import com.thousand_uncles.discord_bot.data.models.ConfirmWorthyMapRecord;
-import com.thousand_uncles.discord_bot.data.models.MapRecord;
-import com.thousand_uncles.discord_bot.data.models.SoloMapRecord;
+import com.thousand_uncles.discord_bot.data.models.*;
 import com.thousand_uncles.discord_bot.data.repository.AnyPercentMapRecordRepository;
 import com.thousand_uncles.discord_bot.data.repository.ConfirmWorthyRepository;
 import com.thousand_uncles.discord_bot.data.repository.SoloMapRecordRepository;
+import com.thousand_uncles.discord_bot.data.repository.TestMapRecordRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -38,6 +37,10 @@ public class MapRecordServiceProd {
     @SuppressWarnings("unused")
     @Autowired(required = false)
     private ConfirmWorthyRepository confirmWorthyRepository;
+
+    @SuppressWarnings("unused")
+    @Autowired(required = false)
+    private TestMapRecordRepository testMapRecordRepository;
 
     @SuppressWarnings("unused")
     @PersistenceContext
@@ -292,5 +295,39 @@ public class MapRecordServiceProd {
         ConfirmWorthyMapRecord foundRecord = confirmWorthyRepository.findMapByCategory(map_id, category);
         confirmWorthyRepository.delete(foundRecord);
         return foundRecord;
+    }
+
+    public TestRecord addTestRecord(
+            int ID,
+            String map_name,
+            BigDecimal curr_wr_time,
+            BigDecimal prev_wr_time,
+            String proof_1_link,
+            String proof_2_link,
+            String proof_3_link,
+            String proof_vid_link,
+            BigDecimal stage_1_time,
+            BigDecimal stage_2_time,
+            BigDecimal stage_3_time
+    ) {
+        TestRecord testRecord = new TestRecord(
+                ID,
+                map_name,
+                curr_wr_time,
+                prev_wr_time,
+                proof_1_link,
+                proof_2_link,
+                proof_3_link,
+                proof_vid_link,
+                stage_1_time,
+                stage_2_time,
+                stage_3_time
+        );
+
+        return testMapRecordRepository.save(testRecord);
+    }
+
+    public TestRecord getTestRecord(int ID){
+        return testMapRecordRepository.findById(ID).orElse(null);
     }
 }

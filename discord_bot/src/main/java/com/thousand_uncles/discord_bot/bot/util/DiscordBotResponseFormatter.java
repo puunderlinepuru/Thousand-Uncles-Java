@@ -3,7 +3,10 @@ package com.thousand_uncles.discord_bot.bot.util;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.util.RecordFormatter;
 
-public class BotResponseFormatter {
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class DiscordBotResponseFormatter {
 
     public static String mapRecordToMessageContent(MapRecord requestedMap) {
         String response = "";
@@ -30,5 +33,17 @@ public class BotResponseFormatter {
         }
 
         return response;
+    }
+
+    public static String NumberToString (BigDecimal timeNumber) {
+        String timeString;
+        BigDecimal minutes = timeNumber.divide(BigDecimal.valueOf(60),0, RoundingMode.HALF_UP);
+        BigDecimal seconds = timeNumber.remainder(BigDecimal.valueOf(60)).setScale(2, RoundingMode.HALF_UP);
+        if (seconds.compareTo(BigDecimal.valueOf(10)) <0){
+            timeString = minutes + ":0" + seconds;
+        } else {
+            timeString = minutes + ":" + seconds;
+        }
+        return timeString;
     }
 }

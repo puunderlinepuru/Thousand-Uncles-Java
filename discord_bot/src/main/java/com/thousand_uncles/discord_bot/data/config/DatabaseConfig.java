@@ -14,6 +14,8 @@ public class DatabaseConfig {
     @Bean
     @Profile("dev")
     public MapRecordServiceProd mapRecordService(FallbackMapRecordService fallbackService) {
+
+//        TODO Figure out offline service
         /*return new MapRecordServiceProd() {
             // Add new record
 

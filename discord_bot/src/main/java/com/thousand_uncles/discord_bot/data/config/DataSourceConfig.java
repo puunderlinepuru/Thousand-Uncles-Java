@@ -1,5 +1,7 @@
 package com.thousand_uncles.discord_bot.data.config;
 
+import com.thousand_uncles.discord_bot.bot.util.AppNotifications;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -16,17 +18,26 @@ import javax.sql.DataSource;
 public class DataSourceConfig {
 
     DataSourceConfig(){
-        System.out.println("datasourseconfig initialized");
+        AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Data Source Config Initialized");
     }
+
+    @Value("${spring.datasource.url}")
+    private String datasourceURL;
+
+    @Value("${spring.datasource.username}")
+    private String datasourceUsername;
+
+    @Value("${spring.datasource.password}")
+    private String datasourcePassword;
 
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
     @SuppressWarnings("unused")
     public DataSource dataSource() {
         return DataSourceBuilder.create()
-                .url("jdbc:postgresql://192.168.1.2:5432/thousand_uncles_db")
-                .username("admin")
-                .password("mypassword")
+                .url(datasourceURL)
+                .username(datasourceUsername)
+                .password(datasourcePassword)
                 .build();
     }
 

@@ -8,9 +8,9 @@ import java.util.List;
 
 @Configuration
 @ConfigurationProperties(prefix = "app")
-public class Config {
+public class BotConfig {
 
-    Config(){
+    BotConfig(){
 
     }
 

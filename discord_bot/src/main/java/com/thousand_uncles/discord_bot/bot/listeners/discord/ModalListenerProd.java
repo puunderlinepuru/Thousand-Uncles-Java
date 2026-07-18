@@ -1,4 +1,4 @@
-package com.thousand_uncles.discord_bot.bot.listeners;
+package com.thousand_uncles.discord_bot.bot.listeners.discord;
 
 import com.thousand_uncles.discord_bot.bot.fun_stuff.Roulette;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;

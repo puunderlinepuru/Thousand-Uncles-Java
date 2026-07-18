@@ -3,7 +3,7 @@ package com.thousand_uncles.discord_bot.bot.commands;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.thousand_uncles.discord_bot.bot.config.Config;
+import com.thousand_uncles.discord_bot.bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import com.thousand_uncles.discord_bot.data.models.AnyPercentMapRecord;
 import com.thousand_uncles.discord_bot.data.models.ConfirmWorthyMapRecord;
@@ -25,7 +25,7 @@ import reactor.core.publisher.Mono;
 public class UpdateSoloCommand implements SlashCommand{
 
     @Autowired
-    Config config;
+    BotConfig botConfig;
 
     @SuppressWarnings("unused")
     @Autowired

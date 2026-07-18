@@ -1,6 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.util;
 
-import com.thousand_uncles.discord_bot.bot.config.Config;
+import com.thousand_uncles.discord_bot.bot.config.BotConfig;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.Guild;
@@ -8,6 +8,7 @@ import discord4j.core.object.entity.channel.MessageChannel;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Component
@@ -18,19 +19,19 @@ public class GlobalThings {
     private static MessageChannel theCave;
     private static MessageChannel currentlyGaming;
     GatewayDiscordClient client;
-    Config config;
+    BotConfig botConfig;
 
-    GlobalThings(GatewayDiscordClient client, Config config){
+    GlobalThings(GatewayDiscordClient client, BotConfig botConfig){
         this.client = client;
-        this.config = config;
+        this.botConfig = botConfig;
 
 
         System.out.println("Generating random sequence seed...");
         rand = new Random();
 
-        final String SERVER_ID = config.getServer_id();
-        final String THE_CAVE_CHANNEL_ID = config.getThe_cave_channel_id();
-        final String CURRENTLY_GAMING_CHANNEL_ID = config.getCurrently_gaming_channel_id();
+        final String SERVER_ID = botConfig.getServer_id();
+        final String THE_CAVE_CHANNEL_ID = botConfig.getThe_cave_channel_id();
+        final String CURRENTLY_GAMING_CHANNEL_ID = botConfig.getCurrently_gaming_channel_id();
 
         Guild server = client.getGuildById(Snowflake.of(SERVER_ID)).block();
         assert server != null;
@@ -39,11 +40,11 @@ public class GlobalThings {
     }
 
     private static final List<String> mapIDS = (List<String>) YAMLHandler.yamlRead("shared_resources/maps.yaml").get("maps");
+    private static final Map<String, String> mapSuffixes = (Map<String, String>) YAMLHandler.yamlRead("shared_resources/maps.yaml").get("map_suffixes");
 
     public static List<String> getMapIDS() {return mapIDS;}
 
-    @SuppressWarnings("unused")
-    public static Integer getMapID(String mapName) {return mapIDS.indexOf(mapName);}
+    public static Map<String, String> getMapSuffixes() {return mapSuffixes;}
 
     public static Random getRand() {return rand;}
 

@@ -101,3 +101,56 @@ maps: #Their IDs in database correspond to indexes in this file. - CP_ALTITUDE =
   - "pl_vigil"
   - "pl_yokohama"
   - "tc_hydro"
+
+map_suffixes:
+  cp_amaranth_rc1b: cp_amaranth
+  cp_baxter_b5w: cp_baxter
+  cp_brooklynn2_rc2: cp_brooklynn2
+  cp_coppice_rc1: cp_coppice
+  cp_drypine_rc1: cp_drypine
+  cp_forsaken_downpour_rc1: cp_forsaken_downpour
+  cp_hazyfort_rc6: cp_hazyfort
+  cp_mojave_b2: cp_mojave
+  cp_nixie_b1: cp_nixie
+  cp_osiris_b27: cp_osiris
+  cp_redbounty_rc2: cp_redbounty
+  cp_rocketforge_b3: cp_rocketforge
+  cp_rumble_rc8: cp_rumble
+  cp_sandswept_b13: cp_sandswept
+  cp_snowlodge_b5: cp_snowlodge
+  cp_sobek_b5: cp_sobek
+  cp_whitetrack_r1: cp_whitetrack
+  cp_wildcat_rc1a: cp_wildcat
+  pl_alongside_b14: pl_alongside
+  pl_beerbowl_rc1: pl_beerbowl
+  pl_blackmoose_b11: pl_blackmoose
+  pl_blastforge_rc1: pl_blastforge
+  pl_blastpitt_rc3: pl_blastpitt
+  pl_blocked_b15: pl_blocked
+  pl_boundary_final1: pl_boundary
+  pl_bridgeway_b2: pl_bridgeway
+  pl_chateau_x23: pl_chateau
+  pl_dbz_b5: pl_dbz
+  pl_desolation_rc2: pl_desolation
+  pl_eruption_b16: pl_eruption
+  pl_escarpment_rc1: pl_escarpment
+  pl_extinction_rc3: pl_extinction
+  pl_farmstead_rc6: pl_farmstead
+  pl_fountain_b3: pl_fountain
+  pl_greenwood_b6: pl_greenwood
+  pl_guzzle_b19b: pl_guzzle
+  pl_haste_b1: pl_haste
+  pl_haywire_rc5: pl_haywire
+  pl_highwood_b19: pl_highwood
+  pl_jerrycan_rc4: pl_jerrycan
+  pl_jinn_rc2: pl_jinn
+  pl_mesaworks_final1: pl_mesaworks
+  pl_mountainside_rc2: pl_mountainside
+  pl_oasis_rc3: pl_oasis
+  pl_rustbelt_rc1: pl_rustbelt
+  pl_shatter_rc5: pl_shatter
+  pl_silverline_rc12: pl_silverline
+  pl_stallberg_rc3: pl_stallberg
+  pl_vesper_b4: pl_vesper
+  pl_vigil_rc10: pl_vigil
+  pl_yokohama_b5a: pl_yokohama

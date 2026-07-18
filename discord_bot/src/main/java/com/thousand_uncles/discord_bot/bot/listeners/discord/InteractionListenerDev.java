@@ -1,8 +1,8 @@
-package com.thousand_uncles.discord_bot.bot.listeners;
+package com.thousand_uncles.discord_bot.bot.listeners.discord;
 
 import com.thousand_uncles.discord_bot.bot.util.AppNotifications;
-import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
-import com.thousand_uncles.discord_bot.bot.config.Config;
+import com.thousand_uncles.discord_bot.bot.util.DiscordBotResponseFormatter;
+import com.thousand_uncles.discord_bot.bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
@@ -38,7 +38,7 @@ public class InteractionListenerDev {
     ApplicationContext applicationContext;
 
     @Autowired
-    Config config;
+    BotConfig botConfig;
 
     GatewayDiscordClient client;
 
@@ -50,16 +50,16 @@ public class InteractionListenerDev {
     String AU_ROLE_ID;
     String ASIA_ROLE_ID;
 
-    public InteractionListenerDev(GatewayDiscordClient client, Config config) {
+    public InteractionListenerDev(GatewayDiscordClient client, BotConfig botConfig) {
         this.client = client;
         System.out.println("InteractionListener initialized");
-        REGION_ROLE_MESSAGE_ID = config.getRegion_role_message_id();
-        ADMI_ROLE_ID = config.getAdmi_role_id();
-        SERVER_ID = config.getServer_id();
-        NA_ROLE_ID = config.getNa_role_id();
-        EU_ROLE_ID = config.getEu_role_id();
-        AU_ROLE_ID = config.getAu_role_id();
-        ASIA_ROLE_ID = config.getAsia_role_id();
+        REGION_ROLE_MESSAGE_ID = botConfig.getRegion_role_message_id();
+        ADMI_ROLE_ID = botConfig.getAdmi_role_id();
+        SERVER_ID = botConfig.getServer_id();
+        NA_ROLE_ID = botConfig.getNa_role_id();
+        EU_ROLE_ID = botConfig.getEu_role_id();
+        AU_ROLE_ID = botConfig.getAu_role_id();
+        ASIA_ROLE_ID = botConfig.getAsia_role_id();
 
         client.on(ButtonInteractionEvent.class, this::onButton).subscribe();
 
@@ -121,7 +121,7 @@ public class InteractionListenerDev {
             String mapName = parts[1];
             int mapID = GlobalThings.getMapIDS().indexOf(mapName);
 
-            AppNotifications.DISCORD_INTERACTION_INFO(" looking for " + selectedOption + "% category for " + mapName);
+            AppNotifications.Discord.DISCORD_INTERACTION_INFO(" looking for " + selectedOption + "% category for " + mapName);
 
 
             MapRecord gotMap;
@@ -139,7 +139,7 @@ public class InteractionListenerDev {
 
         assert event.getMessage().isPresent();
         System.out.println(event.getMessage().get().getChannel().block());
-        event.edit().withContent(BotResponseFormatter.mapRecordToMessageContent(gotMap)).withComponents().block();
+        event.edit().withContent(DiscordBotResponseFormatter.mapRecordToMessageContent(gotMap)).withComponents().block();
 
         return Mono.empty();
     }
@@ -231,8 +231,8 @@ public class InteractionListenerDev {
     }
 
     private Mono<Void> foundMapResponse(SelectMenuInteractionEvent event, MapRecord foundMap, String recordCategory){
-        AppNotifications.DISCORD_INTERACTION_INFO("Found Map");
-        List<String> availableToCheckCategories = config.getAvailable_categories().getCheck();
+        AppNotifications.Discord.DISCORD_INTERACTION_INFO("Found Map");
+        List<String> availableToCheckCategories = botConfig.getAvailable_categories().getCheck();
         List<SelectMenu.Option> availableCategoriesOptions = new ArrayList<>(List.of());
         for (int i = 0; i < availableToCheckCategories.size(); i++) {
             availableCategoriesOptions.add(i, SelectMenu.Option.of(availableToCheckCategories.get(i), availableToCheckCategories.get(i)));
@@ -240,7 +240,7 @@ public class InteractionListenerDev {
         return event.edit()
                 .withEphemeral(true)
                 .withContent("Record for " + foundMap.getMap_name() + " - " + recordCategory + ":\n" +
-                        BotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
+                        DiscordBotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
                         "Other categories:")
                 .withComponents(ActionRow.of(
                         SelectMenu.of("check-" + foundMap.getMap_name(), availableCategoriesOptions)

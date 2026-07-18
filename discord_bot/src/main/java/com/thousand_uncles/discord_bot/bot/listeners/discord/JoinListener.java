@@ -1,6 +1,6 @@
-package com.thousand_uncles.discord_bot.bot.listeners;
+package com.thousand_uncles.discord_bot.bot.listeners.discord;
 
-import com.thousand_uncles.discord_bot.bot.config.Config;
+import com.thousand_uncles.discord_bot.bot.config.BotConfig;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.guild.MemberJoinEvent;
@@ -15,8 +15,8 @@ public class JoinListener {
     GatewayDiscordClient client;
 
     @SuppressWarnings("unused")
-    public JoinListener(GatewayDiscordClient client, Config config) {
-        ROLE_ON_JOIN_ID = config.getRole_on_join_id();
+    public JoinListener(GatewayDiscordClient client, BotConfig botConfig) {
+        ROLE_ON_JOIN_ID = botConfig.getRole_on_join_id();
 
         client.on(MemberJoinEvent.class, this::onJoin).subscribe();
     }

@@ -1,9 +1,9 @@
-package com.thousand_uncles.discord_bot.bot.listeners;
+package com.thousand_uncles.discord_bot.bot.listeners.discord;
 
 import com.thousand_uncles.discord_bot.bot.fun_stuff.Magic_8_ball;
 import com.thousand_uncles.discord_bot.bot.fun_stuff.RandomDictionary;
 import com.thousand_uncles.discord_bot.bot.fun_stuff.RandomNumberInRange;
-import com.thousand_uncles.discord_bot.bot.config.Config;
+import com.thousand_uncles.discord_bot.bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.bot.util.GlobalThings;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
@@ -31,9 +31,9 @@ public class MessageListener {
 
     GatewayDiscordClient client;
 
-    public MessageListener(GatewayDiscordClient client, Config config) {
-        MEME_CHANNEL_ID = config.getMeme_channel_id();
-        CURRENTLY_GAMING_CHANNEL_ID = config.getCurrently_gaming_channel_id();
+    public MessageListener(GatewayDiscordClient client, BotConfig botConfig) {
+        MEME_CHANNEL_ID = botConfig.getMeme_channel_id();
+        CURRENTLY_GAMING_CHANNEL_ID = botConfig.getCurrently_gaming_channel_id();
 
         this.client = client;
 

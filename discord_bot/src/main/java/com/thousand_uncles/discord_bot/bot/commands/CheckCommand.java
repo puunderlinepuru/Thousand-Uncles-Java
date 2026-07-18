@@ -1,8 +1,8 @@
 package com.thousand_uncles.discord_bot.bot.commands;
 
+import com.thousand_uncles.discord_bot.bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.bot.util.AppNotifications;
-import com.thousand_uncles.discord_bot.bot.util.BotResponseFormatter;
-import com.thousand_uncles.discord_bot.bot.config.Config;
+import com.thousand_uncles.discord_bot.bot.util.DiscordBotResponseFormatter;
 import com.thousand_uncles.discord_bot.data.models.MapRecord;
 import com.thousand_uncles.discord_bot.data.service.MapRecordServiceProd;
 import discord4j.core.GatewayDiscordClient;
@@ -38,7 +38,7 @@ public class CheckCommand implements SlashCommand {
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
-    private Config config;
+    private BotConfig botConfig;
 
     @Override
     public String getName() {
@@ -111,8 +111,8 @@ public class CheckCommand implements SlashCommand {
     }
 
     private Mono<Void> singleMapFoundResponse(ChatInputInteractionEvent event, MapRecord foundMap, String category){
-        AppNotifications.DISCORD_INTERACTION_INFO("Single Map Found Response Case");
-        List<String> availableToCheckCategories = config.getAvailable_categories().getCheck();
+        AppNotifications.Discord.DISCORD_INTERACTION_INFO("Single Map Found Response Case");
+        List<String> availableToCheckCategories = botConfig.getAvailable_categories().getCheck();
         List<SelectMenu.Option> availableCategoriesOptions = new java.util.ArrayList<>(List.of());
         for (int i = 0; i < availableToCheckCategories.size(); i++) {
             availableCategoriesOptions.add(i, SelectMenu.Option.of(availableToCheckCategories.get(i), availableToCheckCategories.get(i)));
@@ -121,7 +121,7 @@ public class CheckCommand implements SlashCommand {
         return event.reply()
                 .withEphemeral(true)
                 .withContent("Record for " + foundMap.getMap_name() + " - " + "%" + ":\n" +
-                        BotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
+                        DiscordBotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
                         "Other categories:")
                 .withComponents(ActionRow.of(
                         SelectMenu.of("check-" + foundMap.getMap_name(), availableCategoriesOptions)
