@@ -1,5 +1,6 @@
 package com.thousand_uncles.discord_bot.bot.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thousand_uncles.discord_bot.bot.config.BotConfig;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
@@ -18,6 +19,8 @@ public class GlobalThings {
     private static int pets = 0;
     private static MessageChannel theCave;
     private static MessageChannel currentlyGaming;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     GatewayDiscordClient client;
     BotConfig botConfig;
 
@@ -71,4 +74,6 @@ public class GlobalThings {
     public MessageChannel getCurrentlyGaming() {
         return currentlyGaming;
     }
+
+    public static ObjectMapper getObjectMapper() {return objectMapper;}
 }

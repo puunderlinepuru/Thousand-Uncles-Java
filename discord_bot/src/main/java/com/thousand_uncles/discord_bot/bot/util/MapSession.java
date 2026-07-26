@@ -6,7 +6,12 @@ public class MapSession {
     private String serverName;
     private String mapName;
     private byte stage;
+    private short artificialSetupTicks = 0;
     private long startTick;
+//    Koth = 30 sec setup
+//    TC = 30 sec setup
+//    CTF = 60 sec setup
+//    weird cp(glassworkd) = 60 sec setup
     private BigDecimal stage_1_time = BigDecimal.ZERO;
     private BigDecimal stage_2_time = BigDecimal.ZERO;
     private BigDecimal stage_3_time = BigDecimal.ZERO;
@@ -38,4 +43,7 @@ public class MapSession {
 
     public BigDecimal getFinalTime() {return finalTime;}
     public void setFinalTime(BigDecimal finalTime) {this.finalTime = finalTime;}
+
+    public short getArtificialSetupTicks() {return artificialSetupTicks;}
+    public void setArtificialSetupTicks(short artificialSetupTicks) {this.artificialSetupTicks = artificialSetupTicks;}
 }

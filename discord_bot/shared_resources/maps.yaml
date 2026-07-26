@@ -101,6 +101,10 @@ maps: #Their IDs in database correspond to indexes in this file. - CP_ALTITUDE =
   - "pl_vigil"
   - "pl_yokohama"
   - "tc_hydro"
+  - "cp_sultry"
+  - "cp_glassworks"
+  - "cp_cornkeep"
+  - "pl_harpyhills"
 
 map_suffixes:
   cp_amaranth_rc1b: cp_amaranth
@@ -119,6 +123,9 @@ map_suffixes:
   cp_sandswept_b13: cp_sandswept
   cp_snowlodge_b5: cp_snowlodge
   cp_sobek_b5: cp_sobek
+  cp_cornkeep_rc3: cp_cornkeep
+  cp_glassworks_rc7a: cp_glassworks
+  cp_sultry_b8a: cp_sultry
   cp_whitetrack_r1: cp_whitetrack
   cp_wildcat_rc1a: cp_wildcat
   pl_alongside_b14: pl_alongside
@@ -139,6 +146,7 @@ map_suffixes:
   pl_fountain_b3: pl_fountain
   pl_greenwood_b6: pl_greenwood
   pl_guzzle_b19b: pl_guzzle
+  pl_harpyhills_b4: pl_harpyhills
   pl_haste_b1: pl_haste
   pl_haywire_rc5: pl_haywire
   pl_highwood_b19: pl_highwood

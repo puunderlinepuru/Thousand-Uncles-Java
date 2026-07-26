@@ -1,4 +1,4 @@
-package com.thousand_uncles.discord_bot.bot;
+package com.thousand_uncles.discord_bot.bot.util;
 
 import discord4j.common.JacksonResources;
 import discord4j.discordjson.json.ApplicationCommandData;
