@@ -1,6 +1,6 @@
 package com.thousand_uncles.google_api_handler;
 
-import com.thousand_uncles.google_api_handler.app.spreadsheet.GoogleAPI_Handler;
+import com.thousand_uncles.google_api_handler.spreadsheet.GoogleAPI_Handler;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +10,12 @@ import org.springframework.core.env.Environment;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@SpringBootApplication(
+        exclude = DataSourceAutoConfiguration.class,
+        scanBasePackages = {
+                "com.thousand_uncles.google_api_handler",
+                "com.thousand_uncles.data"
+        })
 public class SheetsApp {
     public static void main(String[] args) {
         try {

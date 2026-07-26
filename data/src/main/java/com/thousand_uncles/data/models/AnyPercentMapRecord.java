@@ -1,20 +1,16 @@
 package com.thousand_uncles.data.models;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "solo")
-public class SoloMapRecord extends MapRecord {
+@Table(name = "any_percent")
+public class AnyPercentMapRecord extends MapRecord {
 
-    @Column(name = "the_hero")
-    private String the_hero;
-
-    public SoloMapRecord(
+    public AnyPercentMapRecord(){}
+    public AnyPercentMapRecord(
             int id,
             String map_name,
-            String the_hero,
             short curr_wr_seconds,
             short prev_wr_seconds,
             String proof_img_1_link,
@@ -38,15 +34,5 @@ public class SoloMapRecord extends MapRecord {
                 stage_2_time_seconds,
                 stage_3_time_seconds
         );
-        this.the_hero = the_hero;
-    }
-
-    @SuppressWarnings("unused")
-    public String getThe_hero() {
-        return the_hero;
-    }
-
-    public void setThe_hero(String the_hero) {
-        this.the_hero = the_hero;
     }
 }

@@ -14,10 +14,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import reactor.util.Logger;
 import reactor.util.Loggers;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+@SpringBootApplication(
+        exclude = {DataSourceAutoConfiguration.class},
+        scanBasePackages = {
+                "com.thousand_uncles.discord_bot",
+                "com.thousand_uncles.data"
+        })
 public class DiscordBotApplication {
     private static final String token = System.getProperty("BOT_TOKEN");
     private static final Logger log = Loggers.getLogger(DiscordBotApplication.class);
