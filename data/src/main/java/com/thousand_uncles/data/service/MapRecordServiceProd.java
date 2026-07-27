@@ -22,30 +22,31 @@ import java.util.Objects;
 @Transactional
 @Profile("prod")
 public class MapRecordServiceProd {
-
-    MapRecordServiceProd(){
-        System.out.println("maprecordserviceprod initialized");
-    }
-
     @SuppressWarnings("unused")
-    @Autowired(required = false)
+    @Autowired
     private SoloMapRecordRepository soloMapRecordRepository;
 
     @SuppressWarnings("unused")
-    @Autowired(required = false)
+    @Autowired
     private AnyPercentMapRecordRepository anyPercentMapRecordRepository;
 
     @SuppressWarnings("unused")
-    @Autowired(required = false)
+    @Autowired
     private ConfirmWorthyRepository confirmWorthyRepository;
 
     @SuppressWarnings("unused")
-    @Autowired(required = false)
+    @Autowired
     private TestMapRecordRepository testMapRecordRepository;
 
     @SuppressWarnings("unused")
     @PersistenceContext
     private EntityManager entityManager;
+
+    MapRecordServiceProd(){
+        System.out.println("maprecordserviceprod initialized");
+    }
+
+
 
     // Add new record
     @SuppressWarnings("unused")

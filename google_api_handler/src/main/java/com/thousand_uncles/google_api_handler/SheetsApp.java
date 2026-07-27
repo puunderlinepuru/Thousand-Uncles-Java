@@ -5,8 +5,11 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -16,6 +19,8 @@ import java.security.GeneralSecurityException;
                 "com.thousand_uncles.google_api_handler",
                 "com.thousand_uncles.data"
         })
+@EntityScan("com.thousand_uncles.data.models")
+@EnableJpaRepositories(basePackages = "com.thousand_uncles.data")
 public class SheetsApp {
     public static void main(String[] args) {
         try {

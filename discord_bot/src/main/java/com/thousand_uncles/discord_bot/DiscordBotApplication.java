@@ -13,8 +13,10 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import reactor.util.Logger;
 import reactor.util.Loggers;
 
@@ -24,6 +26,8 @@ import reactor.util.Loggers;
                 "com.thousand_uncles.discord_bot",
                 "com.thousand_uncles.data"
         })
+@EntityScan("com.thousand_uncles.data.models")
+@EnableJpaRepositories(basePackages = "com.thousand_uncles.data")
 public class DiscordBotApplication {
     private static final String token = System.getProperty("BOT_TOKEN");
     private static final Logger log = Loggers.getLogger(DiscordBotApplication.class);
