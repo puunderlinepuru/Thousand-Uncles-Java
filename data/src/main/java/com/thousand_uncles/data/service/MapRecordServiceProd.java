@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -48,7 +49,7 @@ public class MapRecordServiceProd {
 
     // Add new record
     @SuppressWarnings("unused")
-    public void addRecord(Object record) {
+    public MapRecord addRecord(Object record) {
         if (record instanceof SoloMapRecord soloMapRecord){
             entityManager.joinTransaction();
             soloMapRecordRepository.upsert(
@@ -65,8 +66,9 @@ public class MapRecordServiceProd {
                     soloMapRecord.getStage_3_time_seconds()
             );
         } else if (record instanceof AnyPercentMapRecord) {
-            anyPercentMapRecordRepository.save((AnyPercentMapRecord) record);
+            return anyPercentMapRecordRepository.save((AnyPercentMapRecord) record);
         }
+        return null;
     }
 
     @SuppressWarnings("unused")

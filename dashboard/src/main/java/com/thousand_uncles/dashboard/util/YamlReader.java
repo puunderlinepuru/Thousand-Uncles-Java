@@ -1,4 +1,4 @@
-package com.thousand_uncles.dashboard.web.util;
+package com.thousand_uncles.dashboard.util;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;

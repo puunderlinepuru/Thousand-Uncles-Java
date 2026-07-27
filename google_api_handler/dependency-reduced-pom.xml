@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <groupId>org.springframework.boot</groupId>
-    <version>4.0.0</version>
-    <relativePath>pom.xml</relativePath>
+    <artifactId>parent</artifactId>
+    <groupId>com.thousand_uncles</groupId>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.thousand_uncles</groupId>
   <artifactId>google_api_handler</artifactId>
   <name>google_api_handler</name>
   <version>0.0.1-SNAPSHOT</version>
-  <description>google_api_handler</description>
-  <developers>
-    <developer />
-  </developers>
-  <licenses>
-    <license />
-  </licenses>
-  <scm />
   <build>
     <plugins>
       <plugin>
@@ -37,6 +27,9 @@
                   <mainClass>com.thousand_uncles.google_api_handler.SheetsApp</mainClass>
                 </transformer>
               </transformers>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>stuffed</shadedClassifierName>
+              <outputDirectory>./build/</outputDirectory>
             </configuration>
           </execution>
         </executions>
@@ -45,9 +38,15 @@
   </build>
   <dependencies>
     <dependency>
+      <groupId>com.thousand_uncles</groupId>
+      <artifactId>data</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
-      <version>4.0.0</version>
+      <version>4.1.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -113,19 +112,19 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
-      <version>4.0.0</version>
+      <version>4.1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
-      <version>4.0.0</version>
+      <version>4.1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-amqp</artifactId>
-      <version>4.0.0</version>
+      <version>4.1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

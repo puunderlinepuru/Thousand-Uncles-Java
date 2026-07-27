@@ -1,6 +1,6 @@
-package com.thousand_uncles.dashboard.web.controllers.web;
+package com.thousand_uncles.dashboard.controllers.web;
 
-import com.thousand_uncles.dashboard.data.models.MapRecord;
+import com.thousand_uncles.data.models.MapRecord;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +13,6 @@ public class DashboardController {
     private ArrayList<MapRecord> mapRecordArrayList = new ArrayList<>();
 
     public DashboardController(){
-        mapRecordArrayList.add(new MapRecord(1, "a"));
-        mapRecordArrayList.add(new MapRecord(2, "b"));
-        mapRecordArrayList.add(new MapRecord(3, "c"));
     }
 
     @GetMapping("/hello")

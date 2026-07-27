@@ -1,5 +1,6 @@
-package com.thousand_uncles.google_api_handler.data.config;
+package com.thousand_uncles.dashboard.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -15,18 +16,24 @@ import javax.sql.DataSource;
 @Profile("prod")
 public class DataSourceConfig {
 
-    DataSourceConfig(){
-        System.out.println("datasourseconfig initialized");
-    }
+
+    @Value("${spring.datasource.url}")
+    private String datasourceURL;
+
+    @Value("${spring.datasource.username}")
+    private String datasourceUsername;
+
+    @Value("${spring.datasource.password}")
+    private String datasourcePassword;
 
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
     @SuppressWarnings("unused")
     public DataSource dataSource() {
         return DataSourceBuilder.create()
-                .url("jdbc:postgresql://192.168.1.2:5432/thousand_uncles_db")
-                .username("admin")
-                .password("mypassword")
+                .url(datasourceURL)
+                .username(datasourceUsername)
+                .password(datasourcePassword)
                 .build();
     }
 
