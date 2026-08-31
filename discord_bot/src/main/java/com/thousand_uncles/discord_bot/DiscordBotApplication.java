@@ -67,26 +67,4 @@ public class DiscordBotApplication {
 
         return client;
     }
-
-    @SuppressWarnings("unused")
-    @Bean
-    public RestClient discordRestClient(GatewayDiscordClient client) {
-        return client.getRestClient();
-    }
-
-    @Bean
-    public DirectExchange testExchange() {
-        return new DirectExchange("test.exchange");
-    }
-
-    @Bean
-    public Queue testQueue() {
-        return new Queue("test.queue");
-    }
-
-    @SuppressWarnings("unused")
-    @Bean
-    public Binding testBinding() {
-        return BindingBuilder.bind(testQueue()).to(testExchange()).with("test.routing.key");
-    }
 }

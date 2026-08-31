@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.thousand_uncles.data.models.AnyPercentMapRecord;
-import com.thousand_uncles.data.models.SoloMapRecord;
+import com.thousand_uncles.data.models.uncletopia.AnyPercentMapRecordEntry;
+import com.thousand_uncles.data.models.uncletopia.SoloMapRecordEntry;
 import com.thousand_uncles.data.service.MapRecordServiceProd;
 import com.thousand_uncles.google_api_handler.util.MapOrderHandler;
 import com.thousand_uncles.google_api_handler.spreadsheet.UpdateValues;
@@ -58,7 +58,7 @@ public class ValidateListener {
 
                 switch(gotCategory){
                     case "any":
-                        AnyPercentMapRecord anyPercentTransformedRecord = objectMapper.treeToValue(mapNode, AnyPercentMapRecord.class);
+                        AnyPercentMapRecordEntry anyPercentTransformedRecord = objectMapper.treeToValue(mapNode, AnyPercentMapRecordEntry.class);
                         System.out.println(" extracted record: \n" +
                                 "ID: " + anyPercentTransformedRecord.getId() + "\n" +
                                 "Name: " + anyPercentTransformedRecord.getMap_name() + "\n" +
@@ -72,38 +72,22 @@ public class ValidateListener {
                         System.out.println("cell value:" + mapID);
 
                         UpdateValues.updateSheets(List.of(data), "Any%", "A" + mapID);
-                        try{
-                            mapRecordServiceProd.updateAny(
-                                    anyPercentTransformedRecord.getId(),
-                                    anyPercentTransformedRecord.getMap_name(),
-                                    anyPercentTransformedRecord.getCurr_wr_seconds(),
-                                    anyPercentTransformedRecord.getPrev_wr_seconds(),
-                                    anyPercentTransformedRecord.getProof_img_1_link(),
-                                    anyPercentTransformedRecord.getProof_img_2_link(),
-                                    anyPercentTransformedRecord.getProof_img_3_link(),
-                                    anyPercentTransformedRecord.getProof_vid_link(),
-                                    anyPercentTransformedRecord.getStage_1_time_seconds(),
-                                    anyPercentTransformedRecord.getStage_2_time_seconds(),
-                                    anyPercentTransformedRecord.getStage_3_time_seconds()
-                            );
-                        } catch (NoSuchElementException e){
-                            mapRecordServiceProd.saveAny(
-                                    anyPercentTransformedRecord.getId(),
-                                    anyPercentTransformedRecord.getMap_name(),
-                                    anyPercentTransformedRecord.getCurr_wr_seconds(),
-                                    anyPercentTransformedRecord.getPrev_wr_seconds(),
-                                    anyPercentTransformedRecord.getProof_img_1_link(),
-                                    anyPercentTransformedRecord.getProof_img_2_link(),
-                                    anyPercentTransformedRecord.getProof_img_3_link(),
-                                    anyPercentTransformedRecord.getProof_vid_link(),
-                                    anyPercentTransformedRecord.getStage_1_time_seconds(),
-                                    anyPercentTransformedRecord.getStage_2_time_seconds(),
-                                    anyPercentTransformedRecord.getStage_3_time_seconds()
-                            );
-                        }
+                        mapRecordServiceProd.saveUncletopiaAny(
+                                anyPercentTransformedRecord.getId(),
+                                anyPercentTransformedRecord.getMap_name(),
+                                anyPercentTransformedRecord.getCurr_wr_seconds(),
+                                anyPercentTransformedRecord.getPrev_wr_seconds(),
+                                anyPercentTransformedRecord.getProof_img_1_link(),
+                                anyPercentTransformedRecord.getProof_img_2_link(),
+                                anyPercentTransformedRecord.getProof_img_3_link(),
+                                anyPercentTransformedRecord.getProof_vid_link(),
+                                anyPercentTransformedRecord.getStage_1_time_seconds(),
+                                anyPercentTransformedRecord.getStage_2_time_seconds(),
+                                anyPercentTransformedRecord.getStage_3_time_seconds()
+                        );
                         break;
                     case "solo":
-                        SoloMapRecord soloTransformedRecord = objectMapper.treeToValue(mapNode, SoloMapRecord.class);
+                        SoloMapRecordEntry soloTransformedRecord = objectMapper.treeToValue(mapNode, SoloMapRecordEntry.class);
 
                         mapID = MapOrderHandler.getMapOrderList().indexOf(soloTransformedRecord.getMap_name())+3;
 
@@ -118,38 +102,24 @@ public class ValidateListener {
                                 "Proof pic: " + soloTransformedRecord.getProof_img_1_link()
                         );
                         UpdateValues.updateSheets(List.of(data), "Solo%", "A" + MapOrderHandler.getMapOrderList().indexOf(soloTransformedRecord.getMap_name())+3);
-                        try{
-                            mapRecordServiceProd.updateSolo(
-                                    soloTransformedRecord.getId(),
-                                    soloTransformedRecord.getMap_name(),
-                                    soloTransformedRecord.getCurr_wr_seconds(),
-                                    soloTransformedRecord.getPrev_wr_seconds(),
-                                    soloTransformedRecord.getThe_hero(),
-                                    soloTransformedRecord.getProof_img_1_link(),
-                                    soloTransformedRecord.getProof_img_2_link(),
-                                    soloTransformedRecord.getProof_img_3_link(),
-                                    soloTransformedRecord.getProof_vid_link(),
-                                    soloTransformedRecord.getStage_1_time_seconds(),
-                                    soloTransformedRecord.getStage_2_time_seconds(),
-                                    soloTransformedRecord.getStage_3_time_seconds()
-                            );
-                        } catch (NoSuchElementException e){
-                            mapRecordServiceProd.saveSolo(
-                                    soloTransformedRecord.getId(),
-                                    soloTransformedRecord.getMap_name(),
-                                    soloTransformedRecord.getCurr_wr_seconds(),
-                                    soloTransformedRecord.getPrev_wr_seconds(),
-                                    soloTransformedRecord.getThe_hero(),
-                                    soloTransformedRecord.getProof_img_1_link(),
-                                    soloTransformedRecord.getProof_img_2_link(),
-                                    soloTransformedRecord.getProof_img_3_link(),
-                                    soloTransformedRecord.getProof_vid_link(),
-                                    soloTransformedRecord.getStage_1_time_seconds(),
-                                    soloTransformedRecord.getStage_2_time_seconds(),
-                                    soloTransformedRecord.getStage_3_time_seconds()
-                            );
-                        }
+
+                        mapRecordServiceProd.saveUncletopiaSolo(
+                                soloTransformedRecord.getId(),
+                                soloTransformedRecord.getMap_name(),
+                                soloTransformedRecord.getCurr_wr_seconds(),
+                                soloTransformedRecord.getPrev_wr_seconds(),
+                                soloTransformedRecord.getThe_hero(),
+                                soloTransformedRecord.getProof_img_1_link(),
+                                soloTransformedRecord.getProof_img_2_link(),
+                                soloTransformedRecord.getProof_img_3_link(),
+                                soloTransformedRecord.getProof_vid_link(),
+                                soloTransformedRecord.getStage_1_time_seconds(),
+                                soloTransformedRecord.getStage_2_time_seconds(),
+                                soloTransformedRecord.getStage_3_time_seconds()
+                        );
                         break;
+                    case "cheeseless":
+
                 }
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);

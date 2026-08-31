@@ -1,6 +1,6 @@
 package com.thousand_uncles.data.service;
 
-import com.thousand_uncles.data.models.MapRecord;
+import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +19,13 @@ public class FallbackMapRecordService {
 
     // Read record by name
     @SuppressWarnings("unused")
-    public MapRecord getRecordByName(String mapName) {
+    public ManualIndexedMapRecordEntry getRecordByName(String mapName) {
         return null;
     }
 
     // Read all records
     @SuppressWarnings("unused")
-    public List<MapRecord> getAllRecords() {
+    public List<ManualIndexedMapRecordEntry> getAllRecords() {
         return null;
     }
 
@@ -61,7 +61,7 @@ public class FallbackMapRecordService {
 
     // Search records by partial name
     @SuppressWarnings("unused")
-    public List<MapRecord> searchRecords(String partialName) {
+    public List<ManualIndexedMapRecordEntry> searchRecords(String partialName) {
         return null;
     }
 }

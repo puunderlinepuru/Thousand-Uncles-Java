@@ -7,7 +7,8 @@ import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @SpringBootApplication(
 		exclude = {DataSourceAutoConfiguration.class},
@@ -21,6 +22,10 @@ public class DashboardApplication {
 
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(DashboardApplication.class, args);
+
+//		Timer timer = new Timer();
+//        TimerTask timerTask = new SampleLogTask(context.getBean(LogService.class));
+//        timer.schedule(timerTask, 200, 600);
 
 //		MapRecordUtil util = context.getBean(MapRecordUtil.class);
 //		util.doSomething();

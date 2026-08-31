@@ -1,6 +1,6 @@
 package com.thousand_uncles.dashboard.controllers.web;
 
-import com.thousand_uncles.data.models.MapRecord;
+import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 @Controller
 public class DashboardController {
 
-    private ArrayList<MapRecord> mapRecordArrayList = new ArrayList<>();
+    private ArrayList<ManualIndexedMapRecordEntry> mapRecordArrayList = new ArrayList<>();
 
     public DashboardController(){
     }
@@ -30,6 +30,11 @@ public class DashboardController {
     @GetMapping("/hud")
     public String hud(Model model) {
         return "hud";
+    }
+
+    @GetMapping("/social")
+    public String index() {
+        return "client";
     }
 }
 

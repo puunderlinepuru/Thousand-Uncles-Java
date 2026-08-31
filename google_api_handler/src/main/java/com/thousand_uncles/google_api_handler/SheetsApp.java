@@ -1,6 +1,6 @@
 package com.thousand_uncles.google_api_handler;
 
-import com.thousand_uncles.google_api_handler.spreadsheet.GoogleAPI_Handler;
+import com.thousand_uncles.google_api_handler.services.GoogleAPIService;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,7 +25,7 @@ public class SheetsApp {
     public static void main(String[] args) {
         try {
             ApplicationContext applicationContext = SpringApplication.run(SheetsApp.class, args);
-            GoogleAPI_Handler googleAPIHandler = applicationContext.getBean(GoogleAPI_Handler.class);
+            GoogleAPIService googleAPIHandler = applicationContext.getBean(GoogleAPIService.class);
             Environment environment = applicationContext.getEnvironment();
             System.out.println("Profile: " + environment.getProperty("spring.profiles.active"));
             try {

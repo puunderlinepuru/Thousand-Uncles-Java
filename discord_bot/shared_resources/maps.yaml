@@ -4,7 +4,7 @@ maps: #Their IDs in database correspond to indexes in this file. - CP_ALTITUDE =
   - "cp_amaranth"
   - "cp_baxter"
   - "cp_brew"
-  - "cp_brooklynn2"
+  - "cp_brooklynn"
   - "cp_cargo"
   - "cp_coppice"
   - "cp_drypine"
@@ -105,11 +105,18 @@ maps: #Their IDs in database correspond to indexes in this file. - CP_ALTITUDE =
   - "cp_glassworks"
   - "cp_cornkeep"
   - "pl_harpyhills"
+  - "cp_premuda"
+  - "cp_degrootkeep"
+  - pl_cactuscanyon
+  - pl_redwood
+  - ctf_devilcross
+  - ctf_frosty
+  - ctf_helltrain
 
 map_suffixes:
   cp_amaranth_rc1b: cp_amaranth
   cp_baxter_b5w: cp_baxter
-  cp_brooklynn2_rc2: cp_brooklynn2
+  cp_brooklynn2_rc2: cp_brooklynn
   cp_coppice_rc1: cp_coppice
   cp_drypine_rc1: cp_drypine
   cp_forsaken_downpour_rc1: cp_forsaken_downpour

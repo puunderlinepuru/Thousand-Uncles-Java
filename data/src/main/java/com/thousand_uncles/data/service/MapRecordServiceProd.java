@@ -1,10 +1,19 @@
 package com.thousand_uncles.data.service;
 
-import com.thousand_uncles.data.models.*;
-import com.thousand_uncles.data.repository.AnyPercentMapRecordRepository;
-import com.thousand_uncles.data.repository.ConfirmWorthyRepository;
-import com.thousand_uncles.data.repository.SoloMapRecordRepository;
-import com.thousand_uncles.data.repository.TestMapRecordRepository;
+import com.thousand_uncles.data.models.common.ConfirmWorthyMapRecordEntry;
+import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
+import com.thousand_uncles.data.models.run.RunAnyPercentMapRecordEntry;
+import com.thousand_uncles.data.models.run.RunSoloMapRecordEntry;
+import com.thousand_uncles.data.models.run.TestRecord;
+import com.thousand_uncles.data.models.uncletopia.AnyPercentMapRecordEntry;
+import com.thousand_uncles.data.models.uncletopia.SoloMapRecordEntry;
+import com.thousand_uncles.data.repositories.run.RunAnyPercentMapRecordRepository;
+import com.thousand_uncles.data.repositories.run.RunCheeselessMapRecordRepository;
+import com.thousand_uncles.data.repositories.run.RunSoloMapRecordRepository;
+import com.thousand_uncles.data.repositories.uncletopia.AnyPercentMapRecordRepository;
+import com.thousand_uncles.data.repositories.uncletopia.ConfirmWorthyRepository;
+import com.thousand_uncles.data.repositories.uncletopia.SoloMapRecordRepository;
+import com.thousand_uncles.data.repositories.TestMapRecordRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -29,6 +36,15 @@ public class MapRecordServiceProd {
     @SuppressWarnings("unused")
     @Autowired
     private AnyPercentMapRecordRepository anyPercentMapRecordRepository;
+
+    @Autowired
+    private RunAnyPercentMapRecordRepository runAnyPercentMapRecordRepository;
+
+    @Autowired
+    private RunSoloMapRecordRepository runSoloMapRecordRepository;
+
+    @Autowired
+    RunCheeselessMapRecordRepository runCheeselessMapRecordRepository;
 
     @SuppressWarnings("unused")
     @Autowired
@@ -50,14 +66,14 @@ public class MapRecordServiceProd {
 
     // Add new record
     @SuppressWarnings("unused")
-    public MapRecord addRecord(Object record) {
-        if (record instanceof SoloMapRecord soloMapRecord){
-            entityManager.joinTransaction();
-            soloMapRecordRepository.upsert(
+    public ManualIndexedMapRecordEntry addRecord(Object record) {
+        if (record instanceof SoloMapRecordEntry soloMapRecord){
+            SoloMapRecordEntry soloMapRecordEntry = new SoloMapRecordEntry(
                     soloMapRecord.getId(),
                     soloMapRecord.getMap_name(),
+                    soloMapRecord.getThe_hero(),
                     soloMapRecord.getCurr_wr_seconds(),
-                    (short) 0,
+                    BigDecimal.ZERO,
                     soloMapRecord.getProof_img_1_link(),
                     soloMapRecord.getProof_img_2_link(),
                     soloMapRecord.getProof_img_3_link(),
@@ -65,29 +81,58 @@ public class MapRecordServiceProd {
                     soloMapRecord.getStage_1_time_seconds(),
                     soloMapRecord.getStage_2_time_seconds(),
                     soloMapRecord.getStage_3_time_seconds()
+                    );
+
+            return soloMapRecordRepository.save(soloMapRecordEntry);
+        } else if (record instanceof AnyPercentMapRecordEntry anyPercentMapRecord) {
+            AnyPercentMapRecordEntry anyPercentMapRecordEntry = new AnyPercentMapRecordEntry(
+                    anyPercentMapRecord.getId(),
+                    anyPercentMapRecord.getMap_name(),
+                    anyPercentMapRecord.getCurr_wr_seconds(),
+                    BigDecimal.ZERO,
+                    anyPercentMapRecord.getProof_img_1_link(),
+                    anyPercentMapRecord.getProof_img_2_link(),
+                    anyPercentMapRecord.getProof_img_3_link(),
+                    anyPercentMapRecord.getProof_vid_link(),
+                    anyPercentMapRecord.getStage_1_time_seconds(),
+                    anyPercentMapRecord.getStage_2_time_seconds(),
+                    anyPercentMapRecord.getStage_3_time_seconds()
             );
-        } else if (record instanceof AnyPercentMapRecord) {
-            return anyPercentMapRecordRepository.save((AnyPercentMapRecord) record);
+            return anyPercentMapRecordRepository.save((AnyPercentMapRecordEntry) record);
         }
         return null;
     }
 
     @SuppressWarnings("unused")
-    public MapRecord getRecord(int ID, String category){
-        MapRecord foundMap = null;
-        if(Objects.equals(category, "solo")){
-            foundMap = soloMapRecordRepository.findById(ID).orElseThrow();
-        } else if (Objects.equals(category, "any")){
-            foundMap = anyPercentMapRecordRepository.findById(ID).orElseThrow();
+    public ManualIndexedMapRecordEntry getRecord(int ID, String category){
+        ManualIndexedMapRecordEntry foundMap = null;
+        switch (category){
+            case "solo":
+                foundMap = soloMapRecordRepository.findById(ID).orElse(null);
+                break;
+            case "any":
+                foundMap = anyPercentMapRecordRepository.findById(ID).orElse(null);
+                break;
+            case "cheeseless":
+                break;
+            case "run_any":
+                foundMap = runAnyPercentMapRecordRepository.findById(ID).orElse(null);
+                break;
+            case "run_solo":
+                foundMap = runSoloMapRecordRepository.findById(ID).orElse(null);
+                break;
+            case "run_cheeseless":
+                foundMap = runCheeselessMapRecordRepository.findById(ID).orElse(null);
+                break;
         }
         return foundMap;
     }
 
 //    Modify existing WR
     @SuppressWarnings("unused")
-    public boolean updateWR(MapRecord record){
+    public boolean updateWR(ManualIndexedMapRecordEntry record){
         int updated = 0;
-        if (record instanceof SoloMapRecord){
+        if (record instanceof SoloMapRecordEntry){
             updated = soloMapRecordRepository.updateRecordByName(
                     record.getMap_name(),
                     record.getCurr_wr_seconds(),
@@ -99,7 +144,7 @@ public class MapRecordServiceProd {
                     record.getStage_2_time_seconds(),
                     record.getStage_3_time_seconds()
             );
-        } else if (record instanceof AnyPercentMapRecord) {
+        } else if (record instanceof AnyPercentMapRecordEntry) {
             updated = anyPercentMapRecordRepository.updateRecord(
                     record.getMap_name(),
                     record.getCurr_wr_seconds(),
@@ -117,30 +162,32 @@ public class MapRecordServiceProd {
 
     // Search records by partial name
     @SuppressWarnings("unused")
-    public List<MapRecord> searchRecords(String partialName, String category) {
+    public List<ManualIndexedMapRecordEntry> searchRecords(String partialName, String category) {
         return switch (category) {
             case "solo" -> soloMapRecordRepository.findByMap_nameContaining(partialName);
             case "any" -> anyPercentMapRecordRepository.findByMap_nameContaining(partialName);
+            case "run_solo" -> runSoloMapRecordRepository.findByMap_nameContaining(partialName);
+            case "run_any" -> runAnyPercentMapRecordRepository.findByMap_nameContaining(partialName);
             default -> null;
         };
     }
 
     @SuppressWarnings("unused")
-    public MapRecord saveSolo(
+    public ManualIndexedMapRecordEntry saveUncletopiaSolo(
             int ID,
             String map_name,
-            short curr_wr_time,
-            short prev_wr_time,
+            BigDecimal curr_wr_time,
+            BigDecimal prev_wr_time,
             String the_hero,
             String proof_1_link,
             String proof_2_link,
             String proof_3_link,
             String proof_vid_link,
-            Short stage_1_time,
-            Short stage_2_time,
-            Short stage_3_time
+            BigDecimal stage_1_time,
+            BigDecimal stage_2_time,
+            BigDecimal stage_3_time
     ){
-        SoloMapRecord recordToSave = new SoloMapRecord(
+        SoloMapRecordEntry recordToSave = new SoloMapRecordEntry(
                 ID,
                 map_name,
                 the_hero,
@@ -159,20 +206,20 @@ public class MapRecordServiceProd {
     }
 
     @SuppressWarnings("unused")
-    public MapRecord saveAny(
+    public ManualIndexedMapRecordEntry saveUncletopiaAny(
             int ID,
             String map_name,
-            short curr_wr_time,
-            short prev_wr_time,
+            BigDecimal curr_wr_time,
+            BigDecimal prev_wr_time,
             String proof_1_link,
             String proof_2_link,
             String proof_3_link,
             String proof_vid_link,
-            Short stage_1_time,
-            Short stage_2_time,
-            Short stage_3_time
+            BigDecimal stage_1_time,
+            BigDecimal stage_2_time,
+            BigDecimal stage_3_time
     ){
-        AnyPercentMapRecord recordToSave = new AnyPercentMapRecord(
+        AnyPercentMapRecordEntry recordToSave = new AnyPercentMapRecordEntry(
                 ID,
                 map_name,
                 curr_wr_time,
@@ -190,84 +237,85 @@ public class MapRecordServiceProd {
     }
 
     @SuppressWarnings("unused")
-    public MapRecord updateSolo(
+    public ManualIndexedMapRecordEntry saveRunSolo(
             int ID,
             String map_name,
-            short curr_wr_time,
-            short prev_wr_time,
+            BigDecimal curr_wr_time,
+            BigDecimal prev_wr_time,
             String the_hero,
             String proof_1_link,
             String proof_2_link,
             String proof_3_link,
             String proof_vid_link,
-            Short stage_1_time,
-            Short stage_2_time,
-            Short stage_3_time
-    )  throws NoSuchElementException {
-        SoloMapRecord recordToUpdate = soloMapRecordRepository.findById(ID).orElseThrow();
-        recordToUpdate.setId(ID);
-        recordToUpdate.setMap_name(map_name);
-        recordToUpdate.setCurr_wr_seconds(curr_wr_time);
-        recordToUpdate.setPrev_wr_seconds(prev_wr_time);
-        recordToUpdate.setThe_hero(the_hero);
-        recordToUpdate.setProof_img_1_link(proof_1_link);
-        recordToUpdate.setProof_img_2_link(proof_2_link);
-        recordToUpdate.setProof_img_3_link(proof_3_link);
-        recordToUpdate.setProof_vid_link(proof_vid_link);
-        recordToUpdate.setStage_1_time_seconds(stage_1_time);
-        recordToUpdate.setStage_2_time_seconds(stage_2_time);
-        recordToUpdate.setStage_3_time_seconds(stage_3_time);
+            BigDecimal stage_1_time,
+            BigDecimal stage_2_time,
+            BigDecimal stage_3_time
+    ){
+        RunSoloMapRecordEntry recordToSave = new RunSoloMapRecordEntry(
+                ID,
+                map_name,
+                the_hero,
+                curr_wr_time,
+                prev_wr_time,
+                proof_1_link,
+                proof_2_link,
+                proof_3_link,
+                proof_vid_link,
+                stage_1_time,
+                stage_2_time,
+                stage_3_time
+        );
 
-        return soloMapRecordRepository.save(recordToUpdate);
+        return runSoloMapRecordRepository.save(recordToSave);
     }
 
     @SuppressWarnings("unused")
-    public MapRecord updateAny(
+    public ManualIndexedMapRecordEntry saveRunAny(
             int ID,
             String map_name,
-            short curr_wr_time,
-            short prev_wr_time,
+            BigDecimal curr_wr_time,
+            BigDecimal prev_wr_time,
             String proof_1_link,
             String proof_2_link,
             String proof_3_link,
             String proof_vid_link,
-            Short stage_1_time,
-            Short stage_2_time,
-            Short stage_3_time
-    )  throws NoSuchElementException {
-        AnyPercentMapRecord recordToUpdate = anyPercentMapRecordRepository.findById(ID).orElseThrow();
-        recordToUpdate.setId(ID);
-        recordToUpdate.setMap_name(map_name);
-        recordToUpdate.setCurr_wr_seconds(curr_wr_time);
-        recordToUpdate.setPrev_wr_seconds(prev_wr_time);
-        recordToUpdate.setProof_img_1_link(proof_1_link);
-        recordToUpdate.setProof_img_2_link(proof_2_link);
-        recordToUpdate.setProof_img_3_link(proof_3_link);
-        recordToUpdate.setProof_vid_link(proof_vid_link);
-        recordToUpdate.setStage_1_time_seconds(stage_1_time);
-        recordToUpdate.setStage_2_time_seconds(stage_2_time);
-        recordToUpdate.setStage_3_time_seconds(stage_3_time);
+            BigDecimal stage_1_time,
+            BigDecimal stage_2_time,
+            BigDecimal stage_3_time
+    ){
+        RunAnyPercentMapRecordEntry recordToSave = new RunAnyPercentMapRecordEntry(
+                ID,
+                map_name,
+                curr_wr_time,
+                prev_wr_time,
+                proof_1_link,
+                proof_2_link,
+                proof_3_link,
+                proof_vid_link,
+                stage_1_time,
+                stage_2_time,
+                stage_3_time
+        );
 
-        return anyPercentMapRecordRepository.save(recordToUpdate);
+        return runAnyPercentMapRecordRepository.save(recordToSave);
     }
 
-
-    public ConfirmWorthyMapRecord putOnHold(
+    public ConfirmWorthyMapRecordEntry putOnHold(
             String category,
             int ID,
             String map_name,
-            short curr_wr_time,
-            short prev_wr_time,
+            BigDecimal curr_wr_time,
+            BigDecimal prev_wr_time,
             String proof_1_link,
             String proof_2_link,
             String proof_3_link,
             String proof_vid_link,
-            Short stage_1_time,
-            Short stage_2_time,
-            Short stage_3_time,
+            BigDecimal stage_1_time,
+            BigDecimal stage_2_time,
+            BigDecimal stage_3_time,
             String additional
     ) {
-        ConfirmWorthyMapRecord recordToUpdate = new ConfirmWorthyMapRecord();
+        ConfirmWorthyMapRecordEntry recordToUpdate = new ConfirmWorthyMapRecordEntry();
         recordToUpdate.setCategory(category);
         recordToUpdate.setMap_id(ID);
         recordToUpdate.setMap_name(map_name);
@@ -293,11 +341,11 @@ public class MapRecordServiceProd {
 
     }
 
-    public ConfirmWorthyMapRecord getFromHold(
+    public ConfirmWorthyMapRecordEntry getFromHold(
             String category,
             int map_id
     ){
-        ConfirmWorthyMapRecord foundRecord = confirmWorthyRepository.findMapByCategory(map_id, category);
+        ConfirmWorthyMapRecordEntry foundRecord = confirmWorthyRepository.findMapByCategory(map_id, category);
         confirmWorthyRepository.delete(foundRecord);
         return foundRecord;
     }
@@ -315,6 +363,8 @@ public class MapRecordServiceProd {
             BigDecimal stage_2_time,
             BigDecimal stage_3_time
     ) {
+        System.out.println("writing curr WR: " + curr_wr_time);
+
         TestRecord testRecord = new TestRecord(
                 ID,
                 map_name,

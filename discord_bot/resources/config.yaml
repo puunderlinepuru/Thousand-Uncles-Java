@@ -40,9 +40,9 @@ app:
     check:
       - "any"
       - "solo"
-#      - "dane_any"
+      - "run_any"
 #      - "dane_cheeseless"
-#      - "dane_solo"
+      - "run_solo"
 #      - "run_any"
 #      - "run_cheeseless"
 #      - "run_solo"

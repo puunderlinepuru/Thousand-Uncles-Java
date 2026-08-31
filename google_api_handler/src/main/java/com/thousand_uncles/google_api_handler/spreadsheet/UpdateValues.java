@@ -8,7 +8,6 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import java.io.IOException;
 import java.util.List;
 
-/* Class to demonstrate the use of Spreadsheet Update Values API */
 public class UpdateValues {
 
     private static Sheets service;
