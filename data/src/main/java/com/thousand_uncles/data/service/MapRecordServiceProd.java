@@ -44,7 +44,7 @@ public class MapRecordServiceProd {
     private RunSoloMapRecordRepository runSoloMapRecordRepository;
 
     @Autowired
-    RunCheeselessMapRecordRepository runCheeselessMapRecordRepository;
+    private RunCheeselessMapRecordRepository runCheeselessMapRecordRepository;
 
     @SuppressWarnings("unused")
     @Autowired

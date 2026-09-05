@@ -160,18 +160,51 @@ public class MapSessionTrackingService {
         recordCategories += checkIfCheeselessWR(session);
 
         System.out.println("recordCategories: " + recordCategories);
+        String message;
         switch (recordCategories){
             case 0:
-                AppNotifications.RUNserver.RUN_EVENT_INFO("No records were broken");
+                message = "No records were broken";
+                AppNotifications.RUNserver.RUN_EVENT_INFO(message);
+                RabbitEventListener.setVerdict(serverName, message);
                 break;
             case 1:
-                AppNotifications.RUNserver.RUN_EVENT_INFO("Any% record was broken");
-                botActionsService.sendIntoCave("Any% record was broken on " + session.getMapName() + "|" + serverName + "\n" +
-                        "new WR: " + timeHumanFormat);
+                message = "Any% record was broken";
+                AppNotifications.RUNserver.RUN_EVENT_INFO(message);
+                RabbitEventListener.setVerdict(serverName, message);
+//                botActionsService.sendIntoCave("Any% record was broken on " + session.getMapName() + "|" + serverName + "\n" +
+//                        "new WR: " + timeHumanFormat);
                 break;
             case 2:
-                AppNotifications.RUNserver.RUN_EVENT_INFO("Any% record was broken");
+                message = "Solo% record was broken";
+                AppNotifications.RUNserver.RUN_EVENT_INFO(message);
+                RabbitEventListener.setVerdict(serverName, message);
+                break;
+            case 4:
+                message = "Cheeseless% record was broken";
+                AppNotifications.RUNserver.RUN_EVENT_INFO(message);
+                RabbitEventListener.setVerdict(serverName, message);
+                break;
 
+            case 3:
+                message = "Any% and Solo% records were broken";
+                AppNotifications.RUNserver.RUN_EVENT_INFO(message);
+                RabbitEventListener.setVerdict(serverName, message);
+                break;
+            case 5:
+                message = "Any% and Cheeseless% records were broken";
+                AppNotifications.RUNserver.RUN_EVENT_INFO(message);
+                RabbitEventListener.setVerdict(serverName, message);
+                break;
+            case 6:
+                message = "Solo% and Cheeseless% records were broken";
+                AppNotifications.RUNserver.RUN_EVENT_INFO(message);
+                RabbitEventListener.setVerdict(serverName, message);
+                break;
+            case 7:
+                message = "WRs for all categories were broken!";
+                AppNotifications.RUNserver.RUN_EVENT_INFO(message);
+                RabbitEventListener.setVerdict(serverName, message);
+                break;
         }
 
         AppNotifications.RUNserver.RUN_EVENT_INFO("Session on " + serverName+ " ended with time" + session.getFinalTime());
@@ -223,7 +256,7 @@ public class MapSessionTrackingService {
         RunAnyPercentMapRecordEntry runAnyPercentMapRecordEntry = (RunAnyPercentMapRecordEntry) mapRecordServiceProd.getRecord(mapID, "run_any");
 
         if (runAnyPercentMapRecordEntry == null){
-            AnyPercentMapRecordEntry savedRecord = (AnyPercentMapRecordEntry) mapRecordServiceProd.saveUncletopiaAny(
+            RunAnyPercentMapRecordEntry savedRecord = (RunAnyPercentMapRecordEntry) mapRecordServiceProd.saveRunAny(
                     mapID,
                     mapSession.getMapName(),
                     mapSession.getFinalTime(),
@@ -237,12 +270,10 @@ public class MapSessionTrackingService {
                     mapSession.getStage_3_time()
             );
             System.out.println("savedRecord: " + savedRecord);
-            AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Couldn't find record in TEST for " + mapSession.getMapName() + " with ID " + mapID +  ". Adding...");
-//            botActionsService.sendIntoCave("Couldn't find record for " + mapSession.getMapName() + " on " + mapSession.getServerName() + ". Adding. \n Time: " + DiscordBotResponseFormatter.NumberToString(mapSession.getFinalTime()));
-//            RabbitEventListener.setVerdict(mapSession.getServerName(), "Couldn't find record for " + mapSession.getMapName() + ". Adding. \n Time: " + DiscordBotResponseFormatter.NumberToString(mapSession.getFinalTime()));
+            AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Couldn't find record in Run Any% for " + mapSession.getMapName() + " with ID " + mapID +  ". Adding...");
             return 1;
         } else if (runAnyPercentMapRecordEntry.getCurr_wr_seconds().compareTo(mapSession.getFinalTime()) > 0) {
-            mapRecordServiceProd.saveUncletopiaAny(
+            mapRecordServiceProd.saveRunAny(
                     mapID,
                     mapSession.getMapName(),
                     mapSession.getFinalTime(),
@@ -256,12 +287,11 @@ public class MapSessionTrackingService {
                     mapSession.getStage_3_time()
             );
             AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Record in TEST for " + mapSession.getMapName() + " with ID " + mapID + ". Is worse. Updating");
-//            botActionsService.sendIntoCave("WR beaten for " + mapSession.getMapName() + " on " + mapSession.getServerName() + ". Updating... \n Run time: " + DiscordBotResponseFormatter.NumberToString(mapSession.getFinalTime()));
-//            RabbitEventListener.setVerdict(mapSession.getServerName(), "WR beaten! Updating... \n Run time: " + DiscordBotResponseFormatter.NumberToString(mapSession.getFinalTime()));
+            System.out.println("test 3");
             return 1;
         } else {
             AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Record in TEST for " + mapSession.getMapName() + " with ID " + mapID + ". Is better. ignoring");
-//            RabbitEventListener.setVerdict(mapSession.getServerName(), "Record in TEST for " + mapSession.getMapName() + " is better. ignoring");
+            System.out.println("test 4");
             return 0;
         }
     }
@@ -297,10 +327,31 @@ public class MapSessionTrackingService {
             return 0;
         }
         AppNotifications.RUNserver.RUN_EVENT_INFO("Player " + scoreBarrierPassedPlayerAuth + " passed solo% condition. Percentage: " + ((playersScores.get(scoreBarrierPassedPlayerAuth) / totalScore) * 100));
-
         RunSoloMapRecordEntry existingRecord = (RunSoloMapRecordEntry) mapRecordServiceProd.getRecord(mapID, "run_solo");
         System.out.println("existingRecord: " + existingRecord);
-        return 2;
+        if (existingRecord == null){
+            mapRecordServiceProd.saveRunSolo(
+                    mapID,
+                    session.getMapName(),
+                    session.getFinalTime(),
+                    BigDecimal.valueOf(0.0),
+                    scoreBarrierPassedPlayerAuth,
+                    "added automatically",
+                    "added automatically",
+                    "added automatically",
+                    "added automatically",
+                    session.getStage_1_time(),
+                    session.getStage_2_time(),
+                    session.getStage_3_time()
+            );
+            AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Couldn't find record in Solo% for " + session.getMapName() + " with ID " + mapID + ". Updating");
+            return 2;
+        } else if (existingRecord.getCurr_wr_seconds().compareTo(session.getFinalTime()) > 0){
+            AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Record in Solo% for " + session.getMapName() + " with ID " + mapID + " is worse. Updating");
+            return 2;
+        }
+        return 0;
+
     }
 
     byte checkIfCheeselessWR(MapSession session){
@@ -316,37 +367,10 @@ public class MapSessionTrackingService {
         RunCheeselessMapRecordEntry runCheeselessMapRecordEntry = (RunCheeselessMapRecordEntry) mapRecordServiceProd.getRecord(mapID, "run_cheeseless");
 
         if (runCheeselessMapRecordEntry == null){
-            TestRecord savedRecord = mapRecordServiceProd.addTestRecord(
-                    mapID,
-                    session.getMapName(),
-                    session.getFinalTime(),
-                    BigDecimal.valueOf(0.0),
-                    "added automatically",
-                    "added automatically",
-                    "added automatically",
-                    "added automatically",
-                    session.getStage_1_time(),
-                    session.getStage_2_time(),
-                    session.getStage_3_time()
-            );
-            System.out.println("savedRecord: " + savedRecord);
-            AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Couldn't find record in TEST for " + session.getMapName() + " with ID " + mapID +  ". Adding...");
+            AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Couldn't find record in Cheeseless% for " + session.getMapName() + " with ID " + mapID +  ".");
             return 4;
         } else if (runCheeselessMapRecordEntry.getCurr_wr_seconds().compareTo(session.getFinalTime()) > 0) {
-            mapRecordServiceProd.addTestRecord(
-                    mapID,
-                    session.getMapName(),
-                    session.getFinalTime(),
-                    BigDecimal.valueOf(0.0),
-                    "added automatically",
-                    "added automatically",
-                    "added automatically",
-                    "added automatically",
-                    session.getStage_1_time(),
-                    session.getStage_2_time(),
-                    session.getStage_3_time()
-            );
-            AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Record in cheeseless for " + session.getMapName() + " with ID " + mapID + ". Is worse. Updating");
+            AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Record in cheeseless for " + session.getMapName() + " with ID " + mapID + ". Is worse. Could update");
             return 4;
         } else {
             AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Record in cheeseless for " + session.getMapName() + " with ID " + mapID + ". Is better. ignoring");
@@ -374,15 +398,38 @@ public class MapSessionTrackingService {
             rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
             return;
         }
-        TestRecord existingRecord = mapRecordServiceProd.getTestRecord(mapID);
-        if (existingRecord == null) {
-            chatMessage = "Couldn't find existing record for map. You may be the first!";
-            rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
-            return;
+        RunAnyPercentMapRecordEntry existingAnyRecord = (RunAnyPercentMapRecordEntry) mapRecordServiceProd.getRecord(mapID, "run_any");
+        if (existingAnyRecord == null) {
+            chatMessage = "Couldn't find existing RUN Any% record for map. You may be the first!";
+//            rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
+//            return;
+        } else {
+            String currWRtime = DiscordBotResponseFormatter.NumberToString(existingAnyRecord.getCurr_wr_seconds());
+            chatMessage = "Current RUN Any% WR for map: " + currWRtime;
         }
-        String currWRtime = DiscordBotResponseFormatter.NumberToString(existingRecord.getCurr_wr_seconds());
-        chatMessage = "Current WR for map: " + currWRtime;
-
         rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
+
+        RunSoloMapRecordEntry existingSoloRecord = (RunSoloMapRecordEntry) mapRecordServiceProd.getRecord(mapID, "run_solo");
+        if (existingSoloRecord == null) {
+            chatMessage = "Couldn't find existing RUN Solo% record for map. You may be the first!";
+//            rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
+//            return;
+        } else {
+            String currWRtime = DiscordBotResponseFormatter.NumberToString(existingSoloRecord.getCurr_wr_seconds());
+            chatMessage = "Current RUN Solo% WR for map: " + currWRtime;
+        }
+        rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
+
+        RunCheeselessMapRecordEntry existingCheeselessRecord = (RunCheeselessMapRecordEntry) mapRecordServiceProd.getRecord(mapID, "run_cheeseless");
+        if (existingCheeselessRecord == null) {
+            chatMessage = "Couldn't find existing RUN Cheeseless% record for map. You may be the first!";
+//            return;
+        } else {
+            String currWRtime = DiscordBotResponseFormatter.NumberToString(existingCheeselessRecord.getCurr_wr_seconds());
+            chatMessage = "Current RUN Cheeseless% WR for map: " + currWRtime;
+        }
+        rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
+
+//        rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
     }
 }

@@ -44,6 +44,7 @@ public class RabbitEventListener {
     public static void setVerdict(String serverName, String message){
         String serverID = serverIDs.get(serverName);
         verdicts.put(serverID, message);
+        System.out.println("put \"" + message + "\" in verdicts");
     }
 
     private static final HashMap<String, String> mapsAndPings;
@@ -101,6 +102,7 @@ public class RabbitEventListener {
         long eventTick = eventNode.get("tick").asLong();
         ObjectNode eventData = (ObjectNode) eventNode.get("event_data");
         String serverName = serverNamesByIP.get(eventNode.get("srv").asText());
+        AppNotifications.RUNserver.RUN_EVENT_INFO(eventName + " on " + serverName);
 
         switch (eventName){
 
@@ -119,9 +121,11 @@ public class RabbitEventListener {
             case "teamplay_restart_round":
                 onTeamplayRestartRoundHandle(serverName);
                 break;
-            case "TF2_OnWaitingForPlayersEnd":
-                onWaitingForPlayersEndHandle(serverName);
-                break;
+//            case "TF2_OnWaitingForPlayersEnd":
+//                onWaitingForPlayersEndHandle(serverName);
+//                break;
+            case "teamplay_round_start":
+                onTeamplayRoundStartHandle(serverName);
             case "teamplay_setup_finished":
                 onTeamplaySetupFinishedHandle(serverName, eventTick);
                 break;
@@ -205,6 +209,14 @@ public class RabbitEventListener {
         } catch (Exception e) {
             return;
         }
+    }
+
+    private void onTeamplayRoundStartHandle(String serverName){
+        String serverID = serverIDs.get(serverName);
+        mapSessionTrackingService.chatMapRecordMessage(serverName, serverID);
+        rabbitActionsService.sendToCommand(serverID, "PrintCenterTextAll", verdicts.get(serverID));
+        System.out.println("Sent verdict: " + verdicts.get(serverID));
+        verdicts.remove(serverID);
     }
 
     private void isCertainMap(String mapName, String serverName){
