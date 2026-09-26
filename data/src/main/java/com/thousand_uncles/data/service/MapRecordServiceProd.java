@@ -62,8 +62,6 @@ public class MapRecordServiceProd {
         System.out.println("maprecordserviceprod initialized");
     }
 
-
-
     // Add new record
     @SuppressWarnings("unused")
     public ManualIndexedMapRecordEntry addRecord(Object record) {

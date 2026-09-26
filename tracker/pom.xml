@@ -10,7 +10,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>discord_bot</artifactId>
+	<artifactId>tracker</artifactId>
+	<version>${parent.version}</version>
 
 	<properties>
 		<java.version>21</java.version>
@@ -19,7 +20,7 @@
 		<dependency>
 			<groupId>com.thousand_uncles</groupId>
 			<artifactId>data</artifactId>
-			<version>${project.parent.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -31,52 +32,34 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>2.6</version>
-        </dependency>
-
-<!--		PSQL-->
+		<!--		PSQL-->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.7.8</version>
 		</dependency>
 
-<!--		RabbitMQ-->
+		<!--		RabbitMQ-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
-		</dependency>
-
-
-<!--		Discord4J-->
-		<dependency>
-			<groupId>com.discord4j</groupId>
-			<artifactId>discord4j-core</artifactId>
-			<version>3.3.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>tools.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 		</dependency>
-    </dependencies>
+		<dependency>
+			<groupId>tools.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<outputDirectory>./build/</outputDirectory>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
