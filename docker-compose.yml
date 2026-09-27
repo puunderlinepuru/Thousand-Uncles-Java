@@ -1,9 +1,9 @@
 services:
   postgres:
-    image: postgres
+    image: postgres:latest
     container_name: postgres-db
     env_file:
-      - .env
+      - credentials.env
     volumes:
       - /big_data_1/postgres_data:/var/lib/postgresql
       - ./init-scripts:/docker-entrypoint-initdb.d
@@ -13,17 +13,17 @@ services:
       - app-network
     restart: unless-stopped
 
-  rabbitmq:
-    image: rabbitmq:management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+#  rabbitmq:
+#    image: rabbitmq:management
+#    container_name: rabbitmq
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#    environment:
+#      RABBITMQ_DEFAULT_USER: guest
+#      RABBITMQ_DEFAULT_PASS: guest
+#    volumes:
+#      - rabbitmq_data:/var/lib/rabbitmq
 
   discord_bot:
     build:
@@ -33,21 +33,34 @@ services:
       - ./shared_resources:/shared_resources/:ro
       - ./discord_bot/resources:/resources
     env_file:
-      - token.env
+      - path: ./token.env
+        required: true
+      - path: ./credentials.env
+        required: true
     environment:
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
-#      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
-#      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      - SPRING_RABBITMQ_HOST=172.19.0.2
-      - SPRING_RABBITMQ_PORT=5672
       - SPRING_PROFILE=prod
     depends_on:
       - postgres
-      - rabbitmq
     ports:
-      - "8081:8081"
+      - "8082:8082"
     networks:
       - app-network
+    restart: unless-stopped
+
+  server_tracker:
+    build:
+      context: ./tracker
+    container_name: tracker
+    volumes:
+#      - ./tracker/resources:/resources
+      - ./shared_resources:/shared_resources/:ro
+    depends_on:
+      - postgres
+    ports:
+      - "8084:8084"
+    env_file:
+      - path: ./credentials.env
+        required: true
     restart: unless-stopped
 
   google_api_handler:
@@ -59,13 +72,11 @@ services:
       - ./google_token:/tokens
     depends_on:
       - postgres
-      - rabbitmq
     ports:
-      - "8082:8082"
-    environment:
-      - SPRING_RABBITMQ_HOST=172.19.0.2
-      - SPRING_RABBITMQ_PORT=5672
-      - SPRING_PROFILE=prod
+      - "8083:8083"
+    env_file:
+      - path: ./credentials.env
+        required: true
     restart: unless-stopped
 
 volumes:

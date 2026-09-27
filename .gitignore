@@ -1,5 +1,5 @@
 /.idea
-/.env
+/credentials.env
 /shared_resources_space/records.json
 token.env
 /google_token/StoredCredential
