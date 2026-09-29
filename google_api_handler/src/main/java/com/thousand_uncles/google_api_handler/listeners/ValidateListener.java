@@ -8,7 +8,7 @@ import com.thousand_uncles.data.models.uncletopia.AnyPercentMapRecordEntry;
 import com.thousand_uncles.data.models.uncletopia.SoloMapRecordEntry;
 import com.thousand_uncles.data.service.MapRecordServiceProd;
 import com.thousand_uncles.google_api_handler.util.MapOrderHandler;
-import com.thousand_uncles.google_api_handler.spreadsheet.UpdateValues;
+import com.thousand_uncles.google_api_handler.util.spreadsheet.UpdateValues;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;

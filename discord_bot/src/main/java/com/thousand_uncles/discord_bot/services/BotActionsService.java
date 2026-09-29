@@ -2,6 +2,7 @@ package com.thousand_uncles.discord_bot.services;
 
 import com.thousand_uncles.discord_bot.common.config.BotConfig;
 import com.thousand_uncles.discord_bot.common.util.GlobalThings;
+import com.thousand_uncles.discord_bot.fun_stuff.RandomDictionary;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.poll.PollAnswer;
 import discord4j.core.object.presence.ClientActivity;
@@ -33,8 +34,9 @@ public class BotActionsService {
 
         assert client != null;
         if (READY_MESSAGE != null && !READY_MESSAGE.isEmpty()) {
-
             globalThings.getTheCave().createMessage().withContent(READY_MESSAGE).block();
+        } else {
+            globalThings.getTheCave().createMessage().withContent(RandomDictionary.getWisdom().orElse("")).block();
         }
     }
 

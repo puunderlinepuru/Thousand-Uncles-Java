@@ -16,17 +16,19 @@ public class BotApiController {
     @Autowired
     BotActionsService botActionsService;
 
-    @PostMapping("/send/currently-gaming")
-    public String sendIntoCurrentlyGaming(@RequestBody String message){
-//        botActionsService.sendIntoCave(message);
-        botActionsService.sendIntoCurrentlyGaming(message);
-        return "hi";
-    }
-
-    @PostMapping("/send/cave")
-    public String sendIntoCave(@RequestBody String message){
-        botActionsService.sendIntoCave(message);
-        return "hi";
+    @PostMapping("/send/{channel_name}")
+    public String sendIntoChannel(@PathVariable String channel_name, @RequestBody String message){
+        return switch (channel_name){
+            case "currently-gaming" -> {
+                botActionsService.sendIntoCurrentlyGaming(message);
+                yield "sent";
+            }
+            case "the-cave" -> {
+                botActionsService.sendIntoCave(message);
+                yield "sent";
+            }
+            default -> "couldn't send message";
+        };
     }
 
     @PostMapping("/test_function")
