@@ -1,6 +1,10 @@
 package com.thousand_uncles.google_api_handler.services;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
+import com.google.api.services.sheets.v4.model.ValueRange;
 import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
 import com.thousand_uncles.data.models.run.RunAnyPercentMapRecordEntry;
 import com.thousand_uncles.data.models.run.RunSoloMapRecordEntry;
@@ -9,7 +13,6 @@ import com.thousand_uncles.data.models.uncletopia.SoloMapRecordEntry;
 import com.thousand_uncles.data.service.MapRecordServiceProd;
 import com.thousand_uncles.data.util.RecordFormatter;
 import com.thousand_uncles.google_api_handler.util.GlobalThings;
-import com.thousand_uncles.google_api_handler.util.JSONHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +25,51 @@ import java.util.Objects;
 @Component
 public class SpreadsheetsService {
 
+    private static Sheets service;
+    private static String valueInputOption;
+    private static final String spreadsheetId = "1YtpbwvqTOiBRN4Sm9SXlNJCq6qPb2dvW3SBmwu5poNs";
+
     @Autowired
     MapRecordServiceProd mapRecordServiceProd;
+
+    public static void setService(Sheets service) {
+        SpreadsheetsService.service = service;
+    }
+
+    public static void setValueInputOption(String valueInputOption) {
+        SpreadsheetsService.valueInputOption = valueInputOption;
+    }
+
+    public static void updateSheets(List<List<Object>> values, String sheetName, String topLeft) {
+        UpdateValuesResponse result;
+        try {
+            // Updates the values in the specified range.
+            ValueRange body = new ValueRange()
+                    .setValues(values);
+            result = service.spreadsheets().values().update(spreadsheetId, sheetName+"!" + topLeft, body)
+                    .setValueInputOption(valueInputOption)
+                    .execute();
+            System.out.printf("%d cells updated.\n", result.getUpdatedCells());
+        } catch (GoogleJsonResponseException e) {
+            // TODO(developer) - handle error appropriately
+            GoogleJsonError error = e.getDetails();
+            if (error.getCode() == 404) {
+                System.out.printf("Spreadsheet not found with id '%s'.\n", spreadsheetId);
+            } else {
+                try {
+                    throw e;
+                } catch (GoogleJsonResponseException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        } catch (Exception ex) {
+            try {
+                throw ex;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     public void processAnyPercentSheetData(List<List<String>> spreadsheetRecordValues, String category){
         for (int i = 0; i < spreadsheetRecordValues.size(); i++) {

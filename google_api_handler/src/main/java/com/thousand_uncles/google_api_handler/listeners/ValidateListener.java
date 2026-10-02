@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.thousand_uncles.data.models.uncletopia.AnyPercentMapRecordEntry;
 import com.thousand_uncles.data.models.uncletopia.SoloMapRecordEntry;
 import com.thousand_uncles.data.service.MapRecordServiceProd;
+import com.thousand_uncles.google_api_handler.services.SpreadsheetsService;
 import com.thousand_uncles.google_api_handler.util.MapOrderHandler;
-import com.thousand_uncles.google_api_handler.util.spreadsheet.UpdateValues;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -71,7 +71,7 @@ public class ValidateListener {
 
                         System.out.println("cell value:" + mapID);
 
-                        UpdateValues.updateSheets(List.of(data), "Any%", "A" + mapID);
+                        SpreadsheetsService.updateSheets(List.of(data), "Any%", "A" + mapID);
                         mapRecordServiceProd.saveUncletopiaAny(
                                 anyPercentTransformedRecord.getId(),
                                 anyPercentTransformedRecord.getMap_name(),
@@ -101,7 +101,7 @@ public class ValidateListener {
                                 "Prev WR: " +   soloTransformedRecord.getPrev_wr_seconds() + "\n" +
                                 "Proof pic: " + soloTransformedRecord.getProof_img_1_link()
                         );
-                        UpdateValues.updateSheets(List.of(data), "Solo%", "A" + MapOrderHandler.getMapOrderList().indexOf(soloTransformedRecord.getMap_name())+3);
+                        SpreadsheetsService.updateSheets(List.of(data), "Solo%", "A" + MapOrderHandler.getMapOrderList().indexOf(soloTransformedRecord.getMap_name())+3);
 
                         mapRecordServiceProd.saveUncletopiaSolo(
                                 soloTransformedRecord.getId(),

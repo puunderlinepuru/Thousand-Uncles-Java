@@ -13,7 +13,6 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.thousand_uncles.google_api_handler.UpdateTask;
-import com.thousand_uncles.google_api_handler.util.spreadsheet.UpdateValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -93,10 +92,11 @@ public class GoogleAPIService {
 
         String valueInputOption = "RAW";
 
-        UpdateValues.setService(service);
-        UpdateValues.setValueInputOption(valueInputOption);
-
         System.out.println("[ STATUS UPDATE ] Initializing Google API Connection..");
+
+        SpreadsheetsService.setService(service);
+        SpreadsheetsService.setValueInputOption(valueInputOption);
+
         System.out.println("[ INFO ] \n SpreadsheetID: " + uncletopiaSpreadsheetID + "\n" +
                 "Tried updating values on spreadsheets to: " + valuesToUpdateOnSpreadsheet + "\n" +
                 "InputOption used for updates: " + valueInputOption + "\n");
