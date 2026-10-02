@@ -3,7 +3,7 @@ server:
 
 spring:
   config:
-    import: optional:file:./resources/config.yaml
+    import: optional:file:./resources/config.yml
 
   datasource:
     url: jdbc:postgresql://192.168.1.2:5432/thousand_uncles_db

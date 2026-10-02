@@ -72,8 +72,6 @@ public class GoogleAPIService {
 
     public void startTasks() throws IOException, GeneralSecurityException {
 
-//        Show_Directories_And_Files.printFiles();
-
         // Build a new authorized API client com.thousand_uncles.data.service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 //        final String testSpreadsheetID = "1a09PuBN2hnJ58c8km_la3e0_sUAjQ8HatalX7fdMl50";
