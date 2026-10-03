@@ -5,4 +5,4 @@ sheets:
 
 spring:
   profiles:
-    active: test
+    active: prod

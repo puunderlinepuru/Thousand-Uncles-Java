@@ -1,8 +1,9 @@
 package com.thousand_uncles.google_api_handler.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -77,6 +78,12 @@ public class JSONHandler {
             }
         }
         return beatenRecords;
+    }
+
+    public static String slowConvertJSONtoString(JsonNode jsonNode) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(jsonNode);
+        return null;
     }
 
     private static ObjectNode formatNode(List<String> mapRecord){

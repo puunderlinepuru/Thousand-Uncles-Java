@@ -1,18 +1,10 @@
-package com.thousand_uncles.discord_bot.listeners;
+package com.thousand_uncles.discord_bot.listeners.discord;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.thousand_uncles.data.models.uncletopia.AnyPercentMapRecordEntry;
-import com.thousand_uncles.data.models.common.ConfirmWorthyMapRecordEntry;
 import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
-import com.thousand_uncles.data.models.uncletopia.SoloMapRecordEntry;
 import com.thousand_uncles.data.service.MapRecordServiceProd;
-import com.thousand_uncles.discord_bot.common.config.BotConfig;
-import com.thousand_uncles.discord_bot.fun_stuff.Roulette;
 import com.thousand_uncles.discord_bot.common.util.AppNotifications;
 import com.thousand_uncles.discord_bot.util.DiscordBotResponseFormatter;
+import com.thousand_uncles.discord_bot.common.config.BotConfig;
 import com.thousand_uncles.discord_bot.common.util.GlobalThings;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
@@ -32,22 +24,18 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+// I HAVEN'T UPDATED IT IN A WHILE
+
 @SuppressWarnings("unused")
-@Profile("prod")
+@Profile("dev")
 @Component
-public class InteractionListenerProd {
+public class InteractionListenerDev {
 
     @Autowired
     ApplicationContext applicationContext;
-
-    @Autowired
-    MapRecordServiceProd mapRecordServiceProd;
 
     @Autowired
     BotConfig botConfig;
@@ -62,7 +50,7 @@ public class InteractionListenerProd {
     String AU_ROLE_ID;
     String ASIA_ROLE_ID;
 
-    public InteractionListenerProd(GatewayDiscordClient client, BotConfig botConfig) {
+    public InteractionListenerDev(GatewayDiscordClient client, BotConfig botConfig) {
         this.client = client;
         System.out.println("InteractionListener initialized");
         REGION_ROLE_MESSAGE_ID = botConfig.getRegion_role_message_id();
@@ -79,10 +67,11 @@ public class InteractionListenerProd {
 
         client.on(ReactionAddEvent.class, this::onReaction).subscribe();
 
-        client.on(Event.class, this::onGeneralEvent).subscribe();
+        client.on(Event.class, this::generalEvent).subscribe();
     }
 
-    public Mono<Void> onGeneralEvent(Event event){
+
+    public Mono<Void> generalEvent(Event event){
         System.out.println("Event type: " + event.getClass());
 
         return Mono.empty();
@@ -92,11 +81,21 @@ public class InteractionListenerProd {
         String customID = event.getCustomId();
         System.out.println("button: " + customID);
 
-//        Record validation
         if (customID.startsWith("approve-")){
-            return approveMap(event, customID);
-        }
+            if (event.getMessage().isEmpty()){ return Mono.empty();}
 
+            Member whoClicked = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
+
+            assert whoClicked != null;
+            if (!whoClicked.getRoleIds().contains(Snowflake.of(ADMI_ROLE_ID))){
+                return Mono.empty();
+            }
+
+            event.reply()
+                    .withEphemeral(true)
+                    .withContent("I am running in offline mode, as pu when I'll be online so I can verify the record :p")
+                    .block();
+        }
 //        Region role assignment
         if (event.getMessageId().equals(Snowflake.of(REGION_ROLE_MESSAGE_ID))){
             return assignRegionRole(event, customID);
@@ -115,8 +114,6 @@ public class InteractionListenerProd {
         System.out.println("select menu");
         String selectedOption = event.getValues().getFirst();
         String customID = event.getCustomId();
-        System.out.println("selectedOption: " + selectedOption + "\n" +
-                "customID: " + customID);
 
         if (customID.startsWith("check") || customID.startsWith("update")){
             String[] parts = customID.split("-");
@@ -128,15 +125,12 @@ public class InteractionListenerProd {
 
 
             ManualIndexedMapRecordEntry gotMap;
-            gotMap = mapRecordServiceProd.getRecord(mapID, selectedOption);
-            if (gotMap == null){
+            try{
+                gotMap = mapRecordServiceProd.getRecord(mapID, selectedOption);
+            } catch (Exception e) {
                 return mapNotFoundResponse(event);
             }
             return foundMapResponse(event, gotMap, selectedOption);
-        }
-
-        if(customID.startsWith("roulette")){
-            return Roulette.handleSet(event, selectedOption);
         }
 
 //        Looking for map time
@@ -163,95 +157,6 @@ public class InteractionListenerProd {
         }
 
         return  Mono.empty();
-    }
-
-    private Mono<Void> approveMap(ButtonInteractionEvent event, String customID){
-
-        if (event.getMessage().isEmpty()){ return Mono.empty();}
-
-        Member whoClicked = event.getUser().asMember(Snowflake.of(SERVER_ID)).block();
-
-        assert whoClicked != null;
-        if (!whoClicked.getRoleIds().contains(Snowflake.of(ADMI_ROLE_ID))){
-            return Mono.empty();
-        }
-
-        String[] partsOfCustomID = customID.split("-");
-        System.out.println("Button press, got parts: " + Arrays.toString(partsOfCustomID));
-        String category = partsOfCustomID[1];
-        String map = partsOfCustomID[2];
-        short mapTime = Short.parseShort(partsOfCustomID[3]);
-
-        ConfirmWorthyMapRecordEntry confirmWorthyMapRecordEntry;
-        confirmWorthyMapRecordEntry = mapRecordServiceProd.getFromHold(category, GlobalThings.getMapIDS().indexOf(map));
-
-        ManualIndexedMapRecordEntry foundMap = null;
-
-        switch (category){
-            case "any":
-                AnyPercentMapRecordEntry anyPercentMapRecordEntry = new AnyPercentMapRecordEntry(
-                        GlobalThings.getMapIDS().indexOf(map),
-                        map,
-                        BigDecimal.valueOf(mapTime),
-                        BigDecimal.ZERO,
-                        confirmWorthyMapRecordEntry.getProof_img_1_link(),
-                        confirmWorthyMapRecordEntry.getProof_img_2_link(),
-                        confirmWorthyMapRecordEntry.getProof_img_3_link(),
-                        confirmWorthyMapRecordEntry.getProof_vid_link(),
-                        confirmWorthyMapRecordEntry.getStage_1_time_seconds(),
-                        confirmWorthyMapRecordEntry.getStage_2_time_seconds(),
-                        confirmWorthyMapRecordEntry.getStage_3_time_seconds()
-                );
-
-                foundMap = anyPercentMapRecordEntry;
-                break;
-            case "solo":
-                String theHero;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    String theHeroString = confirmWorthyMapRecordEntry.getAdditional();
-                    JsonNode theHeroNode = objectMapper.readTree(theHeroString);
-                    System.out.println(" Upon transforming json to the hero got: " + theHeroNode);
-                    theHero = theHeroNode.get("the_hero").asText();
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-
-                SoloMapRecordEntry soloMapRecord = new SoloMapRecordEntry(
-                        GlobalThings.getMapIDS().indexOf(map),
-                        map,
-                        theHero,
-                        BigDecimal.valueOf(mapTime),
-                        BigDecimal.ZERO,
-                        confirmWorthyMapRecordEntry.getProof_img_1_link(),
-                        confirmWorthyMapRecordEntry.getProof_img_2_link(),
-                        confirmWorthyMapRecordEntry.getProof_img_3_link(),
-                        confirmWorthyMapRecordEntry.getProof_vid_link(),
-                        confirmWorthyMapRecordEntry.getStage_1_time_seconds(),
-                        confirmWorthyMapRecordEntry.getStage_2_time_seconds(),
-                        confirmWorthyMapRecordEntry.getStage_3_time_seconds()
-                );
-
-                foundMap = soloMapRecord;
-                break;
-        }
-
-        try{
-            ObjectMapper objectMapper = new ObjectMapper();
-            ObjectNode objectNode = objectMapper.valueToTree(foundMap);
-            objectNode.put("category", category);
-//            TODO substitute RabbitActionsService call with tracker API call
-//            rabbitActionsService.sendToValidate(objectNode);
-            AppNotifications.RabbitMQ.RABBITMQ_PUBLISH_INFO("Validated MapRecord Message sent to RabbitMQ");
-        }catch (Exception e) {
-            System.out.println("error: " + e);
-        }
-
-        Message recordApprovalMessage = event.getMessage().get();
-        recordApprovalMessage.edit()
-                .withComponents()
-                .block();
-        return Mono.empty();
     }
 
     private Mono<Void> assignRegionRole(ButtonInteractionEvent event, String customID){

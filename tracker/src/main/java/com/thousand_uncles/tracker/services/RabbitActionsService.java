@@ -40,14 +40,9 @@ public class RabbitActionsService {
         }
     }
 
-    public void sendToValidate(JsonNode jsonNode){
-        try {
-            String jsonString = convertJSONtoString(jsonNode);
-            assert jsonString != null;
-            rabbitTemplate.convertAndSend("validate.exchange", "validate.routing.key", jsonString);
-        } catch (JsonNodeException e) {
-            throw new RuntimeException(e);
-        }
+    public void sendToDiscordMessages(String channel, String message){
+        rabbitTemplate.convertAndSend("discord.messages.exchange", "discord.messages.routing.key", message);
+        AppNotifications.RabbitMQ.RABBITMQ_PUBLISH_INFO("Message sent to discord");
     }
 
     public void sendToCommand(String serverID, String command, String payload){
@@ -66,12 +61,10 @@ public class RabbitActionsService {
         commandNode.put("id", "1");
         commandNode.put("recipient", serverID);
         commandNode.put("expires_at", expiration);
-        commandNode.put("command",command);
+        commandNode.put("command", command);
         commandNode.put("payload", payload);
 
         rabbitTemplate.convertAndSend("commands.exchange", "commands.routing.key", commandNode.toString());
-
-
         AppNotifications.RabbitMQ.RABBITMQ_PUBLISH_INFO("Command sent");
 //        PrintToChatAll
 //        PrintCenterTextAll

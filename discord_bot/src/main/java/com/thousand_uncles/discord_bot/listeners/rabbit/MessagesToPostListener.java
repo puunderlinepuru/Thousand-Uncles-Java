@@ -1,4 +1,4 @@
-package com.thousand_uncles.google_api_handler.listeners;
+package com.thousand_uncles.discord_bot.listeners.rabbit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,25 +13,25 @@ import org.springframework.stereotype.Component;
 
 @SuppressWarnings("unused")
 @Component
-public class EventListener {
+public class MessagesToPostListener {
 
     @Bean
-    public DirectExchange eventExchange() {
-        return new DirectExchange("tf2.round.completed");
+    public DirectExchange discordMessageExchange() {
+        return new DirectExchange("discord.messages.exchange");
     }
 
     @Bean
-    public org.springframework.amqp.core.Queue eventQueue() {
-        return new Queue("tf2.round.completed");
+    public Queue discordMessageQueue() {
+        return new Queue("discord.messages.topost");
     }
 
     @SuppressWarnings("unused")
     @Bean
-    public Binding eventBinding() {
-        return BindingBuilder.bind(eventQueue()).to(eventExchange()).with("tf2.round.completed");
+    public Binding discordMessageBinding() {
+        return BindingBuilder.bind(discordMessageQueue()).to(discordMessageExchange()).with("discord.messages.routing.key");
     }
 
-    @RabbitListener(queues = "tf2.round.completed")
+    @RabbitListener(queues = "discord.messages.topost")
     public void receiveMessage(String message) {
         System.out.println("Received message: " + message);
 
