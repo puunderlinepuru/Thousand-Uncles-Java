@@ -1,6 +1,6 @@
 package com.thousand_uncles.discord_bot.services;
 
-import com.thousand_uncles.discord_bot.common.config.BotConfig;
+import com.thousand_uncles.discord_bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.common.util.GlobalThings;
 import com.thousand_uncles.discord_bot.fun_stuff.RandomDictionary;
 import discord4j.core.GatewayDiscordClient;

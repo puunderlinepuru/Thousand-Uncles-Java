@@ -1,3 +1,9 @@
+app:
+  test: test
+  api_addresses:
+    test: test
+    discord_bot: http://localhost:8082/api/bot/test_function
+
 sheets:
   id:
     production: 1cxxyzz0SDWCj8wI6QwN66SOtbpedrf2DWXrH6io2ZNk

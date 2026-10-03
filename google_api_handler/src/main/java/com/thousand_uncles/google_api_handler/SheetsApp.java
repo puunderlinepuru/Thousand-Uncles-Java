@@ -28,11 +28,11 @@ public class SheetsApp {
             GoogleAPIService googleAPIHandler = applicationContext.getBean(GoogleAPIService.class);
             Environment environment = applicationContext.getEnvironment();
             System.out.println("Profile: " + environment.getProperty("spring.profiles.active"));
-            try {
-                googleAPIHandler.startTasks();
-            } catch (GeneralSecurityException | IOException e) {
-                throw new RuntimeException(e);
-            }
+//            try {
+//                googleAPIHandler.startTasks();
+//            } catch (GeneralSecurityException | IOException e) {
+//                throw new RuntimeException(e);
+//            }
         } catch (BeanCreationException e) {
             System.out.println("blep");
 //            throw new RuntimeException(e);

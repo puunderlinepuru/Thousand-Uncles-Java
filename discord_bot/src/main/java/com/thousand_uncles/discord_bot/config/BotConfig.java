@@ -1,4 +1,4 @@
-package com.thousand_uncles.discord_bot.common.config;
+package com.thousand_uncles.discord_bot.config;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

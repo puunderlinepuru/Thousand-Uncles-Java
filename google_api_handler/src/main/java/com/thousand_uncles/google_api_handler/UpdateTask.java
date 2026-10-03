@@ -1,20 +1,11 @@
 package com.thousand_uncles.google_api_handler;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.thousand_uncles.data.models.uncletopia.AnyPercentMapRecordEntry;
-import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
-import com.thousand_uncles.data.models.uncletopia.SoloMapRecordEntry;
-import com.thousand_uncles.data.service.MapRecordServiceProd;
-import com.thousand_uncles.data.util.RecordFormatter;
 import com.thousand_uncles.google_api_handler.services.SpreadsheetsService;
-import com.thousand_uncles.google_api_handler.util.GlobalThings;
-import com.thousand_uncles.google_api_handler.util.JSONHandler;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 
 public class UpdateTask extends TimerTask {

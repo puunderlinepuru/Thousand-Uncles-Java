@@ -3,7 +3,7 @@ package com.thousand_uncles.discord_bot.listeners.discord;
 import com.thousand_uncles.discord_bot.fun_stuff.Magic_8_ball;
 import com.thousand_uncles.discord_bot.fun_stuff.RandomDictionary;
 import com.thousand_uncles.discord_bot.fun_stuff.RandomNumberInRange;
-import com.thousand_uncles.discord_bot.common.config.BotConfig;
+import com.thousand_uncles.discord_bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.common.util.GlobalThings;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;

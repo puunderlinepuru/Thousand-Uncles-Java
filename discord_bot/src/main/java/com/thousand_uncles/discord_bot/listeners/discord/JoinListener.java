@@ -1,6 +1,6 @@
 package com.thousand_uncles.discord_bot.listeners.discord;
 
-import com.thousand_uncles.discord_bot.common.config.BotConfig;
+import com.thousand_uncles.discord_bot.config.BotConfig;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.guild.MemberJoinEvent;

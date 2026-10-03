@@ -4,7 +4,7 @@ import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
 import com.thousand_uncles.data.service.MapRecordServiceProd;
 import com.thousand_uncles.discord_bot.common.util.AppNotifications;
 import com.thousand_uncles.discord_bot.util.DiscordBotResponseFormatter;
-import com.thousand_uncles.discord_bot.common.config.BotConfig;
+import com.thousand_uncles.discord_bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.common.util.GlobalThings;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;

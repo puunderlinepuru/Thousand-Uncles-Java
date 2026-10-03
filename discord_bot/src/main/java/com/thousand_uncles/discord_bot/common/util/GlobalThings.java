@@ -1,7 +1,7 @@
 package com.thousand_uncles.discord_bot.common.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thousand_uncles.discord_bot.common.config.BotConfig;
+import com.thousand_uncles.discord_bot.config.BotConfig;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.Guild;
