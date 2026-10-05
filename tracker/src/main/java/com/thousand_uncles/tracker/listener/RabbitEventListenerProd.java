@@ -1,6 +1,7 @@
 package com.thousand_uncles.tracker.listener;
 
 import com.thousand_uncles.data.models.run.TestRecord;
+import com.thousand_uncles.tracker.services.TrackerActionsService;
 import com.thousand_uncles.tracker.util.AppNotifications;
 import com.thousand_uncles.tracker.util.Converter;
 import com.thousand_uncles.tracker.util.GlobalThings;
@@ -39,6 +40,9 @@ public class RabbitEventListenerProd implements RabbitEventListener{
 
     @Autowired
     RabbitActionsService rabbitActionsService;
+
+    @Autowired
+    TrackerActionsService trackerActionsService;
 
     private static final Map<String, String> verdicts = new ConcurrentHashMap<>();
 
@@ -95,7 +99,7 @@ public class RabbitEventListenerProd implements RabbitEventListener{
             throw new RuntimeException(e);
         }
 
-        System.out.println("JSON node: " + eventNode.toPrettyString());
+//        System.out.println("JSON node: " + eventNode.toPrettyString());
         String eventName = eventNode.get("event_name").asText();
         long eventTick = eventNode.get("tick").asLong();
         ObjectNode eventData = (ObjectNode) eventNode.get("event_data");
@@ -249,8 +253,7 @@ public class RabbitEventListenerProd implements RabbitEventListener{
     }
 
     private void mapAlert(String mapName, String serverName){
-//        TODO replace botActionsService with API call
-//        botActionsService.sendIntoCurrentlyGaming(mapsAndPings.get(mapName) + mapName + " alert on " + serverName + "!");
+        trackerActionsService.postMessageToDiscordAPI("currently-gaming", mapsAndPings.get(mapName) + mapName + " alert on " + serverName + "!");
     }
 }
 

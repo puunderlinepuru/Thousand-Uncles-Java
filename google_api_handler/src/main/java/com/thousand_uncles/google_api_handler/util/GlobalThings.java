@@ -6,6 +6,11 @@ import java.util.List;
 
 @Component
 public class GlobalThings {
+    public enum GameServerCommand {
+        PrintToChatAll,
+        PrintCenterTextAll
+    }
+
     private static final List<String> mapIDS = (List<String>) YAMLHandler.yamlRead("shared_resources/maps.yaml").get("maps");
 
     public static List<String> getMapIDS() {return mapIDS;}

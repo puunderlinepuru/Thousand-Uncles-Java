@@ -1,0 +1,8 @@
+app:
+  api_addresses:
+#    discord_bot: http://localhost:8082/api/bot/send/
+    discord_bot: http://192.168.1.2:8082/api/bot/send/
+
+spring:
+  profiles:
+    active: prod

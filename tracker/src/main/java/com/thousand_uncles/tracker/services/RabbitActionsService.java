@@ -66,7 +66,5 @@ public class RabbitActionsService {
 
         rabbitTemplate.convertAndSend("commands.exchange", "commands.routing.key", commandNode.toString());
         AppNotifications.RabbitMQ.RABBITMQ_PUBLISH_INFO("Command sent");
-//        PrintToChatAll
-//        PrintCenterTextAll
     }
 }
