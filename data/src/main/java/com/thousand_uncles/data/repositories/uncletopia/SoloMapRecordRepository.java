@@ -17,6 +17,9 @@ public interface SoloMapRecordRepository extends JpaRepository<SoloMapRecordEntr
     @Query("SELECT m FROM SoloMapRecordEntry m WHERE LOWER(m.map_name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<ManualIndexedMapRecordEntry> findByMap_nameContaining(@Param("name") String name);
 
+    @Query("SELECT m.curr_wr_seconds FROM SoloMapRecordEntry m WHERE m.id = :id")
+    BigDecimal getCurrWr(@Param("id") int id);
+
     @SuppressWarnings("unused")
     @Modifying
     @Query("UPDATE SoloMapRecordEntry m SET " +

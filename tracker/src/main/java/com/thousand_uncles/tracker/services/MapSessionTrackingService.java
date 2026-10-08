@@ -3,6 +3,7 @@ package com.thousand_uncles.tracker.services;
 import com.thousand_uncles.data.models.run.RunAnyPercentMapRecordEntry;
 import com.thousand_uncles.data.models.run.RunCheeselessMapRecordEntry;
 import com.thousand_uncles.data.models.run.RunSoloMapRecordEntry;
+import com.thousand_uncles.data.models.uncletopia.AnyPercentMapRecordEntry;
 import com.thousand_uncles.data.service.MapRecordServiceProd;
 import com.thousand_uncles.tracker.dto.MapSession;
 import com.thousand_uncles.tracker.listener.RabbitEventListener;
@@ -207,6 +208,33 @@ public class MapSessionTrackingService {
         restartSession(serverName);
         String chatMessage = "Your time: " + timeHumanFormat;
         rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
+    }
+
+    private void brokenAnyPercentUpdate(MapSession session){
+        String mapUnsuffixed = GlobalThings.getMapSuffixes().get(session.getMapName());
+        int mapID;
+        if (mapUnsuffixed == null){
+            mapID = GlobalThings.getMapIDS().indexOf(session.getMapName());
+        } else {
+            mapID = GlobalThings.getMapIDS().indexOf(mapUnsuffixed);
+        }
+
+        RunAnyPercentMapRecordEntry updateEntity = new RunAnyPercentMapRecordEntry(
+            mapID,
+            session.getMapName(),
+            session.getFinalTime(),
+            null,
+//            TODO Replace with signature?
+            "updated automatically",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
+        mapRecordServiceProd.updateRecord(updateEntity);
     }
 
     public void restartSession(String serverName){

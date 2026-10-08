@@ -17,6 +17,9 @@ public interface AnyPercentMapRecordRepository extends JpaRepository<AnyPercentM
     @Query("SELECT m FROM AnyPercentMapRecordEntry m WHERE LOWER(m.map_name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<ManualIndexedMapRecordEntry> findByMap_nameContaining(@Param("name") String name);
 
+    @Query("SELECT m.curr_wr_seconds FROM AnyPercentMapRecordEntry m WHERE m.id = :id")
+    BigDecimal getCurrWr(@Param("id") int id);
+
     @SuppressWarnings("unused")
     @Modifying
     @Query("UPDATE AnyPercentMapRecordEntry m SET " +
@@ -41,4 +44,6 @@ public interface AnyPercentMapRecordRepository extends JpaRepository<AnyPercentM
             @Param("stage2_time")  BigDecimal stage_2_time,
             @Param("stage3_time")  BigDecimal stage_3_time
     );
+
+
 }

@@ -7,10 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
 public interface RunCheeselessMapRecordRepository extends JpaRepository<RunCheeselessMapRecordEntry, Integer> {
     @Query("SELECT m FROM RunCheeselessMapRecordEntry m WHERE LOWER(m.map_name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<ManualIndexedMapRecordEntry> findByMap_nameContaining(@Param("name") String name);
+
+    @Query("SELECT m.curr_wr_seconds FROM RunCheeselessMapRecordEntry m WHERE m.id = :id")
+    BigDecimal getCurrWr(@Param("id") int id);
 }
