@@ -1,7 +1,7 @@
 package com.thousand_uncles.discord_bot.config;
 
 import com.thousand_uncles.data.service.FallbackMapRecordService;
-import com.thousand_uncles.data.service.MapRecordServiceProd;
+import com.thousand_uncles.data.service.MapRecordServiceOnline;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -13,7 +13,7 @@ public class DatabaseConfig {
     @SuppressWarnings("unused")
     @Bean
     @Profile("dev")
-    public MapRecordServiceProd mapRecordService(FallbackMapRecordService fallbackService) {
+    public MapRecordServiceOnline mapRecordService(FallbackMapRecordService fallbackService) {
 
 //        TODO Figure out offline service
         /*return new MapRecordServiceProd() {

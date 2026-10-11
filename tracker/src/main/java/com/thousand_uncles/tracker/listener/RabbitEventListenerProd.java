@@ -5,7 +5,7 @@ import com.thousand_uncles.tracker.services.TrackerActionsService;
 import com.thousand_uncles.tracker.util.AppNotifications;
 import com.thousand_uncles.tracker.util.Converter;
 import com.thousand_uncles.tracker.util.GlobalThings;
-import com.thousand_uncles.data.service.MapRecordServiceProd;
+import com.thousand_uncles.data.service.MapRecordServiceOnline;
 import com.thousand_uncles.tracker.services.RabbitActionsService;
 import com.thousand_uncles.tracker.services.RabbitQueuePurgeService;
 import com.thousand_uncles.tracker.services.MapSessionTrackingService;
@@ -30,7 +30,7 @@ import static com.thousand_uncles.tracker.util.JSONHandler.processJSON;
 public class RabbitEventListenerProd implements RabbitEventListener{
 
     @Autowired
-    MapRecordServiceProd mapRecordServiceProd;
+    MapRecordServiceOnline mapRecordServiceOnline;
 
     @Autowired
     GlobalThings globalThings;
@@ -103,6 +103,7 @@ public class RabbitEventListenerProd implements RabbitEventListener{
         String eventName = eventNode.get("event_name").asText();
         long eventTick = eventNode.get("tick").asLong();
         ObjectNode eventData = (ObjectNode) eventNode.get("event_data");
+//      TODO figure out what .asText is now
         String serverName = serverNamesByIP.get(eventNode.get("srv").asText());
         AppNotifications.RUNserver.RUN_EVENT_INFO(eventName + " on " + serverName);
 
@@ -242,7 +243,7 @@ public class RabbitEventListenerProd implements RabbitEventListener{
             chatMessage = "Map doesn't exist in maplist. Tracking will retry on the next map.";
             return chatMessage;
         }
-        TestRecord existingRecord = mapRecordServiceProd.getTestRecord(mapID);
+        TestRecord existingRecord = mapRecordServiceOnline.getTestRecord(mapID);
         if (existingRecord == null) {
             chatMessage = "Couldn't find existing record for map. You may be the first!";
             return chatMessage;

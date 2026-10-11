@@ -26,12 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional
-@Profile("prod")
-public class MapRecordServiceProd {
+@Profile("online")
+public class MapRecordServiceOnline {
     @Autowired
     private SoloMapRecordRepository soloMapRecordRepository;
 
@@ -59,47 +58,109 @@ public class MapRecordServiceProd {
     @PersistenceContext
     private EntityManager entityManager;
 
-    MapRecordServiceProd(){
-        System.out.println("maprecordserviceprod initialized");
+    MapRecordServiceOnline(){
+        System.out.println("MapRecordServiceOnline initialized");
     }
 
     // Add new record
     @SuppressWarnings("unused")
     public ManualIndexedMapRecordEntry addRecord(Object record) {
-        if (record instanceof SoloMapRecordEntry soloMapRecord){
-            SoloMapRecordEntry soloMapRecordEntry = new SoloMapRecordEntry(
-                    soloMapRecord.getId(),
-                    soloMapRecord.getMap_name(),
-                    soloMapRecord.getThe_hero(),
-                    soloMapRecord.getCurr_wr_seconds(),
-                    BigDecimal.ZERO,
-                    soloMapRecord.getProof_img_1_link(),
-                    soloMapRecord.getProof_img_2_link(),
-                    soloMapRecord.getProof_img_3_link(),
-                    soloMapRecord.getProof_vid_link(),
-                    soloMapRecord.getStage_1_time_seconds(),
-                    soloMapRecord.getStage_2_time_seconds(),
-                    soloMapRecord.getStage_3_time_seconds()
-                    );
-
-            return soloMapRecordRepository.save(soloMapRecordEntry);
-        } else if (record instanceof AnyPercentMapRecordEntry anyPercentMapRecord) {
-            AnyPercentMapRecordEntry anyPercentMapRecordEntry = new AnyPercentMapRecordEntry(
-                    anyPercentMapRecord.getId(),
-                    anyPercentMapRecord.getMap_name(),
-                    anyPercentMapRecord.getCurr_wr_seconds(),
-                    BigDecimal.ZERO,
-                    anyPercentMapRecord.getProof_img_1_link(),
-                    anyPercentMapRecord.getProof_img_2_link(),
-                    anyPercentMapRecord.getProof_img_3_link(),
-                    anyPercentMapRecord.getProof_vid_link(),
-                    anyPercentMapRecord.getStage_1_time_seconds(),
-                    anyPercentMapRecord.getStage_2_time_seconds(),
-                    anyPercentMapRecord.getStage_3_time_seconds()
-            );
-            return anyPercentMapRecordRepository.save((AnyPercentMapRecordEntry) record);
+        switch (record){
+            case AnyPercentMapRecordEntry anyPercentMapRecordEntry:
+                AnyPercentMapRecordEntry newAnyPercentMapEntry = new AnyPercentMapRecordEntry(
+                        anyPercentMapRecordEntry.getId(),
+                        anyPercentMapRecordEntry.getMap_name(),
+                        anyPercentMapRecordEntry.getCurr_wr_seconds(),
+                        BigDecimal.ZERO,
+                        anyPercentMapRecordEntry.getProof_img_1_link(),
+                        anyPercentMapRecordEntry.getProof_img_2_link(),
+                        anyPercentMapRecordEntry.getProof_img_3_link(),
+                        anyPercentMapRecordEntry.getProof_vid_link(),
+                        anyPercentMapRecordEntry.getStage_1_time_seconds(),
+                        anyPercentMapRecordEntry.getStage_2_time_seconds(),
+                        anyPercentMapRecordEntry.getStage_3_time_seconds()
+                );
+                return anyPercentMapRecordRepository.save(newAnyPercentMapEntry);
+            case SoloMapRecordEntry soloMapRecordEntry:
+                SoloMapRecordEntry newSoloMapEntry = new SoloMapRecordEntry(
+                        soloMapRecordEntry.getId(),
+                        soloMapRecordEntry.getMap_name(),
+                        soloMapRecordEntry.getThe_hero(),
+                        soloMapRecordEntry.getCurr_wr_seconds(),
+                        BigDecimal.ZERO,
+                        soloMapRecordEntry.getProof_img_1_link(),
+                        soloMapRecordEntry.getProof_img_2_link(),
+                        soloMapRecordEntry.getProof_img_3_link(),
+                        soloMapRecordEntry.getProof_vid_link(),
+                        soloMapRecordEntry.getStage_1_time_seconds(),
+                        soloMapRecordEntry.getStage_2_time_seconds(),
+                        soloMapRecordEntry.getStage_3_time_seconds()
+                );
+                return soloMapRecordRepository.save(newSoloMapEntry);
+            case CheeselessMapRecordEntry cheeselessMapRecordEntry:
+                CheeselessMapRecordEntry newCheeselessMapEntry = new CheeselessMapRecordEntry(
+                        cheeselessMapRecordEntry.getId(),
+                        cheeselessMapRecordEntry.getMap_name(),
+                        cheeselessMapRecordEntry.getCurr_wr_seconds(),
+                        BigDecimal.ZERO,
+                        cheeselessMapRecordEntry.getProof_img_1_link(),
+                        cheeselessMapRecordEntry.getProof_img_2_link(),
+                        cheeselessMapRecordEntry.getProof_img_3_link(),
+                        cheeselessMapRecordEntry.getProof_vid_link(),
+                        cheeselessMapRecordEntry.getStage_1_time_seconds(),
+                        cheeselessMapRecordEntry.getStage_2_time_seconds(),
+                        cheeselessMapRecordEntry.getStage_3_time_seconds()
+                );
+                return cheeselessMapRecordRepository.save(newCheeselessMapEntry);
+            case RunAnyPercentMapRecordEntry runAnyPercentMapRecordEntry:
+                RunAnyPercentMapRecordEntry newRunAnyPercentMapEntry = new RunAnyPercentMapRecordEntry(
+                        runAnyPercentMapRecordEntry.getId(),
+                        runAnyPercentMapRecordEntry.getMap_name(),
+                        runAnyPercentMapRecordEntry.getCurr_wr_seconds(),
+                        BigDecimal.ZERO,
+                        runAnyPercentMapRecordEntry.getProof_img_1_link(),
+                        runAnyPercentMapRecordEntry.getProof_img_2_link(),
+                        runAnyPercentMapRecordEntry.getProof_img_3_link(),
+                        runAnyPercentMapRecordEntry.getProof_vid_link(),
+                        runAnyPercentMapRecordEntry.getStage_1_time_seconds(),
+                        runAnyPercentMapRecordEntry.getStage_2_time_seconds(),
+                        runAnyPercentMapRecordEntry.getStage_3_time_seconds()
+                );
+                return runAnyPercentMapRecordRepository.save(newRunAnyPercentMapEntry);
+            case RunSoloMapRecordEntry runSoloMapRecordEntry:
+                RunSoloMapRecordEntry newRunSoloMapEntry = new RunSoloMapRecordEntry(
+                        runSoloMapRecordEntry.getId(),
+                        runSoloMapRecordEntry.getMap_name(),
+                        runSoloMapRecordEntry.getThe_hero(),
+                        runSoloMapRecordEntry.getCurr_wr_seconds(),
+                        BigDecimal.ZERO,
+                        runSoloMapRecordEntry.getProof_img_1_link(),
+                        runSoloMapRecordEntry.getProof_img_2_link(),
+                        runSoloMapRecordEntry.getProof_img_3_link(),
+                        runSoloMapRecordEntry.getProof_vid_link(),
+                        runSoloMapRecordEntry.getStage_1_time_seconds(),
+                        runSoloMapRecordEntry.getStage_2_time_seconds(),
+                        runSoloMapRecordEntry.getStage_3_time_seconds()
+                );
+                return runSoloMapRecordRepository.save(newRunSoloMapEntry);
+            case RunCheeselessMapRecordEntry runCheeselessMapRecordEntry:
+                RunCheeselessMapRecordEntry newRunCheeselessMapEntry = new RunCheeselessMapRecordEntry(
+                        runCheeselessMapRecordEntry.getId(),
+                        runCheeselessMapRecordEntry.getMap_name(),
+                        runCheeselessMapRecordEntry.getCurr_wr_seconds(),
+                        BigDecimal.ZERO,
+                        runCheeselessMapRecordEntry.getProof_img_1_link(),
+                        runCheeselessMapRecordEntry.getProof_img_2_link(),
+                        runCheeselessMapRecordEntry.getProof_img_3_link(),
+                        runCheeselessMapRecordEntry.getProof_vid_link(),
+                        runCheeselessMapRecordEntry.getStage_1_time_seconds(),
+                        runCheeselessMapRecordEntry.getStage_2_time_seconds(),
+                        runCheeselessMapRecordEntry.getStage_3_time_seconds()
+                );
+                return runCheeselessMapRecordRepository.save(newRunCheeselessMapEntry);
+            default:
+                throw new IllegalStateException("Unexpected value: " + record);
         }
-        return null;
     }
 
     public BigDecimal getCurrentWR(int id, String category){
@@ -132,7 +193,7 @@ public class MapRecordServiceProd {
                 existingAnyPercentMapRecordEntry.setStage_3_time_seconds(anyPercentMapRecordEntry.getStage_3_time_seconds());
                 return anyPercentMapRecordRepository.save(existingAnyPercentMapRecordEntry);
             case SoloMapRecordEntry soloMapRecordEntry:
-                SoloMapRecordEntry existingSoloMapRecordEntry = (SoloMapRecordEntry) getRecord(soloMapRecordEntry.getId(), "any");
+                SoloMapRecordEntry existingSoloMapRecordEntry = (SoloMapRecordEntry) getRecord(soloMapRecordEntry.getId(), "solo");
                 brokenWR = existingSoloMapRecordEntry.getCurr_wr_seconds();
                 existingSoloMapRecordEntry.setMap_name(soloMapRecordEntry.getMap_name());
                 existingSoloMapRecordEntry.setCurr_wr_seconds(soloMapRecordEntry.getCurr_wr_seconds());
@@ -146,7 +207,7 @@ public class MapRecordServiceProd {
                 existingSoloMapRecordEntry.setStage_3_time_seconds(soloMapRecordEntry.getStage_3_time_seconds());
                 return soloMapRecordRepository.save(existingSoloMapRecordEntry);
             case CheeselessMapRecordEntry cheeselessMapRecordEntry:
-                CheeselessMapRecordEntry existingCheeselessMapRecordEntry = (CheeselessMapRecordEntry) getRecord(cheeselessMapRecordEntry.getId(), "any");
+                CheeselessMapRecordEntry existingCheeselessMapRecordEntry = (CheeselessMapRecordEntry) getRecord(cheeselessMapRecordEntry.getId(), "cheeseless");
                 brokenWR = existingCheeselessMapRecordEntry.getCurr_wr_seconds();
                 existingCheeselessMapRecordEntry.setMap_name(cheeselessMapRecordEntry.getMap_name());
                 existingCheeselessMapRecordEntry.setCurr_wr_seconds(cheeselessMapRecordEntry.getCurr_wr_seconds());
@@ -160,7 +221,7 @@ public class MapRecordServiceProd {
                 existingCheeselessMapRecordEntry.setStage_3_time_seconds(cheeselessMapRecordEntry.getStage_3_time_seconds());
                 return cheeselessMapRecordRepository.save(existingCheeselessMapRecordEntry);
             case RunAnyPercentMapRecordEntry runAnyPercentMapRecordEntry:
-                RunAnyPercentMapRecordEntry existingRunAnyPercentMapRecordEntry = (RunAnyPercentMapRecordEntry) getRecord(runAnyPercentMapRecordEntry.getId(), "any");
+                RunAnyPercentMapRecordEntry existingRunAnyPercentMapRecordEntry = (RunAnyPercentMapRecordEntry) getRecord(runAnyPercentMapRecordEntry.getId(), "run_any");
                 brokenWR = existingRunAnyPercentMapRecordEntry.getCurr_wr_seconds();
                 existingRunAnyPercentMapRecordEntry.setMap_name(runAnyPercentMapRecordEntry.getMap_name());
                 existingRunAnyPercentMapRecordEntry.setCurr_wr_seconds(runAnyPercentMapRecordEntry.getCurr_wr_seconds());
@@ -174,7 +235,7 @@ public class MapRecordServiceProd {
                 existingRunAnyPercentMapRecordEntry.setStage_3_time_seconds(runAnyPercentMapRecordEntry.getStage_3_time_seconds());
                 return runAnyPercentMapRecordRepository.save(existingRunAnyPercentMapRecordEntry);
             case RunSoloMapRecordEntry runSoloMapRecordEntry:
-                RunSoloMapRecordEntry existingRunSoloMapRecordEntry = (RunSoloMapRecordEntry) getRecord(runSoloMapRecordEntry.getId(), "any");
+                RunSoloMapRecordEntry existingRunSoloMapRecordEntry = (RunSoloMapRecordEntry) getRecord(runSoloMapRecordEntry.getId(), "run_solo");
                 brokenWR = existingRunSoloMapRecordEntry.getCurr_wr_seconds();
                 existingRunSoloMapRecordEntry.setMap_name(runSoloMapRecordEntry.getMap_name());
                 existingRunSoloMapRecordEntry.setCurr_wr_seconds(runSoloMapRecordEntry.getCurr_wr_seconds());
@@ -188,7 +249,7 @@ public class MapRecordServiceProd {
                 existingRunSoloMapRecordEntry.setStage_3_time_seconds(runSoloMapRecordEntry.getStage_3_time_seconds());
                 return runSoloMapRecordRepository.save(existingRunSoloMapRecordEntry);
             case RunCheeselessMapRecordEntry runCheeselessMapRecordEntry:
-                RunCheeselessMapRecordEntry existingRunCheeselessMapRecordEntry = (RunCheeselessMapRecordEntry) getRecord(runCheeselessMapRecordEntry.getId(), "any");
+                RunCheeselessMapRecordEntry existingRunCheeselessMapRecordEntry = (RunCheeselessMapRecordEntry) getRecord(runCheeselessMapRecordEntry.getId(), "run_cheeseless");
                 brokenWR = existingRunCheeselessMapRecordEntry.getCurr_wr_seconds();
                 existingRunCheeselessMapRecordEntry.setMap_name(runCheeselessMapRecordEntry.getMap_name());
                 existingRunCheeselessMapRecordEntry.setCurr_wr_seconds(runCheeselessMapRecordEntry.getCurr_wr_seconds());

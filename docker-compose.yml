@@ -52,7 +52,7 @@ services:
       context: ./tracker
     container_name: tracker
     volumes:
-#      - ./tracker/resources:/resources
+      - ./tracker/resources:/resources
       - ./shared_resources:/shared_resources/:ro
     depends_on:
       - postgres
@@ -70,6 +70,7 @@ services:
     volumes:
       - ./shared_resources:/shared_resources/
       - ./google_token:/tokens
+      - ./google_api_handler/resources:/resources
     depends_on:
       - postgres
     ports:

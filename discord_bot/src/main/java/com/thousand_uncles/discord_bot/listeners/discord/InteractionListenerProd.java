@@ -8,7 +8,7 @@ import com.thousand_uncles.data.models.uncletopia.AnyPercentMapRecordEntry;
 import com.thousand_uncles.data.models.common.ConfirmWorthyMapRecordEntry;
 import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
 import com.thousand_uncles.data.models.uncletopia.SoloMapRecordEntry;
-import com.thousand_uncles.data.service.MapRecordServiceProd;
+import com.thousand_uncles.data.service.MapRecordServiceOnline;
 import com.thousand_uncles.discord_bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.fun_stuff.Roulette;
 import com.thousand_uncles.discord_bot.common.util.AppNotifications;
@@ -47,7 +47,7 @@ public class InteractionListenerProd {
     ApplicationContext applicationContext;
 
     @Autowired
-    MapRecordServiceProd mapRecordServiceProd;
+    MapRecordServiceOnline mapRecordServiceOnline;
 
     @Autowired
     BotConfig botConfig;
@@ -110,7 +110,7 @@ public class InteractionListenerProd {
     }
 
     public Mono<Void> onSelectMenu (SelectMenuInteractionEvent event){
-        MapRecordServiceProd mapRecordServiceProd = applicationContext.getBean(MapRecordServiceProd.class);
+        MapRecordServiceOnline mapRecordServiceOnline = applicationContext.getBean(MapRecordServiceOnline.class);
 
         System.out.println("select menu");
         String selectedOption = event.getValues().getFirst();
@@ -128,7 +128,7 @@ public class InteractionListenerProd {
 
 
             ManualIndexedMapRecordEntry gotMap;
-            gotMap = mapRecordServiceProd.getRecord(mapID, selectedOption);
+            gotMap = mapRecordServiceOnline.getRecord(mapID, selectedOption);
             if (gotMap == null){
                 return mapNotFoundResponse(event);
             }
@@ -140,7 +140,7 @@ public class InteractionListenerProd {
         }
 
 //        Looking for map time
-        ManualIndexedMapRecordEntry gotMap = mapRecordServiceProd.getRecord(GlobalThings.getMapIDS().indexOf(selectedOption), customID);
+        ManualIndexedMapRecordEntry gotMap = mapRecordServiceOnline.getRecord(GlobalThings.getMapIDS().indexOf(selectedOption), customID);
         System.out.println("found map " + gotMap.getMap_name());
 
         assert event.getMessage().isPresent();
@@ -184,7 +184,7 @@ public class InteractionListenerProd {
         short mapTime = Short.parseShort(partsOfCustomID[3]);
 
         ConfirmWorthyMapRecordEntry confirmWorthyMapRecordEntry;
-        confirmWorthyMapRecordEntry = mapRecordServiceProd.getFromHold(category, GlobalThings.getMapIDS().indexOf(map));
+        confirmWorthyMapRecordEntry = mapRecordServiceOnline.getFromHold(category, GlobalThings.getMapIDS().indexOf(map));
 
         ManualIndexedMapRecordEntry foundMap = null;
 

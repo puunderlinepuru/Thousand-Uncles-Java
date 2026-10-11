@@ -1,7 +1,7 @@
 package com.thousand_uncles.discord_bot.commands;
 
 import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
-import com.thousand_uncles.data.service.MapRecordServiceProd;
+import com.thousand_uncles.data.service.MapRecordServiceOnline;
 import com.thousand_uncles.discord_bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.common.util.AppNotifications;
 import com.thousand_uncles.discord_bot.util.DiscordBotResponseFormatter;
@@ -48,7 +48,7 @@ public class CheckCommand implements SlashCommand {
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event){
         try {
-            MapRecordServiceProd mapRecordServiceProd = applicationContext.getBean(MapRecordServiceProd.class);
+            MapRecordServiceOnline mapRecordServiceOnline = applicationContext.getBean(MapRecordServiceOnline.class);
 
             String partialMapName = event.getOption("map")
                     .flatMap(ApplicationCommandInteractionOption::getValue)
@@ -63,7 +63,7 @@ public class CheckCommand implements SlashCommand {
                     .orElse("any");
 
 
-            List<ManualIndexedMapRecordEntry> searchedMaps = mapRecordServiceProd.searchRecords(partialMapName, category);
+            List<ManualIndexedMapRecordEntry> searchedMaps = mapRecordServiceOnline.searchRecords(partialMapName, category);
             System.out.println("found maps: " + searchedMaps);
             if (searchedMaps.isEmpty()){
                 System.out.println(" no maps found");

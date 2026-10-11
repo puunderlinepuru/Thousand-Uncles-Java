@@ -5,4 +5,4 @@ app:
 
 spring:
   profiles:
-    active: prod
+    active: prod, online

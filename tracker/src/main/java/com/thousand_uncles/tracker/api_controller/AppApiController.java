@@ -2,7 +2,7 @@ package com.thousand_uncles.tracker.api_controller;
 
 import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
 import com.thousand_uncles.data.models.run.TestRecord;
-import com.thousand_uncles.data.service.MapRecordServiceProd;
+import com.thousand_uncles.data.service.MapRecordServiceOnline;
 import com.thousand_uncles.tracker.dto.GamerDTO;
 import com.thousand_uncles.tracker.services.MapSessionTrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class AppApiController {
     MapSessionTrackingService mapSessionTrackingService;
 
     @Autowired
-    MapRecordServiceProd mapRecordServiceProd;
+    MapRecordServiceOnline mapRecordServiceOnline;
 
     @PostMapping("/set/{serverName}")
     public String startGameSession(@PathVariable String serverName, @RequestBody String mapName){
@@ -54,7 +54,7 @@ public class AppApiController {
                 BigDecimal.ONE
         );
 
-        ManualIndexedMapRecordEntry savedRecord1 = mapRecordServiceProd.saveUncletopiaAny(
+        ManualIndexedMapRecordEntry savedRecord1 = mapRecordServiceOnline.saveUncletopiaAny(
                 0,
                 "name",
                 BigDecimal.valueOf(1.1),
@@ -68,7 +68,7 @@ public class AppApiController {
                 BigDecimal.ONE
         );
 
-        TestRecord savedRecord = mapRecordServiceProd.addTestRecord(
+        TestRecord savedRecord = mapRecordServiceOnline.addTestRecord(
                 0,
                 "name",
                 BigDecimal.valueOf(1.1),

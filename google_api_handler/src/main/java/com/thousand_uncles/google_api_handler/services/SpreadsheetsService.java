@@ -10,7 +10,7 @@ import com.thousand_uncles.data.models.run.RunAnyPercentMapRecordEntry;
 import com.thousand_uncles.data.models.run.RunSoloMapRecordEntry;
 import com.thousand_uncles.data.models.uncletopia.AnyPercentMapRecordEntry;
 import com.thousand_uncles.data.models.uncletopia.SoloMapRecordEntry;
-import com.thousand_uncles.data.service.MapRecordServiceProd;
+import com.thousand_uncles.data.service.MapRecordServiceOnline;
 import com.thousand_uncles.data.util.RecordFormatter;
 import com.thousand_uncles.google_api_handler.util.GlobalThings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Component
@@ -30,7 +29,7 @@ public class SpreadsheetsService {
     private static final String spreadsheetId = "1YtpbwvqTOiBRN4Sm9SXlNJCq6qPb2dvW3SBmwu5poNs";
 
     @Autowired
-    MapRecordServiceProd mapRecordServiceProd;
+    MapRecordServiceOnline mapRecordServiceOnline;
 
     public static void setService(Sheets service) {
         SpreadsheetsService.service = service;
@@ -168,12 +167,12 @@ public class SpreadsheetsService {
             }
 
             ManualIndexedMapRecordEntry databaseMapRecord;
-            databaseMapRecord = mapRecordServiceProd.getRecord(map_id, category);
+            databaseMapRecord = mapRecordServiceOnline.getRecord(map_id, category);
             if (databaseMapRecord == null){
                 System.out.println("[ DATABASE RECORD ERROR ] Couldn't find " + map_name + " in the data, skipping comparison");
                 try {
                     if (Objects.equals(category, "any")){
-                        AnyPercentMapRecordEntry savedRecord = (AnyPercentMapRecordEntry) mapRecordServiceProd.saveUncletopiaAny(
+                        AnyPercentMapRecordEntry savedRecord = (AnyPercentMapRecordEntry) mapRecordServiceOnline.saveUncletopiaAny(
                                 map_id,
                                 map_name,
                                 spreadsheetRecordTimeInSeconds,
@@ -186,7 +185,7 @@ public class SpreadsheetsService {
                                 stage_time_2,
                                 stage_time_3);
                     } else if(Objects.equals(category, "run_any")){
-                        RunAnyPercentMapRecordEntry savedRecord = (RunAnyPercentMapRecordEntry) mapRecordServiceProd.saveRunAny(
+                        RunAnyPercentMapRecordEntry savedRecord = (RunAnyPercentMapRecordEntry) mapRecordServiceOnline.saveRunAny(
                                 map_id,
                                 map_name,
                                 spreadsheetRecordTimeInSeconds,
@@ -220,7 +219,7 @@ public class SpreadsheetsService {
             System.out.println("[ RECORD BEATEN ] for map " + map_name + ": " + databaseRecordTimeInSeconds + " -> " + spreadsheetRecordTimeInSeconds);
             try {
                 if (Objects.equals(category, "any")){
-                    AnyPercentMapRecordEntry savedRecord = (AnyPercentMapRecordEntry) mapRecordServiceProd.saveUncletopiaAny(
+                    AnyPercentMapRecordEntry savedRecord = (AnyPercentMapRecordEntry) mapRecordServiceOnline.saveUncletopiaAny(
                             map_id,
                             map_name,
                             spreadsheetRecordTimeInSeconds,
@@ -233,7 +232,7 @@ public class SpreadsheetsService {
                             stage_time_2,
                             stage_time_3);
                 } else if(Objects.equals(category, "run_any")){
-                    RunAnyPercentMapRecordEntry savedRecord = (RunAnyPercentMapRecordEntry) mapRecordServiceProd.saveRunAny(
+                    RunAnyPercentMapRecordEntry savedRecord = (RunAnyPercentMapRecordEntry) mapRecordServiceOnline.saveRunAny(
                             map_id,
                             map_name,
                             spreadsheetRecordTimeInSeconds,
@@ -390,12 +389,12 @@ public class SpreadsheetsService {
             }
 
             ManualIndexedMapRecordEntry databaseMapRecord;
-            databaseMapRecord = mapRecordServiceProd.getRecord(map_id, category);
+            databaseMapRecord = mapRecordServiceOnline.getRecord(map_id, category);
             if (databaseMapRecord == null){
                 System.out.println("[ DATABASE RECORD ERROR ] Couldn't find " + map_name + " in the data, skipping comparison");
                 try {
                     if (Objects.equals(category, "solo")){
-                        SoloMapRecordEntry savedRecord = (SoloMapRecordEntry) mapRecordServiceProd.saveUncletopiaSolo(
+                        SoloMapRecordEntry savedRecord = (SoloMapRecordEntry) mapRecordServiceOnline.saveUncletopiaSolo(
                                 map_id,
                                 map_name,
                                 spreadsheetRecordTimeInSeconds,
@@ -409,7 +408,7 @@ public class SpreadsheetsService {
                                 stage_time_2,
                                 stage_time_3);
                     } else if (Objects.equals(category, "run_solo")){
-                        RunSoloMapRecordEntry savedRecord = (RunSoloMapRecordEntry) mapRecordServiceProd.saveRunSolo(
+                        RunSoloMapRecordEntry savedRecord = (RunSoloMapRecordEntry) mapRecordServiceOnline.saveRunSolo(
                                 map_id,
                                 map_name,
                                 spreadsheetRecordTimeInSeconds,
@@ -444,7 +443,7 @@ public class SpreadsheetsService {
             System.out.println("[ RECORD BEATEN ] for map " + map_name + ": " + databaseRecordTimeInSeconds + " -> " + spreadsheetRecordTimeInSeconds);
             try {
                 if (Objects.equals(category, "solo")){
-                    SoloMapRecordEntry savedRecord = (SoloMapRecordEntry) mapRecordServiceProd.saveUncletopiaSolo(
+                    SoloMapRecordEntry savedRecord = (SoloMapRecordEntry) mapRecordServiceOnline.saveUncletopiaSolo(
                             map_id,
                             map_name,
                             spreadsheetRecordTimeInSeconds,
@@ -458,7 +457,7 @@ public class SpreadsheetsService {
                             stage_time_2,
                             stage_time_3);
                 } else if (Objects.equals(category, "run_solo")){
-                    RunSoloMapRecordEntry savedRecord = (RunSoloMapRecordEntry) mapRecordServiceProd.saveRunSolo(
+                    RunSoloMapRecordEntry savedRecord = (RunSoloMapRecordEntry) mapRecordServiceOnline.saveRunSolo(
                             map_id,
                             map_name,
                             spreadsheetRecordTimeInSeconds,

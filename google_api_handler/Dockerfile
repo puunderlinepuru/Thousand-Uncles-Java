@@ -3,6 +3,7 @@ LABEL authors="popo"
 
 COPY ./build/google_api_handler-0.0.1-SNAPSHOT-stuffed.jar ./app.jar
 COPY ./tokens/StoredCredential /tokens/StoredCredential
+COPY resources/ /resources/
 
 EXPOSE 8083
 

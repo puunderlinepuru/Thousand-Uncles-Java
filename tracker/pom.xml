@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>com.thousand_uncles</groupId>
 			<artifactId>data</artifactId>
-			<version>${project.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 
 		<dependency>
