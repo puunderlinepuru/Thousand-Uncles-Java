@@ -13,6 +13,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.thousand_uncles.google_api_handler.UpdateTask;
+import com.thousand_uncles.google_api_handler.config.GAPIConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,8 @@ public class GoogleAPIService {
     @Autowired
     SpreadsheetsService spreadsheetsService;
 
+    @Autowired
+    GAPIConfig gapiConfig;
 
     private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
@@ -74,10 +77,9 @@ public class GoogleAPIService {
 
         // Build a new authorized API client com.thousand_uncles.data.service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-//        final String testSpreadsheetID = "1a09PuBN2hnJ58c8km_la3e0_sUAjQ8HatalX7fdMl50";
 
-//        https://docs.google.com/spreadsheets/d/1cxxyzz0SDWCj8wI6QwN66SOtbpedrf2DWXrH6io2ZNk/edit?gid=0#gid=0
-        final String uncletopiaSpreadsheetID = "1cxxyzz0SDWCj8wI6QwN66SOtbpedrf2DWXrH6io2ZNk"; // Actual
+        final GAPIConfig.Sheets gapiConfigSheets = gapiConfig.getSheets();
+        final String uncletopiaSpreadsheetID = gapiConfigSheets.getIds().getProduction(); // Actual
 
         List<List<Object>> valuesToUpdateOnSpreadsheet = new ArrayList<>();
         String[] inletValues = {"Another update"};
@@ -101,7 +103,7 @@ public class GoogleAPIService {
 
         System.out.println("[ STATUS UPDATE ] Starting Update Task..");
         Timer timer = new Timer();
-        TimerTask timerTask = new UpdateTask(uncletopiaSpreadsheetID, valueInputOption, service, applicationContext, spreadsheetsService);
+        TimerTask timerTask = new UpdateTask(uncletopiaSpreadsheetID, valueInputOption, service, applicationContext, spreadsheetsService, gapiConfigSheets);
         timer.schedule(timerTask, 200, 1800000);
     }
 }
