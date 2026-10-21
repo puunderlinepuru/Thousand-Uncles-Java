@@ -185,9 +185,9 @@ public class MapSessionTrackingService {
                 message = "Cheeseless% record was broken";
                 AppNotifications.RUNserver.RUN_EVENT_INFO(message);
                 RabbitEventListener.setVerdict(serverName, message);
-                trackerActionsService.postMessageToDiscordAPI("the-cave", "Any% record was broken on " + session.getMapName() + " | " + serverName + "\n" +
+                trackerActionsService.postMessageToDiscordAPI("the-cave", "Cheeseless% record may be broken on " + session.getMapName() + " | " + serverName + "\n" +
                         "new WR: " + timeHumanFormat + "\n" +
-                        "Cheeseless% record may be broken but I can't verify :p");
+                        " but I can't verify :p");
                 break;
             case 3:
                 message = "Any% and Solo% records were broken";
