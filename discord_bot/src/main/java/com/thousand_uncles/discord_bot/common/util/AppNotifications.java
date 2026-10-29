@@ -2,16 +2,6 @@ package com.thousand_uncles.discord_bot.common.util;
 
 public class AppNotifications {
 
-    public static class PostgreSQL{
-        private static final String PSQL_RecordInfo = "[ POSTGRESQL RECORD INFO ] ";
-        private static final String PSQL_RecordError = "[ POSTGRESQL RECORD ERROR ] ";
-        private static final String PSQL_RecordWarning = "[ POSTGRESQL RECORD WARNING ] ";
-
-        public static void PSQL_RECORD_INFO(String message){System.out.println(PSQL_RecordInfo + message);}
-        public static void PSQL_RECORD_ERROR(String message){System.out.println(PSQL_RecordError + message);}
-        public static void PSQL_RECORD_WARNING(String message){System.out.println(PSQL_RecordWarning + message);}
-    }
-
     public static class JSON{
         private static final String JSON_RecordInfo = "[ JSON RECORD INFO ] ";
         private static final String JSON_RecordError = "[ JSON RECORD ERROR ] ";

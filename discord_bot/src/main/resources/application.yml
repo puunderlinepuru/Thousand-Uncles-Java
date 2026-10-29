@@ -5,19 +5,6 @@ spring:
   config:
     import: optional:file:./resources/config.yml
 
-  datasource:
-    url: jdbc:postgresql://192.168.1.2:5432/thousand_uncles_db
-    username: admin
-    password: mypassword
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
   rabbitmq:
     host: ${SPRING_RABBITMQ_HOST:192.168.1.2}
     port: ${SPRING_RABBITMQ_PORT:5672}

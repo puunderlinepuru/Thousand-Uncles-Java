@@ -24,10 +24,10 @@ import reactor.util.Loggers;
         exclude = {DataSourceAutoConfiguration.class},
         scanBasePackages = {
                 "com.thousand_uncles.discord_bot",
-                "com.thousand_uncles.data"
+//                "com.thousand_uncles.data"
         })
-@EntityScan("com.thousand_uncles.data.models")
-@EnableJpaRepositories(basePackages = "com.thousand_uncles.data")
+//@EntityScan("com.thousand_uncles.data.models")
+//@EnableJpaRepositories(basePackages = "com.thousand_uncles.data")
 public class DiscordBotApplication {
     private static final String token = System.getProperty("BOT_TOKEN");
     private static final Logger log = Loggers.getLogger(DiscordBotApplication.class);

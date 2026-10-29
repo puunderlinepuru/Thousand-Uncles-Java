@@ -1,6 +1,6 @@
 package com.thousand_uncles.discord_bot.listeners.discord;
 
-import com.thousand_uncles.data.service.MapRecordServiceOnline;
+
 import com.thousand_uncles.discord_bot.config.BotConfig;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageUpdateEvent;
@@ -15,9 +15,6 @@ public class StatusUpdateListener {
 
     @Autowired
     ApplicationContext applicationContext;
-
-    @Autowired
-    MapRecordServiceOnline mapRecordServiceOnline;
 
     @Autowired
     BotConfig botConfig;

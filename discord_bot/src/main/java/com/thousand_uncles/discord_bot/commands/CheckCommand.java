@@ -1,15 +1,10 @@
 package com.thousand_uncles.discord_bot.commands;
 
-import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
-import com.thousand_uncles.data.service.MapRecordServiceOnline;
 import com.thousand_uncles.discord_bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.common.util.AppNotifications;
-import com.thousand_uncles.discord_bot.util.DiscordBotResponseFormatter;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
-import discord4j.core.object.command.ApplicationCommandInteractionOption;
-import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.Message;
@@ -47,46 +42,9 @@ public class CheckCommand implements SlashCommand {
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event){
-        try {
-            MapRecordServiceOnline mapRecordServiceOnline = applicationContext.getBean(MapRecordServiceOnline.class);
-
-            String partialMapName = event.getOption("map")
-                    .flatMap(ApplicationCommandInteractionOption::getValue)
-                    .map(ApplicationCommandInteractionOptionValue::asString)
-                    .orElse(null);
-
-            System.out.println("gotName: " + partialMapName);
-
-            String category = event.getOption("category")
-                    .flatMap(ApplicationCommandInteractionOption::getValue)
-                    .map(ApplicationCommandInteractionOptionValue::asString)
-                    .orElse("any");
-
-
-            List<ManualIndexedMapRecordEntry> searchedMaps = mapRecordServiceOnline.searchRecords(partialMapName, category);
-            System.out.println("found maps: " + searchedMaps);
-            if (searchedMaps.isEmpty()){
-                System.out.println(" no maps found");
-                return mapNotFound(event);
-            }
-
-            SelectMenu foundMapsMenu;
-            List<SelectMenu.Option> foundMapOptions = new java.util.ArrayList<>(List.of());
-            if (searchedMaps.size() == 1){
-                return singleMapFoundResponse(event, searchedMaps.getFirst(), category);
-            }
-
-            for (int i = 0; i < searchedMaps.size(); i++) {
-                foundMapOptions.add(i, SelectMenu.Option.of(searchedMaps.get(i).getMap_name(),searchedMaps.get(i).getMap_name()));
-            }
-
-            return multipleMapsFoundResponse(event, partialMapName, category, foundMapOptions);
-
-
-        } catch (Exception e) {
-            System.out.println("[ ERROR ] " + e);
-            return mapNotFound(event);
-        }
+        return event.reply()
+                .withEphemeral(true)
+                .withContent("Thank you for using it but this command is unavailable for a short while. Im working on bringing it back :p");
     }
 
     private Mono<Void> multipleMapsFoundResponse(ChatInputInteractionEvent event, String partialMapName, String category, List<SelectMenu.Option> foundMapOptions){
@@ -110,7 +68,9 @@ public class CheckCommand implements SlashCommand {
                 .then();
     }
 
-    private Mono<Void> singleMapFoundResponse(ChatInputInteractionEvent event, ManualIndexedMapRecordEntry foundMap, String category){
+    private Mono<Void> singleMapFoundResponse(ChatInputInteractionEvent event,
+//                                              ManualIndexedMapRecordEntry foundMap,
+                                              String category){
         AppNotifications.Discord.DISCORD_INTERACTION_INFO("Single Map Found Response Case");
         List<String> availableToCheckCategories = botConfig.getAvailable_categories().getCheck();
         List<SelectMenu.Option> availableCategoriesOptions = new java.util.ArrayList<>(List.of());
@@ -120,12 +80,15 @@ public class CheckCommand implements SlashCommand {
 
         return event.reply()
                 .withEphemeral(true)
-                .withContent("Record for " + foundMap.getMap_name() + " - " + category + "%" + ":\n" +
-                        DiscordBotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
+                .withContent("Record for " +
+//                        foundMap.getMap_name() +
+                        " - " + category + "%" + ":\n" +
+//                        DiscordBotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
                         "Other categories:")
-                .withComponents(ActionRow.of(
-                        SelectMenu.of("check-" + foundMap.getMap_name(), availableCategoriesOptions)
-                                .withMaxValues(1)));
+//                .withComponents(ActionRow.of(
+//                        SelectMenu.of("check-" + foundMap.getMap_name(), availableCategoriesOptions)
+//                                .withMaxValues(1)))
+                                ;
     }
 
     private Mono<Void> mapNotFound(ChatInputInteractionEvent event){
