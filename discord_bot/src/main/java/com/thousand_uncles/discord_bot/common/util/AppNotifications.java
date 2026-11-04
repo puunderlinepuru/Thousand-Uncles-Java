@@ -2,7 +2,7 @@ package com.thousand_uncles.discord_bot.common.util;
 
 public class AppNotifications {
 
-    public static class JSON{
+    /*public static class JSON{
         private static final String JSON_RecordInfo = "[ JSON RECORD INFO ] ";
         private static final String JSON_RecordError = "[ JSON RECORD ERROR ] ";
         private static final String JSON_RecordWarning = "[ JSON RECORD WARNING ] ";
@@ -10,6 +10,16 @@ public class AppNotifications {
         public static void JSON_RECORD_INFO(String message){System.out.println(JSON_RecordInfo + message);}
         public static void JSON_RECORD_ERROR(String message){System.out.println(JSON_RecordError + message);}
         public static void JSON_RECORD_WARNING(String message){System.out.println(JSON_RecordWarning + message);}
+    }*/
+
+    public static class API{
+        private static final String APIInfo = "[ API INFO ] ";
+        private static final String APIError = "[ API ERROR ] ";
+        private static final String APIWarning = "[ API WARNING ] ";
+
+        public static void API_INFO(String message){System.out.println(APIInfo + message);}
+        public static void API_ERROR(String message){System.out.println(APIError + message);}
+        public static void API_WARNING(String message){System.out.println(APIWarning + message);}
     }
 
     public static class Discord{

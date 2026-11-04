@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod, online
+    active: prod, online, friendly
 app:
   # ROLLING
   server_id: "1306287199259463710"
