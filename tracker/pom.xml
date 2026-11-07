@@ -11,7 +11,6 @@
 	</parent>
 
 	<artifactId>tracker</artifactId>
-	<version>${parent.version}</version>
 
 	<properties>
 		<java.version>21</java.version>

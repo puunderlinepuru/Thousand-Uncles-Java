@@ -15,6 +15,7 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.GuildMemberEditSpec;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import java.time.Duration;
@@ -48,8 +49,11 @@ public class MessageListener {
                 );
     }
 
+
+
     public Mono<Void> onMessage(MessageCreateEvent event) {
-        System.out.println(event.toString());
+
+//        System.out.println(event.toString());
         final Message message = event.getMessage();
 //        System.out.println("Data: " + message.getData());
 //        System.out.println("Poll: " + message.getPoll());
