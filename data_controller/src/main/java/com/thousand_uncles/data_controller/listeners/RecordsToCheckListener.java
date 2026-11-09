@@ -1,17 +1,19 @@
 package com.thousand_uncles.data_controller.listeners;
 
 import com.thousand_uncles.data.service.MapRecordServiceOnline;
-import com.thousand_uncles.data_controller.services.DataControllerActionsService;
 import com.thousand_uncles.data_controller.services.RabbitQueuePurgeService;
-import com.thousand_uncles.data_controller.util.GlobalThings;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import tools.jackson.databind.JsonNode;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 @Component
@@ -23,8 +25,20 @@ public class RecordsToCheckListener {
     @Autowired
     MapRecordServiceOnline mapRecordServiceOnline;
 
-    RecordsToCheckListener(RabbitQueuePurgeService rabbitQueuePurgeService){
+    private final ObjectMapper objectMapper;
+    public List<String> mapIDS;
+    public Map<String, String> mapSuffixes;
+
+    RecordsToCheckListener(
+            RabbitQueuePurgeService rabbitQueuePurgeService,
+            ObjectMapper objectMapper,
+            List<String> mapIDS,
+            Map<String, String> mapSuffixes
+    ){
         rabbitQueuePurgeService.purgeQueue("data.controller.requests");
+        this.objectMapper = objectMapper;
+        this.mapIDS = mapIDS;
+        this.mapSuffixes = mapSuffixes;
     }
 
     @Bean
@@ -47,17 +61,60 @@ public class RecordsToCheckListener {
     public String receiveAndRespond(String messageString) {
         System.out.println("Received message: " + messageString);
 
-        JsonNode messageNode = GlobalThings.getObjectMapper().readTree(messageString);
-
-        String type = messageNode.get("type").asString();
+        ObjectNode requestNode = objectMapper.readTree(messageString).asObject();
+        String type = requestNode.get("type").asString();
+        requestNode.remove("type");
         System.out.println(type);
 
-        return "hi";
+        String mapName = requestNode.get("map_name").asString();
+        String recordCategory = requestNode.get("category").asString();
+
+        return switch (type){
+            case "full" -> {
+                yield getFullNode(mapName, recordCategory);
+            }
+            case "just_time" -> {
+                yield getWRtime(mapName, recordCategory);
+            }
+            default -> returnError();
+        };
 
     }
 
-    private JsonNode processJSON(String message) {
-        ObjectMapper objectMapper = new ObjectMapper();
-         return objectMapper.readTree(message);
+    private String getWRtime(String mapName, String recordCategory){
+        String unsuffixedMapName = mapSuffixes.get(mapName);
+        int mapID;
+        if (unsuffixedMapName == null){
+            mapID = mapIDS.indexOf(mapName);
+        } else {
+            mapID = mapIDS.indexOf(unsuffixedMapName);
+        }
+
+        BigDecimal WRtime = mapRecordServiceOnline.getCurrentWR(mapID, recordCategory);
+
+        return
+                "{" +
+                "\"time\": " + WRtime +
+                "}";
+    }
+
+    private String getFullNode(String mapName, String recordCategory){
+        String unsuffixedMapName = mapSuffixes.get(mapName);
+        int mapID;
+        if (unsuffixedMapName == null){
+            mapID = mapIDS.indexOf(mapName);
+        } else {
+            mapID = mapIDS.indexOf(unsuffixedMapName);
+        }
+
+        return mapRecordServiceOnline.getRecord(mapID, recordCategory).toString();
+    }
+
+    private String returnError(){
+        return
+                "{" +
+                "\"error\": \"Error determining request type. Is \"type\" field present?\"" +
+                "}";
+
     }
 }

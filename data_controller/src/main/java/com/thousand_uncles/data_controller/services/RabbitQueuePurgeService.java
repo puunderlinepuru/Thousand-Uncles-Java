@@ -17,6 +17,7 @@ public class RabbitQueuePurgeService {
         try {
             rabbitTemplate.execute((channel) -> {
                 channel.queuePurge(queueName);
+                System.out.println("Queue purged");
                 return null;
             });
         } catch (Exception e) {

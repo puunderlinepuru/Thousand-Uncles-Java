@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.thousand_uncles.tracker.util.JSONHandler.processJSON;
+import static com.thousand_uncles.data.util.JSONHandler.processJSON;
+
 
 @SuppressWarnings("unused")
 @Component

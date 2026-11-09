@@ -1,4 +1,4 @@
-package com.thousand_uncles.tracker.util;
+package com.thousand_uncles.data.util;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;

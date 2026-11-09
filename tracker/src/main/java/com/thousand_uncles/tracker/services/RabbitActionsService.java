@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 
-import static com.thousand_uncles.tracker.util.JSONHandler.convertJSONtoString;
+import static com.thousand_uncles.data.util.JSONHandler.convertJSONtoString;
 
 @Component
 public class RabbitActionsService {
