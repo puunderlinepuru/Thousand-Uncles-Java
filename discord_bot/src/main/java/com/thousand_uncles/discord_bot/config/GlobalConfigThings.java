@@ -1,4 +1,4 @@
-package com.thousand_uncles.data_controller.config;
+package com.thousand_uncles.discord_bot.config;
 
 import com.thousand_uncles.data.util.YAMLHandler;
 import org.springframework.context.annotation.Bean;

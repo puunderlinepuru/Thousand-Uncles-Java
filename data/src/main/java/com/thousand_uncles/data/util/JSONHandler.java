@@ -1,9 +1,10 @@
 package com.thousand_uncles.data.util;
 
-
+import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+@Component
 public class JSONHandler {
 
     private final ObjectMapper objectMapper;
@@ -12,12 +13,12 @@ public class JSONHandler {
         this.objectMapper = objectMapper;
     }
 
-    public static String convertJSONtoString(JsonNode jsonNode) {
+    public String convertJSONtoString(JsonNode jsonNode) {
         String jsonString = objectMapper.writeValueAsString(jsonNode);
         return null;
     }
 
-    public static JsonNode processJSON(String message){
-        return GlobalThings.getObjectMapper().readTree(message);
+    public JsonNode processJSON(String message){
+        return objectMapper.readTree(message);
     }
 }

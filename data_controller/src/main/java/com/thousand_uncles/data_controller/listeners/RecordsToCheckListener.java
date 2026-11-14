@@ -1,5 +1,7 @@
 package com.thousand_uncles.data_controller.listeners;
 
+import com.thousand_uncles.data.config.GlobalConfigThings;
+import com.thousand_uncles.data.dto.RecordRequestEnvelope;
 import com.thousand_uncles.data.service.MapRecordServiceOnline;
 import com.thousand_uncles.data_controller.services.RabbitQueuePurgeService;
 import org.springframework.amqp.core.*;
@@ -8,12 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings("unused")
 @Component
@@ -25,20 +24,13 @@ public class RecordsToCheckListener {
     @Autowired
     MapRecordServiceOnline mapRecordServiceOnline;
 
-    private final ObjectMapper objectMapper;
-    public List<String> mapIDS;
-    public Map<String, String> mapSuffixes;
+    @Autowired
+    GlobalConfigThings globalConfigThings;
 
     RecordsToCheckListener(
-            RabbitQueuePurgeService rabbitQueuePurgeService,
-            ObjectMapper objectMapper,
-            List<String> mapIDS,
-            Map<String, String> mapSuffixes
+            RabbitQueuePurgeService rabbitQueuePurgeService
     ){
         rabbitQueuePurgeService.purgeQueue("data.controller.requests");
-        this.objectMapper = objectMapper;
-        this.mapIDS = mapIDS;
-        this.mapSuffixes = mapSuffixes;
     }
 
     @Bean
@@ -58,12 +50,11 @@ public class RecordsToCheckListener {
     }
 
     @RabbitListener(queues = "data.controller.requests")
-    public String receiveAndRespond(String messageString) {
-        System.out.println("Received message: " + messageString);
+    public RecordRequestEnvelope receiveAndRespond(RecordRequestEnvelope requestEnvelope) {
+        System.out.println("Received message: " + requestEnvelope);
 
-        ObjectNode requestNode = objectMapper.readTree(messageString).asObject();
-        String type = requestNode.get("type").asString();
-        requestNode.remove("type");
+        ObjectNode requestNode = globalConfigThings.ObjectMapper().readTree(requestEnvelope.getData().toString()).asObject();
+        String type = requestEnvelope.getType();
         System.out.println(type);
 
         String mapName = requestNode.get("map_name").asString();
@@ -81,40 +72,36 @@ public class RecordsToCheckListener {
 
     }
 
-    private String getWRtime(String mapName, String recordCategory){
-        String unsuffixedMapName = mapSuffixes.get(mapName);
+    private RecordRequestEnvelope getWRtime(String mapName, String recordCategory){
+        String unsuffixedMapName = globalConfigThings.mapSuffixes().get(mapName);
         int mapID;
         if (unsuffixedMapName == null){
-            mapID = mapIDS.indexOf(mapName);
+            mapID = globalConfigThings.mapIDS().indexOf(mapName);
         } else {
-            mapID = mapIDS.indexOf(unsuffixedMapName);
+            mapID = globalConfigThings.mapIDS().indexOf(unsuffixedMapName);
         }
 
         BigDecimal WRtime = mapRecordServiceOnline.getCurrentWR(mapID, recordCategory);
 
-        return
-                "{" +
-                "\"time\": " + WRtime +
-                "}";
+        return new RecordRequestEnvelope("just_time", WRtime);
     }
 
-    private String getFullNode(String mapName, String recordCategory){
-        String unsuffixedMapName = mapSuffixes.get(mapName);
+    private RecordRequestEnvelope getFullNode(String mapName, String recordCategory){
+        String unsuffixedMapName = globalConfigThings.mapSuffixes().get(mapName);
         int mapID;
         if (unsuffixedMapName == null){
-            mapID = mapIDS.indexOf(mapName);
+            mapID = globalConfigThings.mapIDS().indexOf(mapName);
         } else {
-            mapID = mapIDS.indexOf(unsuffixedMapName);
+            mapID = globalConfigThings.mapIDS().indexOf(unsuffixedMapName);
         }
-
-        return mapRecordServiceOnline.getRecord(mapID, recordCategory).toString();
+        return new RecordRequestEnvelope("full", mapRecordServiceOnline.getRecord(mapID, recordCategory));
     }
 
-    private String returnError(){
-        return
+    private RecordRequestEnvelope returnError(){
+        return new RecordRequestEnvelope("error",
                 "{" +
                 "\"error\": \"Error determining request type. Is \"type\" field present?\"" +
-                "}";
+                "}");
 
     }
 }

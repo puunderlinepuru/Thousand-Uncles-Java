@@ -112,6 +112,7 @@ maps: #Their IDs in database correspond to indexes in this file. - CP_ALTITUDE =
   - ctf_devilcross
   - ctf_frosty
   - ctf_helltrain
+  - cp_snowplow
 
 map_suffixes:
   cp_amaranth_rc1b: cp_amaranth

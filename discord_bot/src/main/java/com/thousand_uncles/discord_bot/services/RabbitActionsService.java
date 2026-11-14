@@ -1,5 +1,6 @@
 package com.thousand_uncles.discord_bot.services;
 
+import com.thousand_uncles.data.dto.RecordRequestEnvelope;
 import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.math.BigDecimal;
 import java.util.concurrent.ExecutionException;
 
 //Probably will be used but not today
@@ -30,20 +32,28 @@ public class RabbitActionsService {
         this.directMapRecordsExchange = directMapRecordsExchange;
     }
 
-    public String askForMapTime(){
+    public BigDecimal askForMapTime(String mapName, String recordCategory){
+        RecordRequestEnvelope responseEnvelope = makeRequest("just_time", mapName, recordCategory);
+        return  (BigDecimal) responseEnvelope.getData();
+    }
+
+    public ManualIndexedMapRecordEntry askForMapRecord(String mapName, String recordCategory){
+        RecordRequestEnvelope responseEnvelope = makeRequest("just_time", mapName, recordCategory);
+        return  (ManualIndexedMapRecordEntry) responseEnvelope.getData();
+    }
+
+    private RecordRequestEnvelope makeRequest(String type, String mapName, String recordCategory){
         ObjectNode message = new ObjectMapper().createObjectNode();
 
-        message.put("type", "full");
+        message.put("map_name", mapName);
+        message.put("category", recordCategory);
+        RecordRequestEnvelope requestEnvelope = new RecordRequestEnvelope(type, message);
 
-        RabbitConverterFuture<String> response = asyncRabbitTemplate.convertSendAndReceive(
+        RabbitConverterFuture<RecordRequestEnvelope> response = asyncRabbitTemplate.convertSendAndReceive(
                 directMapRecordsExchange.getName(),
                 ROUTING_KEY,
-                message.toString()
+                requestEnvelope
         );
-
-//        botActionsService.publishCavePoll(Integer.parseInt(duration));
-//        TODO substitute RabbitActionsService call with tracker API call
-//        rabbitActionsService.sendToCommand("server1", "PrintCenterTextAll", "test message");
         try{
             return response.get();
         } catch (ExecutionException | InterruptedException e) {

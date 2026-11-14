@@ -484,7 +484,5 @@ public class MapSessionTrackingService {
             chatMessage = "Current RUN Cheeseless% WR for map: " + currWRtime;
         }
         rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
-
-//        rabbitActionsService.sendToCommand(serverID, "PrintToChatAll", chatMessage);
     }
 }

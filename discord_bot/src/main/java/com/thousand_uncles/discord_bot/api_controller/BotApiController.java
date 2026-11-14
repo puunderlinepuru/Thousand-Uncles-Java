@@ -1,22 +1,15 @@
 package com.thousand_uncles.discord_bot.api_controller;
 
 import com.thousand_uncles.discord_bot.common.util.AppNotifications;
+import com.thousand_uncles.discord_bot.config.GlobalConfigThings;
 import com.thousand_uncles.discord_bot.services.BotActionsService;
 import com.thousand_uncles.discord_bot.services.RabbitActionsService;
 import discord4j.core.GatewayDiscordClient;
 import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
-import org.springframework.amqp.rabbit.RabbitConverterFuture;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.bind.annotation.*;
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
-
-import java.util.concurrent.ExecutionException;
 
 @Profile("friendly")
 @RestController
@@ -35,6 +28,9 @@ public class BotApiController {
 
     @Autowired
     BotActionsService botActionsService;
+
+    @Autowired
+    GlobalConfigThings globalConfigThings;
 
     public BotApiController(DirectExchange directMapRecordsExchange) {
         this.directMapRecordsExchange = directMapRecordsExchange;
@@ -57,7 +53,18 @@ public class BotApiController {
     }
 
     @PostMapping("/test_function")
-    public String publishPoll(){
-        return rabbitActionsService.askForMapTime();
+    public String publishPoll(@RequestBody String request){
+
+        ObjectNode requestNode = globalConfigThings.ObjectMapper().readTree(request).asObject();
+
+        String type = requestNode.get("type").asString();
+        String mapName = requestNode.get("map_name").asString();
+        String category = requestNode.get("category").asString();
+
+        return switch (type){
+            case "1" -> rabbitActionsService.askForMapTime(mapName, category).toString();
+            case "2" -> rabbitActionsService.askForMapRecord(mapName, category).toString();
+            default -> "wrong";
+        };
     }
 }
