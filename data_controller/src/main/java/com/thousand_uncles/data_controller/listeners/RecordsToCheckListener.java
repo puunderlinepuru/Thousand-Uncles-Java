@@ -1,16 +1,14 @@
 package com.thousand_uncles.data_controller.listeners;
 
 import com.thousand_uncles.data.config.GlobalConfigThings;
-import com.thousand_uncles.data.dto.RecordRequestEnvelope;
 import com.thousand_uncles.data.service.MapRecordServiceOnline;
 import com.thousand_uncles.data_controller.services.RabbitQueuePurgeService;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
 
 import java.math.BigDecimal;
 
@@ -33,35 +31,18 @@ public class RecordsToCheckListener {
         rabbitQueuePurgeService.purgeQueue("data.controller.requests");
     }
 
-    @Bean
-    public DirectExchange discordMessageExchange() {
-        return new DirectExchange("map.records.checking");
-    }
-
-    @Bean
-    public Queue discordMessageQueue() {
-        return new Queue("data.controller.requests");
-    }
-
-    @SuppressWarnings("unused")
-    @Bean
-    public Binding discordMessageBinding() {
-        return BindingBuilder.bind(discordMessageQueue()).to(discordMessageExchange()).with("map.record");
-    }
-
     @RabbitListener(queues = "data.controller.requests")
-    public RecordRequestEnvelope receiveAndRespond(RecordRequestEnvelope requestEnvelope) {
-        System.out.println("Received message: " + requestEnvelope);
+    public String receiveAndRespond(String request) {
+        JsonNode requestNode = globalConfigThings.ObjectMapper().readTree(request);
 
-        ObjectNode requestNode = globalConfigThings.ObjectMapper().readTree(requestEnvelope.getData().toString()).asObject();
-        String type = requestEnvelope.getType();
-        System.out.println(type);
-
+        String type = requestNode.get("type").asString();
         String mapName = requestNode.get("map_name").asString();
         String recordCategory = requestNode.get("category").asString();
 
+        System.out.println(type);
+
         return switch (type){
-            case "full" -> {
+            case "full_record" -> {
                 yield getFullNode(mapName, recordCategory);
             }
             case "just_time" -> {
@@ -69,10 +50,9 @@ public class RecordsToCheckListener {
             }
             default -> returnError();
         };
-
     }
 
-    private RecordRequestEnvelope getWRtime(String mapName, String recordCategory){
+    private String getWRtime(String mapName, String recordCategory){
         String unsuffixedMapName = globalConfigThings.mapSuffixes().get(mapName);
         int mapID;
         if (unsuffixedMapName == null){
@@ -83,10 +63,12 @@ public class RecordsToCheckListener {
 
         BigDecimal WRtime = mapRecordServiceOnline.getCurrentWR(mapID, recordCategory);
 
-        return new RecordRequestEnvelope("just_time", WRtime);
+        return "{" +
+                "\"time\": " + WRtime.toString() +
+                "}";
     }
 
-    private RecordRequestEnvelope getFullNode(String mapName, String recordCategory){
+    private String getFullNode(String mapName, String recordCategory){
         String unsuffixedMapName = globalConfigThings.mapSuffixes().get(mapName);
         int mapID;
         if (unsuffixedMapName == null){
@@ -94,14 +76,14 @@ public class RecordsToCheckListener {
         } else {
             mapID = globalConfigThings.mapIDS().indexOf(unsuffixedMapName);
         }
-        return new RecordRequestEnvelope("full", mapRecordServiceOnline.getRecord(mapID, recordCategory));
+        return mapRecordServiceOnline.getRecord(mapID, recordCategory).toString();
     }
 
-    private RecordRequestEnvelope returnError(){
-        return new RecordRequestEnvelope("error",
-                "{" +
+    private String returnError(){
+        return
+            "{" +
                 "\"error\": \"Error determining request type. Is \"type\" field present?\"" +
-                "}");
+            "}";
 
     }
 }

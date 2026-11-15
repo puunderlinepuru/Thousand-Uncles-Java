@@ -1,20 +1,14 @@
 package com.thousand_uncles.discord_bot.services;
 
-import com.thousand_uncles.data.dto.RecordRequestEnvelope;
-import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
+import com.thousand_uncles.discord_bot.config.GlobalConfigThings;
+import com.thousand_uncles.discord_bot.dto.ManualIndexedMapRecordEntry;
 import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
-import org.springframework.amqp.rabbit.RabbitConverterFuture;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 
 import java.math.BigDecimal;
-import java.util.concurrent.ExecutionException;
-
-//Probably will be used but not today
 
 @Component
 public class RabbitActionsService {
@@ -23,7 +17,7 @@ public class RabbitActionsService {
     RabbitTemplate rabbitTemplate;
 
     @Autowired
-    AsyncRabbitTemplate asyncRabbitTemplate;
+    GlobalConfigThings globalConfigThings;
 
     private final DirectExchange directMapRecordsExchange;
     public static final String ROUTING_KEY = "map.record";
@@ -33,31 +27,27 @@ public class RabbitActionsService {
     }
 
     public BigDecimal askForMapTime(String mapName, String recordCategory){
-        RecordRequestEnvelope responseEnvelope = makeRequest("just_time", mapName, recordCategory);
-        return  (BigDecimal) responseEnvelope.getData();
+        String responseString = makeRequest("just_time", mapName, recordCategory);
+        ObjectNode responseNode = globalConfigThings.ObjectMapper().readTree(responseString).asObject();
+        return responseNode.get("time").asDecimal();
     }
 
-    public ManualIndexedMapRecordEntry askForMapRecord(String mapName, String recordCategory){
-        RecordRequestEnvelope responseEnvelope = makeRequest("just_time", mapName, recordCategory);
-        return  (ManualIndexedMapRecordEntry) responseEnvelope.getData();
+    public ManualIndexedMapRecordEntry askForMapRecord(String partialMapName, String recordCategory){
+        String responseString = makeRequest("full_record", partialMapName, recordCategory);
+        return globalConfigThings.ObjectMapper().readValue(responseString, ManualIndexedMapRecordEntry.class);
     }
 
-    private RecordRequestEnvelope makeRequest(String type, String mapName, String recordCategory){
-        ObjectNode message = new ObjectMapper().createObjectNode();
+    private String makeRequest(String type, String mapName, String recordCategory){
+        ObjectNode message = globalConfigThings.ObjectMapper().createObjectNode();
 
+        message.put("type", type);
         message.put("map_name", mapName);
         message.put("category", recordCategory);
-        RecordRequestEnvelope requestEnvelope = new RecordRequestEnvelope(type, message);
 
-        RabbitConverterFuture<RecordRequestEnvelope> response = asyncRabbitTemplate.convertSendAndReceive(
+        return String.valueOf(rabbitTemplate.convertSendAndReceive(
                 directMapRecordsExchange.getName(),
                 ROUTING_KEY,
-                requestEnvelope
-        );
-        try{
-            return response.get();
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+                globalConfigThings.ObjectMapper().writeValueAsString(message)
+        ));
     }
 }

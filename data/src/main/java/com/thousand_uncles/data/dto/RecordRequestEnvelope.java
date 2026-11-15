@@ -18,4 +18,9 @@ public class RecordRequestEnvelope {
 
     public Object getData() {return data;}
     public void setData(Object data) {this.data = data;}
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

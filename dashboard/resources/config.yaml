@@ -1,0 +1,7 @@
+dashboard:
+  data:
+    usingLocal: true
+
+spring:
+  profiles:
+    active: prod, online

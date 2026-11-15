@@ -5,6 +5,8 @@ import com.thousand_uncles.discord_bot.common.util.AppNotifications;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
+import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.Message;
@@ -42,6 +44,19 @@ public class CheckCommand implements SlashCommand {
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event){
+
+        String partialMapName = event.getOption("map")
+                .flatMap(ApplicationCommandInteractionOption::getValue)
+                .map(ApplicationCommandInteractionOptionValue::asString)
+                .orElse(null);
+
+        String category = event.getOption("category")
+                .flatMap(ApplicationCommandInteractionOption::getValue)
+                .map(ApplicationCommandInteractionOptionValue::asString)
+                .orElse("any");
+
+//        List<ManualIndexedMapRecordEntry> searchedMaps = mapRecordServiceProd.searchRecords(partialMapName, category);
+
         return event.reply()
                 .withEphemeral(true)
                 .withContent("Thank you for using it but this command is unavailable for a short while. Im working on bringing it back :p");

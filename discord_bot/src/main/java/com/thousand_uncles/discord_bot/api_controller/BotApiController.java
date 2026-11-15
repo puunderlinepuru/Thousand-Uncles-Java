@@ -53,7 +53,7 @@ public class BotApiController {
     }
 
     @PostMapping("/test_function")
-    public String publishPoll(@RequestBody String request){
+    public String testFunction(@RequestBody String request){
 
         ObjectNode requestNode = globalConfigThings.ObjectMapper().readTree(request).asObject();
 
