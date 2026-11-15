@@ -1,5 +1,6 @@
 package com.thousand_uncles.tracker.services;
 
+import com.thousand_uncles.data.util.JSONHandler;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.exc.JsonNodeException;
 import tools.jackson.databind.node.ObjectNode;
@@ -12,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-
-import static com.thousand_uncles.tracker.util.JSONHandler.convertJSONtoString;
 
 @Component
 public class RabbitActionsService {
@@ -28,11 +27,14 @@ public class RabbitActionsService {
     RabbitTemplate rabbitTemplate;
 
     @Autowired
+    JSONHandler jsonHandler;
+
+    @Autowired
     public Binding eventBinding;
 
     public void sendToEvent(JsonNode jsonNode){
         try {
-            String jsonString = convertJSONtoString(jsonNode);
+            String jsonString = jsonHandler.convertJSONtoString(jsonNode);
             assert jsonString != null;
             rabbitTemplate.convertAndSend("test.exchange", "test.routing.key", jsonString);
         } catch (JsonNodeException e) {

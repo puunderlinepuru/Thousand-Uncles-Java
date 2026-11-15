@@ -1,14 +1,11 @@
 package com.thousand_uncles.discord_bot.util;
 
-import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
-import com.thousand_uncles.data.util.RecordFormatter;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class DiscordBotResponseFormatter {
 
-    public static String mapRecordToMessageContent(ManualIndexedMapRecordEntry requestedMap) {
+    /*public static String mapRecordToMessageContent(ManualIndexedMapRecordEntry requestedMap) {
         String response = "";
         response += "Current WR: " + RecordFormatter.BigDecimalToString(requestedMap.getCurr_wr_seconds()) + "\n";
         response += "Previous WR: " + RecordFormatter.BigDecimalToString(requestedMap.getPrev_wr_seconds()) + "\n";
@@ -33,7 +30,7 @@ public class DiscordBotResponseFormatter {
         }
 
         return response;
-    }
+    }*/
 
     public static String NumberToString (BigDecimal timeNumber) {
         String timeString;

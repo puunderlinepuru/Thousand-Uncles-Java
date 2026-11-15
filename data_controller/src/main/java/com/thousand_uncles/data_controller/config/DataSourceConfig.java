@@ -1,6 +1,6 @@
-package com.thousand_uncles.discord_bot.config;
+package com.thousand_uncles.data_controller.config;
 
-import com.thousand_uncles.discord_bot.common.util.AppNotifications;
+//import com.thousand_uncles.tracker.util.AppNotifications;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -17,9 +17,9 @@ import javax.sql.DataSource;
 @Profile("prod")
 public class DataSourceConfig {
 
-    DataSourceConfig(){
-        AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Data Source Config Initialized");
-    }
+//    DataSourceConfig(){
+//        AppNotifications.PostgreSQL.PSQL_RECORD_INFO("Data Source Config Initialized");
+//    }
 
     @Value("${spring.datasource.url}")
     private String datasourceURL;

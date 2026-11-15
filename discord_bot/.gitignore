@@ -40,3 +40,4 @@ build/
 /target/test-classes/
 /target/discord_bot-0.0.1-SNAPSHOT.jar
 /target/discord_bot-0.0.1-SNAPSHOT.jar.original
+/dependency-reduced-pom.xml

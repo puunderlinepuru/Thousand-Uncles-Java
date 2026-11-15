@@ -1,7 +1,5 @@
 package com.thousand_uncles.discord_bot.listeners.discord;
 
-import com.thousand_uncles.data.models.common.ManualIndexedMapRecordEntry;
-import com.thousand_uncles.data.service.MapRecordServiceOnline;
 import com.thousand_uncles.discord_bot.common.util.AppNotifications;
 import com.thousand_uncles.discord_bot.util.DiscordBotResponseFormatter;
 import com.thousand_uncles.discord_bot.config.BotConfig;
@@ -63,7 +61,7 @@ public class InteractionListenerDev {
 
         client.on(ButtonInteractionEvent.class, this::onButton).subscribe();
 
-        client.on(SelectMenuInteractionEvent.class, this::onSelectMenu).subscribe();
+//        client.on(SelectMenuInteractionEvent.class, this::onSelectMenu).subscribe();
 
         client.on(ReactionAddEvent.class, this::onReaction).subscribe();
 
@@ -108,7 +106,7 @@ public class InteractionListenerDev {
         return Mono.empty();
     }
 
-    public Mono<Void> onSelectMenu (SelectMenuInteractionEvent event){
+    /*public Mono<Void> onSelectMenu (SelectMenuInteractionEvent event){
         MapRecordServiceOnline mapRecordServiceOnline = applicationContext.getBean(MapRecordServiceOnline.class);
 
         System.out.println("select menu");
@@ -142,7 +140,7 @@ public class InteractionListenerDev {
         event.edit().withContent(DiscordBotResponseFormatter.mapRecordToMessageContent(gotMap)).withComponents().block();
 
         return Mono.empty();
-    }
+    }*/
 
     public Mono<Void> onReaction(ReactionAddEvent event){
         Message message = event.getMessage().block();
@@ -230,7 +228,7 @@ public class InteractionListenerDev {
         }
     }
 
-    private Mono<Void> foundMapResponse(SelectMenuInteractionEvent event, ManualIndexedMapRecordEntry foundMap, String recordCategory){
+    /*private Mono<Void> foundMapResponse(SelectMenuInteractionEvent event, ManualIndexedMapRecordEntry foundMap, String recordCategory){
         AppNotifications.Discord.DISCORD_INTERACTION_INFO("Found Map");
         List<String> availableToCheckCategories = botConfig.getAvailable_categories().getCheck();
         List<SelectMenu.Option> availableCategoriesOptions = new ArrayList<>(List.of());
@@ -245,7 +243,7 @@ public class InteractionListenerDev {
                 .withComponents(ActionRow.of(
                         SelectMenu.of("check-" + foundMap.getMap_name(), availableCategoriesOptions)
                                 .withMaxValues(1)));
-    }
+    }*/
 
     private Mono<Void> mapNotFoundResponse(SelectMenuInteractionEvent event){
         return event.reply()

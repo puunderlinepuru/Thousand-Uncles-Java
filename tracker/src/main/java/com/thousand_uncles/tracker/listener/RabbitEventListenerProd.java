@@ -1,6 +1,7 @@
 package com.thousand_uncles.tracker.listener;
 
 import com.thousand_uncles.data.models.run.TestRecord;
+import com.thousand_uncles.data.util.JSONHandler;
 import com.thousand_uncles.tracker.services.TrackerActionsService;
 import com.thousand_uncles.tracker.util.AppNotifications;
 import com.thousand_uncles.tracker.util.Converter;
@@ -22,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.thousand_uncles.tracker.util.JSONHandler.processJSON;
 
 @SuppressWarnings("unused")
 @Component
@@ -43,6 +43,9 @@ public class RabbitEventListenerProd implements RabbitEventListener{
 
     @Autowired
     TrackerActionsService trackerActionsService;
+
+    @Autowired
+    JSONHandler jsonHandler;
 
     private static final Map<String, String> verdicts = new ConcurrentHashMap<>();
 
@@ -94,7 +97,7 @@ public class RabbitEventListenerProd implements RabbitEventListener{
         JsonNode eventNode;
 
         try{
-            eventNode = processJSON(message);
+            eventNode = jsonHandler.processJSON(message);
         } catch (JsonNodeException e) {
             throw new RuntimeException(e);
         }
