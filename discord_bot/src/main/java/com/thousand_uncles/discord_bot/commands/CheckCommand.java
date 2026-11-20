@@ -2,6 +2,10 @@ package com.thousand_uncles.discord_bot.commands;
 
 import com.thousand_uncles.discord_bot.config.BotConfig;
 import com.thousand_uncles.discord_bot.common.util.AppNotifications;
+import com.thousand_uncles.discord_bot.config.GlobalConfigThings;
+import com.thousand_uncles.discord_bot.dto.ManualIndexedMapRecordEntry;
+import com.thousand_uncles.discord_bot.services.RabbitActionsService;
+import com.thousand_uncles.discord_bot.util.DiscordBotResponseFormatter;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
@@ -11,7 +15,6 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.Message;
 import discord4j.core.spec.InteractionApplicationCommandCallbackReplyMono;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
@@ -32,7 +35,10 @@ public class CheckCommand implements SlashCommand {
     private GatewayDiscordClient client;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    RabbitActionsService rabbitActionsService;
+
+    @Autowired
+    GlobalConfigThings globalConfigThings;
 
     @Autowired
     private BotConfig botConfig;
@@ -48,18 +54,43 @@ public class CheckCommand implements SlashCommand {
         String partialMapName = event.getOption("map")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
-                .orElse(null);
+                .orElseThrow();
 
         String category = event.getOption("category")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .orElse("any");
 
-//        List<ManualIndexedMapRecordEntry> searchedMaps = mapRecordServiceProd.searchRecords(partialMapName, category);
+        String mapName = null;
+        for (String mapNameFromList : globalConfigThings.mapNames()){
+            if (mapNameFromList.contains(partialMapName)){
+                mapName = mapNameFromList;
+                break;
+            }
+        }
+        if (mapName == null){
+            for (String mapNameFromList : globalConfigThings.mapSuffixes().keySet()){
+                if (mapNameFromList.contains(partialMapName)){
+                    mapName = mapNameFromList;
+                    break;
+                }
+            }
+        }
+        if (mapName == null){
+            return mapNotFound(event);
+        }
 
-        return event.reply()
-                .withEphemeral(true)
-                .withContent("Thank you for using it but this command is unavailable for a short while. Im working on bringing it back :p");
+
+        ManualIndexedMapRecordEntry foundMap = rabbitActionsService.askForMapRecord(mapName, category);
+        if (foundMap == null){
+            return mapNotFound(event);
+        }
+
+        return singleMapFoundResponse(event, foundMap, category);
+
+//        return event.reply()
+//                .withEphemeral(true)
+//                .withContent(DiscordBotResponseFormatter.mapRecordToMessageContent(foundMap));
     }
 
     private Mono<Void> multipleMapsFoundResponse(ChatInputInteractionEvent event, String partialMapName, String category, List<SelectMenu.Option> foundMapOptions){
@@ -84,7 +115,7 @@ public class CheckCommand implements SlashCommand {
     }
 
     private Mono<Void> singleMapFoundResponse(ChatInputInteractionEvent event,
-//                                              ManualIndexedMapRecordEntry foundMap,
+                                              ManualIndexedMapRecordEntry foundMap,
                                               String category){
         AppNotifications.Discord.DISCORD_INTERACTION_INFO("Single Map Found Response Case");
         List<String> availableToCheckCategories = botConfig.getAvailable_categories().getCheck();
@@ -96,14 +127,13 @@ public class CheckCommand implements SlashCommand {
         return event.reply()
                 .withEphemeral(true)
                 .withContent("Record for " +
-//                        foundMap.getMap_name() +
+                        foundMap.getMap_name() +
                         " - " + category + "%" + ":\n" +
-//                        DiscordBotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
+                        DiscordBotResponseFormatter.mapRecordToMessageContent(foundMap) + "\n " +
                         "Other categories:")
-//                .withComponents(ActionRow.of(
-//                        SelectMenu.of("check-" + foundMap.getMap_name(), availableCategoriesOptions)
-//                                .withMaxValues(1)))
-                                ;
+                .withComponents(ActionRow.of(
+                        SelectMenu.of("check-" + foundMap.getMap_name(), availableCategoriesOptions)
+                                .withMaxValues(1)));
     }
 
     private Mono<Void> mapNotFound(ChatInputInteractionEvent event){

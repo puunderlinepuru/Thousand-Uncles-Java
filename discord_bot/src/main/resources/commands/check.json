@@ -10,7 +10,7 @@
     },
     {
       "name": "category",
-      "description": "run category",
+      "description": "run category. Available categories: \nany, \nsolo, \ncheeseless, \nrun_any, \nrun_solo, \nrun_cheeseless",
       "type": 3,
       "required": false
     }

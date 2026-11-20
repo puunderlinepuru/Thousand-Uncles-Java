@@ -6,6 +6,7 @@ import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
 import tools.jackson.databind.node.ObjectNode;
 
 import java.math.BigDecimal;
@@ -32,9 +33,13 @@ public class RabbitActionsService {
         return responseNode.get("time").asDecimal();
     }
 
-    public ManualIndexedMapRecordEntry askForMapRecord(String partialMapName, String recordCategory){
-        String responseString = makeRequest("full_record", partialMapName, recordCategory);
-        return globalConfigThings.ObjectMapper().readValue(responseString, ManualIndexedMapRecordEntry.class);
+    public ManualIndexedMapRecordEntry askForMapRecord(String mapName, String recordCategory){
+        String responseString = makeRequest("full_record", mapName, recordCategory);
+        try{
+            return globalConfigThings.ObjectMapper().readValue(responseString, ManualIndexedMapRecordEntry.class);
+        } catch (JacksonException e) {
+            return null;
+        }
     }
 
     private String makeRequest(String type, String mapName, String recordCategory){

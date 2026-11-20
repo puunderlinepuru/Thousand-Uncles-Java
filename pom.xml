@@ -27,6 +27,7 @@
 
     <modules>
         <module>data</module>
+        <module>data_controller</module>
         <module>dashboard</module>
         <module>discord_bot</module>
         <module>google_api_handler</module>
