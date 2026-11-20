@@ -79,7 +79,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<outputDirectory>./build/</outputDirectory>
+					<outputDirectory>../output/discord_bot/build/</outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>

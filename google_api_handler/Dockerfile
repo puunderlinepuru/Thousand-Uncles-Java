@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21
+FROM eclipse-temurin:25
 LABEL authors="popo"
 
 COPY ./build/google_api_handler-0.0.1-SNAPSHOT-stuffed.jar ./app.jar

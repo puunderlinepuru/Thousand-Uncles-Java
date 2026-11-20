@@ -25,27 +25,41 @@ services:
 #    volumes:
 #      - rabbitmq_data:/var/lib/rabbitmq
 
-  discord_bot:
+  data_controller:
     build:
-      context: ./discord_bot
-    container_name: discord_bot
+      context: ./data_controller
+    container_name: data_controller
     volumes:
       - ./shared_resources:/shared_resources/:ro
-      - ./discord_bot/resources:/resources
+      - ./data_controller/resources:/resources
     env_file:
-      - path: ./token.env
-        required: true
       - path: ./credentials.env
         required: true
     environment:
       - SPRING_PROFILE=prod
-    depends_on:
-      - postgres
-    ports:
-      - "8082:8082"
-    networks:
-      - app-network
     restart: unless-stopped
+
+#  discord_bot:
+#    build:
+#      context: ./discord_bot
+#    container_name: discord_bot
+#    volumes:
+#      - ./shared_resources:/shared_resources/:ro
+#      - ./discord_bot/resources:/resources
+#    env_file:
+#      - path: ./token.env
+#        required: true
+#      - path: ./credentials.env
+#        required: true
+#    environment:
+#      - SPRING_PROFILE=prod
+#    depends_on:
+#      - postgres
+#    ports:
+#      - "8082:8082"
+#    networks:
+#      - app-network
+#    restart: unless-stopped
 
   server_tracker:
     build:
@@ -82,7 +96,6 @@ services:
 
 volumes:
   postgres_data:
-  rabbitmq_data:
 
 networks:
   app-network:

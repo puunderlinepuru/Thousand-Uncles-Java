@@ -60,7 +60,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<outputDirectory>./build/</outputDirectory>
+					<outputDirectory>../output/tracker/build/</outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>

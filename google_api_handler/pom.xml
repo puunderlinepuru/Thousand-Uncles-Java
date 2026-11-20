@@ -119,7 +119,7 @@
               </transformers>
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <shadedClassifierName>stuffed</shadedClassifierName>
-              <outputDirectory>./build/</outputDirectory>
+              <outputDirectory>../output/google_api_handler/build/</outputDirectory>
             </configuration>
           </execution>
         </executions>
