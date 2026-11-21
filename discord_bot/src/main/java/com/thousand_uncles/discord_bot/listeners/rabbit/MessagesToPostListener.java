@@ -1,6 +1,7 @@
 package com.thousand_uncles.discord_bot.listeners.rabbit;
 
-import tools.jackson.core.JacksonException;
+import com.thousand_uncles.discord_bot.services.BotActionsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import tools.jackson.databind.JsonNode;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -14,6 +15,9 @@ import tools.jackson.databind.ObjectMapper;
 @SuppressWarnings("unused")
 @Component
 public class MessagesToPostListener {
+
+    @Autowired
+    BotActionsService botActionsService;
 
     @Bean
     public DirectExchange discordMessageExchange() {
@@ -38,9 +42,14 @@ public class MessagesToPostListener {
         JsonNode jsonNode;
 
         jsonNode = processJSON(message);
+        String channel = jsonNode.get("channel").asString();
+        String messageContents = jsonNode.get("message").asString();
 
-        System.out.println("JSON node: " + jsonNode.toPrettyString());
-
+        switch (channel) {
+            case "the-cave" -> botActionsService.sendIntoCave(messageContents);
+            case "currently-gaming" -> botActionsService.sendIntoCurrentlyGaming(messageContents);
+            default -> throw new IllegalStateException("Unexpected value: " + channel);
+        }
     }
 
     private JsonNode processJSON(String message) {

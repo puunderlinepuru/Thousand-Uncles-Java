@@ -3,6 +3,7 @@ package com.thousand_uncles.discord_bot.util;
 import com.thousand_uncles.data.util.YAMLHandler;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,7 +29,10 @@ public class RecognizedMapsChecker {
             trackedMaps.addAll(mapSuffixes);
             return compareAndPrintMissing(toBeProcessed, trackedMaps);
 
-        } catch (IOException e) {
+        }   catch (FileNotFoundException e){
+            System.err.println("COULD NOT FIND FILE: \n" + e.getCause());
+        }
+        catch (IOException e) {
             System.err.println("Error reading files: " + e.getMessage());
             e.printStackTrace();
         }
